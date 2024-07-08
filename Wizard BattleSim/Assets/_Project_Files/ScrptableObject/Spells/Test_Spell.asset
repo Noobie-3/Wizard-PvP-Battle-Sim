@@ -15,6 +15,6 @@ MonoBehaviour:
   Spell_Speed: 30
   Spell_Damage: 1
   Spell_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
-  CooldownDuration: 0
-  LifeTime: 0
+  CooldownDuration: 3
+  LifeTime: 15
   Spell_Type: 0

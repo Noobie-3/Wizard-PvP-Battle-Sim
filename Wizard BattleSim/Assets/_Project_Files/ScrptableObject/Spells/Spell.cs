@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Spell", menuName = "Spell")]
@@ -17,4 +18,12 @@ public class Spell : ScriptableObject {
         TrapSpell
     };
     public SpellType Spell_Type;
+
+    public void SpellHit(GameObject other, GameObject self)
+    {
+        if (other.GetComponent<IHittable_inherited>() || other.GetComponentInChildren<IHittable_inherited>())
+        { 
+           other.GetComponent<IHittable_inherited>().GotHit(self);
+        }
+    }
 }

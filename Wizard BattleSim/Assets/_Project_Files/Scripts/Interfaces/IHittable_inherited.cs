@@ -5,14 +5,14 @@ using UnityEngine;
 public class IHittable_inherited : MonoBehaviour, IHitable
 {
 
-    private enum ObjectType {
+   [SerializeField] private enum ObjectType {
 
         nullify,
         Player,
         Breakable
 
     }
-    ObjectType Type;
+    [SerializeField] ObjectType Type;
 
 
     public void GotHit(GameObject ObjectThatHitMe) {
@@ -20,14 +20,19 @@ public class IHittable_inherited : MonoBehaviour, IHitable
         if(Type == ObjectType.nullify) {
 
             Destroy(ObjectThatHitMe);
+            print("Spell  Nullable obj got hit");
 
         }    
         
         else if(Type == ObjectType.Player) {
 
+            print("Player got hit");
+
         }   
         
         else if(Type == ObjectType.Breakable) {
+
+            print("Breakable got hit");
 
         }
 
