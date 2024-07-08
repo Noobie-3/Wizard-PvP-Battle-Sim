@@ -4,5 +4,4 @@ using UnityEngine;
 
 public interface Spell_Interface
 {
-    public GameObject Caster_;
 }
