@@ -15,7 +15,7 @@ public class IHittable_inherited : MonoBehaviour, IHitable
     [SerializeField] ObjectType Type;
 
 
-    public void GotHit(GameObject ObjectThatHitMe) {
+    public void GotHit(GameObject ObjectThatHitMe, Spell Spell, GameObject Caster ) {
 
         if(Type == ObjectType.nullify) {
 
@@ -26,12 +26,15 @@ public class IHittable_inherited : MonoBehaviour, IHitable
         
         else if(Type == ObjectType.Player) {
 
-            print("Player got hit");
+
+            if(gameObject != Caster)
+            {
+                print("Player got hit");
+            }
 
         }   
         
         else if(Type == ObjectType.Breakable) {
-
             print("Breakable got hit");
 
         }

@@ -19,11 +19,11 @@ public class Spell : ScriptableObject {
     };
     public SpellType Spell_Type;
 
-    public void SpellHit(GameObject other, GameObject self)
+    public void SpellHit(GameObject other, GameObject self, GameObject Caster)
     {
         if (other.GetComponent<IHittable_inherited>() || other.GetComponentInChildren<IHittable_inherited>())
         { 
-           other.GetComponent<IHittable_inherited>().GotHit(self);
+           other.GetComponent<IHittable_inherited>().GotHit(self, this, Caster);
         }
     }
 }

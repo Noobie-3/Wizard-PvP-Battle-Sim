@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Spell_Interface
+public interface ISpell_Interface
 {
+    GameObject Caster { get; set; }
+
+
 }

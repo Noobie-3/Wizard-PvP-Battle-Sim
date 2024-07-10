@@ -4,11 +4,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 
-public class First_Spell_Test_DELETELATER : MonoBehaviour, Spell_Interface
+public class First_Spell_Test_DELETELATER : MonoBehaviour, ISpell_Interface
 {
     public Spell Curernt_spell;
     public Rigidbody Rb;
-    public GameObject Caster_;
+    public GameObject Caster { get; set; }
 
     private void Start() {
 
@@ -24,7 +24,7 @@ public class First_Spell_Test_DELETELATER : MonoBehaviour, Spell_Interface
         if (other.GetComponent<IHittable_inherited>() || other.GetComponentInChildren<IHittable_inherited>() && other.gameObject.GetComponent<PlayerController>())
         {
             //if it does, call the GotHit method
-            other.GetComponent<IHittable_inherited>().GotHit(gameObject);
+            other.GetComponent<IHittable_inherited>().GotHit(gameObject, Curernt_spell, Caster);
         }
     }
 

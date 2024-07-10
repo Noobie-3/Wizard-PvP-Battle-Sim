@@ -41,6 +41,24 @@ public class gameController : MonoBehaviour
 
 
     }
+
+    public float TakeDmg(float Hp, float Def, float Attack, GameObject ObjectThatGotHit)
+    {
+        //take damage from the object that got hit while taking into account the defense of the object
+        if(Def > Attack)
+        {
+            print(ObjectThatGotHit.name + " took no damage");
+            //Effect for no damage here
+            return Hp;
+        }
+        else {
+            Hp -= (Attack - Def);
+            //effect for damage here
+        }
+
+        return Hp;
+    }
+
     private void Update() {
         //if PlayerList is less than the number of players in the scene)
         if(Players.Length != GameObject.FindGameObjectsWithTag(PLayerTag).Length) {
