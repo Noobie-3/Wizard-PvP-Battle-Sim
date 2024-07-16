@@ -6,6 +6,7 @@ using Unity.Netcode;
 using Cinemachine;
 using Unity.VisualScripting;
 using Unity.Mathematics;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : NetworkBehaviour
@@ -17,13 +18,13 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float Gravity = 15f;
     private Rigidbody rb;
     [SerializeField] public Vector2 MoveInput;
+    [SerializeField] public Vector2 MouseInput;
 
     public List<Spell> currentSpells;
     [SerializeField] private int selectedSpellIndex = 0;
     public List<float> spellCooldownTimers;
 
     [SerializeField] private CinemachineVirtualCamera Vcam;
-    [SerializeField] private GameObject CamFollowTarget; // New camera follow target
     [SerializeField] private AudioListener audioListener;
 
     // Variables for camera rotation
@@ -76,11 +77,10 @@ public class PlayerController : NetworkBehaviour
         Vector3 moveDirection = (Cam.right.normalized * MoveInput.x + Cam.transform.forward.normalized * MoveInput.y);
         moveDirection.y = 0;
         Vector3 targetPosition = rb.position + moveSpeed * Time.fixedDeltaTime * moveDirection;
-        rb.MovePosition(targetPosition );
+        rb.MovePosition(targetPosition);
+
         //Rotate the player towrads camrea forward
-
-
-        if(MoveInput != Vector2.zero)
+        if (MoveInput != Vector2.zero)
         {
             MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
         }
@@ -88,6 +88,12 @@ public class PlayerController : NetworkBehaviour
 
         // Apply custom gravity
         rb.AddForce(Vector3.down * Gravity, ForceMode.Acceleration);
+
+
+        //clamp the vcam  movement
+        
+
+
 
 
 
@@ -106,16 +112,23 @@ public class PlayerController : NetworkBehaviour
         else if (scrollInput < 0)
         {
             selectedSpellIndex++;
-            if (selectedSpellIndex >= currentSpells.Count)
+            if (selectedSpellIndex > currentSpells.Count - 1)
                 selectedSpellIndex = 0;
         }
 
-        Debug.Log("Selected Spell: " + selectedSpellIndex);
+        Debug.Log("Selected Spell: " + selectedSpellIndex + " out of " + currentSpells.Count);
     }
 
     public void GetMoveInput(InputAction.CallbackContext context)
     {
         MoveInput = context.ReadValue<Vector2>();
+    }
+    
+    
+    public void GetMouseInput(InputAction.CallbackContext context)
+    {
+        MouseInput = context.ReadValue<Vector2>();
+
     }
 
     public void CastSpell()
