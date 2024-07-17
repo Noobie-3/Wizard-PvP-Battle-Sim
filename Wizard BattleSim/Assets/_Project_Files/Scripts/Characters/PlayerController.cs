@@ -26,6 +26,7 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private CinemachineVirtualCamera Vcam;
     [SerializeField] private AudioListener audioListener;
+    [SerializeField] private float JumpHeight = 5f;
 
     // Variables for camera rotation
     [SerializeField] private float CamSpeed = 1f;
@@ -176,7 +177,25 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    public void JumpInput(InputAction.CallbackContext context)
+    {
+        //Basic jump
+            rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
+        //multiple Jumps 
+        if(JumpHeight > 0)
+        {
+            rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
+            JumpHeight -= 1;
+        }
+        else
+        {
+            return;
+        }
 
+
+        //if player holds button instead of just press it then the player will jump higher
+
+    }
 
     public void AddSpell(Spell newSpell)
     {

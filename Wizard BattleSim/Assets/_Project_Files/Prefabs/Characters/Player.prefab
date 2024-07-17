@@ -146,6 +146,7 @@ MonoBehaviour:
   spellCooldownTimers: []
   Vcam: {fileID: 2560195394970560980}
   audioListener: {fileID: 383817550984596914}
+  JumpHeight: 5
   CamSpeed: 15
   RotateSpeed: 1
   minXRotation: -45
@@ -291,6 +292,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 6420ba1d-8920-49f8-bc0b-16bf87df7d43
     m_ActionName: Player/ChangeSpellMouseScroll[/Mouse/scroll/down,/Mouse/scroll/up]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7950968318720125282}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Jump
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: cdd0ed00-f3f5-4f92-b60c-7a8a5db3783b
+    m_ActionName: Player/Jump[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -434,7 +451,7 @@ MonoBehaviour:
     m_InvertInput: 0
     m_MinValue: -180
     m_MaxValue: 180
-    m_Wrap: 0
+    m_Wrap: 1
     m_Recentering:
       m_enabled: 0
       m_WaitTime: 1
