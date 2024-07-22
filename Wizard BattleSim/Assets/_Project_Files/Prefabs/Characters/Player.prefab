@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1558211036
+  GlobalObjectIdHash: 2885273471
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -118,7 +118,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 2
 --- !u!114 &7950968318720125282
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MeshToRotate: {fileID: 5865634993870737861}
-  moveSpeed: 20
+  moveSpeed: 50
   Cam: {fileID: 3515196710709728275}
   Gravity: 15
   MoveInput: {x: 0, y: 0}
@@ -296,8 +296,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7950968318720125282}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Jump
-        m_Mode: 1
+        m_MethodName: JumpInput
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -510,7 +510,7 @@ Transform:
   m_GameObject: {fileID: 6085331379833305553}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15188564, y: -0.82120156, z: 0.25627035, w: 0.48670757}
-  m_LocalPosition: {x: 9.535222, y: 9.457469, z: 2.8447638}
+  m_LocalPosition: {x: 27.187893, y: 9.45747, z: -13.347139}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

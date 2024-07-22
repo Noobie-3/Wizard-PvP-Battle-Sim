@@ -9,6 +9,7 @@ public class gameController : MonoBehaviour
     public static gameController GC;
     public  PlayerController[] Players;
     [SerializeField] bool HideMouse;
+    public float Gravity_force;
     public string PLayerTag = "Player";
     private void Awake() {
 
