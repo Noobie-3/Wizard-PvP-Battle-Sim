@@ -25,6 +25,8 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float RotateSpeed = 1f;
     [SerializeField] private float minXRotation = -45f;   // Minimum X rotation (pitch)
     [SerializeField] private float maxXRotation = 45f;    // Maximum X rotation (pitch)
+    [SerializeField] private bool JumpUsed = false;
+    [SerializeField] Vector3 GroundCheck_Start = new Vector3(0, .5f, 0);
 
     // Public variables
     [SerializeField] public Vector2 MoveInput;
@@ -205,20 +207,14 @@ public class PlayerController : NetworkBehaviour
     // Ground check logic
     private void GroundCheck()
     {
-        Ray GroundCheckRay = new Ray(transform.position, Vector3.down);
-        RaycastHit hit;
 
-        if (Physics.Raycast(GroundCheckRay, out hit, GroundCheck_Distance))
-        {
-            Grounded = true;
-        }
-        else
-        {
-            Grounded = false;
-        }
+
+         Grounded = Physics.Raycast(transform.position + GroundCheck_Start , Vector3.down,  out RaycastHit HitInfo, GroundCheck_Distance, gameController.GC.GroundLayer);
+
+
 
         //show raycast 
-        Debug.DrawRay(transform.position, Vector3.down * GroundCheck_Distance, Color.red);
+        Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
 
         ApplyGravity();
     }
@@ -228,7 +224,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (!Grounded)
         {
-            rb.AddForce(Vector3.down * Gravity, ForceMode.Acceleration);
+            rb.AddForce(Vector3.down * gameController.GC.Gravity_force, ForceMode.Acceleration);
         }
         else
         {

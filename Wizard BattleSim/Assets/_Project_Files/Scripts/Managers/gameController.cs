@@ -11,6 +11,7 @@ public class gameController : MonoBehaviour
     [SerializeField] bool HideMouse;
     public float Gravity_force;
     public string PLayerTag = "Player";
+    public LayerMask GroundLayer;
     private void Awake() {
 
         if(GC == null) {

@@ -1681,7 +1681,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Players: []
   HideMouse: 0
+  Gravity_force: 50
   PLayerTag: Player
+  GroundLayer:
+    serializedVersion: 2
+    m_Bits: 2147483667
 --- !u!4 &684742548
 Transform:
   m_ObjectHideFlags: 0
