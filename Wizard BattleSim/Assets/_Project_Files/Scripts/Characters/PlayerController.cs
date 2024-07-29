@@ -12,32 +12,63 @@ using System.Data;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : NetworkBehaviour
 {
-    // Serialized variables
-    [SerializeField] private GameObject MeshToRotate;
+    // Serialized variables (Editor exposed)
+
+    // Movement variables
+    [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private Transform Cam;
-    [SerializeField] private float Gravity = 15f;
-    [SerializeField] private CinemachineVirtualCamera Vcam;
-    [SerializeField] private AudioListener audioListener;
+    [SerializeField] private bool Gravity;
     [SerializeField] private float JumpHeight = 5f;
+
+    // Ground check variables
+    [Header("Ground Check Settings")]
     [SerializeField] private float GroundCheck_Distance = 0.5f;
-    [SerializeField] private float CamSpeed = 1f;         // Variables for camera rotation
+    [SerializeField] private Vector3 GroundCheck_Start = new Vector3(0, 0.5f, 0);
+
+    // Wall check variables
+    [Header("Wall Check Settings")]
+    [SerializeField] private Vector3 WallCheck_Start = new Vector3(0, 3, 0);
+    [SerializeField] private float wallCheckDistance = 1f;
+    [SerializeField] private float wallRunTimerDefault = 4.5f;
+    [SerializeField] private float wallRunTimer_Tick = 4.5f;
+    [SerializeField] private float DistanceFromFloorRequiredToWallRun = 3f;
+    [SerializeField] private bool IsWallRunning = false;
+
+    // Camera settings
+    [Header("Camera Settings")]
+    [SerializeField] private Transform Cam;
+    [SerializeField] private CinemachineVirtualCamera Vcam;
+    [SerializeField] private float CamSpeed = 1f;
     [SerializeField] private float RotateSpeed = 1f;
     [SerializeField] private float minXRotation = -45f;   // Minimum X rotation (pitch)
     [SerializeField] private float maxXRotation = 45f;    // Maximum X rotation (pitch)
+
+    // Miscellaneous settings
+    [Header("Miscellaneous Settings")]
+    [SerializeField] private GameObject MeshToRotate;
+    [SerializeField] private AudioListener audioListener;
     [SerializeField] private bool JumpUsed = false;
-    [SerializeField] Vector3 GroundCheck_Start = new Vector3(0, .5f, 0);
 
     // Public variables
+
+    // Input variables
+    [Header("Input Settings")]
     [SerializeField] public Vector2 MoveInput;
     [SerializeField] public Vector2 MouseInput;
     [SerializeField] public bool Grounded;
+
+    // Spell variables
+    [Header("Spell Settings")]
     public List<Spell> currentSpells;
     [SerializeField] private int selectedSpellIndex = 0;
     public List<float> spellCooldownTimers;
 
     // Private variables
+
+    // Rigidbody
     private Rigidbody rb;
+
+    // Rotation variables
     private float rotationX = 0f;
     private float rotationY = 0f;
 
@@ -75,6 +106,7 @@ public class PlayerController : NetworkBehaviour
 
         MoveObject();
         GroundCheck();
+        WallCheck();
     }
 
     // Movement logic
@@ -174,12 +206,11 @@ public class PlayerController : NetworkBehaviour
     // Jump logic
     public void JumpInput(InputAction.CallbackContext context)
     {
-        if(context.performed && Grounded)
+        if (context.performed && Grounded)
         {
-
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
-
         }
+
     }
 
     // Spell management
@@ -207,28 +238,103 @@ public class PlayerController : NetworkBehaviour
     // Ground check logic
     private void GroundCheck()
     {
-
-
-         Grounded = Physics.Raycast(transform.position + GroundCheck_Start , Vector3.down,  out RaycastHit HitInfo, GroundCheck_Distance, gameController.GC.GroundLayer);
-
-
-
-        //show raycast 
+        // Shoot Raycast down to check if player is grounded with an offset from the ground
+        Grounded = Physics.Raycast(transform.position + GroundCheck_Start, Vector3.down, out RaycastHit HitInfo, GroundCheck_Distance, gameController.GC.GroundLayer);
+        // Show raycast
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
 
         ApplyGravity();
     }
 
+    private void WallCheck()
+    {
+        
+        //return if not owner
+        if(!IsOwner) return;
+        //return if no mouse input
+    if(MoveInput.x == 0 &&  MoveInput.y == 0)
+        {
+            return;
+        }
+        // Wall Run When Not On ground and input is towards the wall
+        if (!Grounded)
+        {
+            // Grab Wall
+            // Shoot RayCast to all sides of player to check for wall
+            RaycastHit hit;
+            if (!Physics.Raycast(transform.position, -transform.up, out hit, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
+            {
+                if (Physics.Raycast(transform.position + WallCheck_Start, transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||Physics.Raycast(transform.position, -transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||Physics.Raycast(transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) || Physics.Raycast(transform.position, -transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer)) 
+                {
+                    IsWallRunning = true;
+                    print("We are running walla Babu");
+                }
+                else
+                {
+                    // If no wall is detected, stop wall running
+
+                    IsWallRunning = false;
+                    wallRunTimer_Tick = wallRunTimerDefault;
+                    Gravity = true;
+                }
+
+            }
+
+            // Start ticking down the wall run timer
+            if (IsWallRunning)
+            { rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); //Problem line
+
+                wallRunTimer_Tick -= Time.deltaTime;
+                if (wallRunTimer_Tick <= 0)
+                {
+                    // If the timer runs out, stop wall running
+                    wallRunTimer_Tick = wallRunTimerDefault;
+                    IsWallRunning = false;
+                    Gravity = true;
+                }
+            }
+
+            // If Player moves away from the wall, stop wall running
+            //get hit direction
+            Vector3 hitDirection = hit.normal;
+            if(MoveInput.x > 0 && hitDirection == transform.right)
+            {
+                IsWallRunning = false;
+            }
+            else if(MoveInput.x < 0 && hitDirection == -transform.right)
+            {
+                IsWallRunning = false;
+            }
+            else if(MoveInput.y > 0 && hitDirection == transform.forward)
+            {
+                IsWallRunning = false;
+            }
+            else if(MoveInput.y < 0 && hitDirection == -transform.forward)
+            {
+                IsWallRunning = false;
+            }
+
+
+            Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
+            Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
+            Debug.DrawRay(transform.position + WallCheck_Start, transform.forward * wallCheckDistance, Color.blue);
+            Debug.DrawRay(transform.position + WallCheck_Start, -transform.forward * wallCheckDistance, Color.blue);
+            Debug.DrawRay(transform.position + WallCheck_Start, -transform.up * DistanceFromFloorRequiredToWallRun, Color.blue);
+            print(IsWallRunning + " wallrunning State");
+        }
+    }
+
     // Custom gravity application
     private void ApplyGravity()
     {
-        if (!Grounded)
+        if(!Gravity)
+        {
+            return;
+        }
+        if (!Grounded || !IsWallRunning)
         {
             rb.AddForce(Vector3.down * gameController.GC.Gravity_force, ForceMode.Acceleration);
         }
-        else
-        {
-            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        }
+
     }
 }

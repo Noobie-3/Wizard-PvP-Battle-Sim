@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1558211036
+  GlobalObjectIdHash: 2885273471
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -116,7 +116,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
@@ -133,18 +133,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d78b5014b1459041a7f051e1d888830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MeshToRotate: {fileID: 5865634993870737861}
   moveSpeed: 50
-  Cam: {fileID: 3515196710709728275}
-  Gravity: 15
-  Vcam: {fileID: 2560195394970560980}
-  audioListener: {fileID: 383817550984596914}
-  JumpHeight: 5
+  Gravity: 1
+  JumpHeight: 60
   GroundCheck_Distance: 0.5
+  GroundCheck_Start: {x: 0, y: 0.5, z: 0}
+  WallCheck_Start: {x: 0, y: 1, z: 0}
+  wallCheckDistance: 2.5
+  wallRunTimerDefault: 4.5
+  wallRunTimer_Tick: 4.5
+  DistanceFromFloorRequiredToWallRun: 5
+  IsWallRunning: 0
+  Cam: {fileID: 3515196710709728275}
+  Vcam: {fileID: 2560195394970560980}
   CamSpeed: 15
   RotateSpeed: 1
   minXRotation: -45
   maxXRotation: 45
+  MeshToRotate: {fileID: 5865634993870737861}
+  audioListener: {fileID: 383817550984596914}
   JumpUsed: 0
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}

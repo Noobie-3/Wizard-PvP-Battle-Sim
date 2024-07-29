@@ -12,6 +12,7 @@ public class gameController : MonoBehaviour
     public float Gravity_force;
     public string PLayerTag = "Player";
     public LayerMask GroundLayer;
+    public LayerMask WallLayer;
     private void Awake() {
 
         if(GC == null) {
