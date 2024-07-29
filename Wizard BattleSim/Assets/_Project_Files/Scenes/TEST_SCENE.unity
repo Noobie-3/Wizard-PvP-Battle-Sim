@@ -1686,6 +1686,9 @@ MonoBehaviour:
   GroundLayer:
     serializedVersion: 2
     m_Bits: 2147483667
+  WallLayer:
+    serializedVersion: 2
+    m_Bits: 1073741824
 --- !u!4 &684742548
 Transform:
   m_ObjectHideFlags: 0
