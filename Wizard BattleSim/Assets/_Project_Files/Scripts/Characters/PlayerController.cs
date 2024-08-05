@@ -4,10 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
 using Cinemachine;
-using Unity.VisualScripting;
-using Unity.Mathematics;
-using UnityEngine.Rendering;
-using System.Data;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : NetworkBehaviour
@@ -76,6 +72,7 @@ public class PlayerController : NetworkBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         UpdateSpellCooldownTimers();
     }
 
@@ -113,15 +110,20 @@ public class PlayerController : NetworkBehaviour
     private void MoveObject()
     {
         // Calculate movement direction
-        Vector3 moveDirection = (Cam.right.normalized * MoveInput.x + Cam.transform.forward.normalized * MoveInput.y);
+        Vector3 moveDirection = (Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y);
         moveDirection.y = 0;
-        Vector3 targetPosition = rb.position + moveSpeed * Time.fixedDeltaTime * moveDirection;
-        rb.MovePosition(targetPosition);
+
+        // Apply movement
+        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
 
         // Rotate the player towards camera forward
         if (MoveInput != Vector2.zero)
         {
             MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
+        }
+        else if (Grounded)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
     }
 
@@ -130,13 +132,13 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        if (scrollInput > 0)
+        if (scrollInput >= 0)
         {
             selectedSpellIndex--;
             if (selectedSpellIndex < 0)
                 selectedSpellIndex = currentSpells.Count - 1;
         }
-        else if (scrollInput < 0)
+        else if (scrollInput <= 0)
         {
             selectedSpellIndex++;
             if (selectedSpellIndex > currentSpells.Count - 1)
@@ -144,6 +146,21 @@ public class PlayerController : NetworkBehaviour
         }
 
         Debug.Log("Selected Spell: " + selectedSpellIndex + " out of " + currentSpells.Count);
+    }
+
+    public void SelectSpellWithKeyBoard(int spellIndex)
+    {
+        if (!IsOwner) return;
+
+        if (spellIndex >= 0 && spellIndex < currentSpells.Count)
+        {
+            selectedSpellIndex = spellIndex;
+            Debug.Log("Selected Spell: " + selectedSpellIndex + " out of " + currentSpells.Count);
+        }
+        else
+        {
+            Debug.LogWarning("Spell index out of range");
+        }
     }
 
     // Input handlers
@@ -210,7 +227,6 @@ public class PlayerController : NetworkBehaviour
         {
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
         }
-
     }
 
     // Spell management
@@ -239,7 +255,7 @@ public class PlayerController : NetworkBehaviour
     private void GroundCheck()
     {
         // Shoot Raycast down to check if player is grounded with an offset from the ground
-        Grounded = Physics.Raycast(transform.position + GroundCheck_Start, Vector3.down, out RaycastHit HitInfo, GroundCheck_Distance, gameController.GC.GroundLayer);
+        Grounded = Physics.Raycast(transform.position + GroundCheck_Start, Vector3.down, GroundCheck_Distance, gameController.GC.GroundLayer);
         // Show raycast
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
 
@@ -248,93 +264,83 @@ public class PlayerController : NetworkBehaviour
 
     private void WallCheck()
     {
-        
-        //return if not owner
-        if(!IsOwner) return;
-        //return if no mouse input
-    if(MoveInput.x == 0 &&  MoveInput.y == 0)
-        {
-            return;
-        }
+        if (!IsOwner) return;
+        if (MoveInput.x == 0 && MoveInput.y == 0) return;
+
         // Wall Run When Not On ground and input is towards the wall
         if (!Grounded)
         {
             // Grab Wall
             // Shoot RayCast to all sides of player to check for wall
             RaycastHit hit;
-            if (!Physics.Raycast(transform.position, -transform.up, out hit, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
+            if (!Physics.Raycast(transform.position, -transform.up, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
             {
-                if (Physics.Raycast(transform.position + WallCheck_Start, transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||Physics.Raycast(transform.position, -transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||Physics.Raycast(transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) || Physics.Raycast(transform.position, -transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer)) 
+                if (Physics.Raycast(transform.position + WallCheck_Start, transform.right, out hit, wallCheckDistance, LayerMask.GetMask("Wall")) ||
+                    Physics.Raycast(transform.position, -transform.right, out hit, wallCheckDistance, LayerMask.GetMask("Wall")) ||
+                    Physics.Raycast(transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, LayerMask.GetMask("Wall")) ||
+                    Physics.Raycast(transform.position, -transform.forward, out hit, wallCheckDistance, LayerMask.GetMask("Wall")))
                 {
                     IsWallRunning = true;
-                    print("We are running walla Babu");
+                    Debug.Log("Wall Running");
                 }
                 else
                 {
                     // If no wall is detected, stop wall running
-
                     IsWallRunning = false;
                     wallRunTimer_Tick = wallRunTimerDefault;
                     Gravity = true;
                 }
 
-            }
 
-            // Start ticking down the wall run timer
-            if (IsWallRunning)
-            { rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); //Problem line
-
-                wallRunTimer_Tick -= Time.deltaTime;
-                if (wallRunTimer_Tick <= 0)
+                // Start ticking down the wall run timer
+                if (IsWallRunning)
                 {
-                    // If the timer runs out, stop wall running
-                    wallRunTimer_Tick = wallRunTimerDefault;
-                    IsWallRunning = false;
-                    Gravity = true;
+                    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+                    wallRunTimer_Tick -= Time.deltaTime;
+                    if (wallRunTimer_Tick <= 0)
+                    {
+                        // If the timer runs out, stop wall running
+                        wallRunTimer_Tick = wallRunTimerDefault;
+                        IsWallRunning = false;
+                        Gravity = true;
+                    }
                 }
-            }
 
-            // If Player moves away from the wall, stop wall running
-            //get hit direction
-            Vector3 hitDirection = hit.normal;
-            if(MoveInput.x > 0 && hitDirection == transform.right)
-            {
-                IsWallRunning = false;
-            }
-            else if(MoveInput.x < 0 && hitDirection == -transform.right)
-            {
-                IsWallRunning = false;
-            }
-            else if(MoveInput.y > 0 && hitDirection == transform.forward)
-            {
-                IsWallRunning = false;
-            }
-            else if(MoveInput.y < 0 && hitDirection == -transform.forward)
-            {
-                IsWallRunning = false;
-            }
+                // If Player moves away from the wall, stop wall running
+                Vector3 hitDirection = hit.normal;
+                if ((MoveInput.x > 0 && hitDirection == transform.right) ||
+                    (MoveInput.x < 0 && hitDirection == -transform.right) ||
+                    (MoveInput.y > 0 && hitDirection == transform.forward) ||
+                    (MoveInput.y < 0 && hitDirection == -transform.forward))
+                {
+                    IsWallRunning = false;
+                }
 
+                // Only be able to wall run when not looking at the wall
+                if (Vector3.Dot(transform.forward, hitDirection) > 0.5f)
+                {
+                    IsWallRunning = false;
+                }
 
-            Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
-            Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
-            Debug.DrawRay(transform.position + WallCheck_Start, transform.forward * wallCheckDistance, Color.blue);
-            Debug.DrawRay(transform.position + WallCheck_Start, -transform.forward * wallCheckDistance, Color.blue);
-            Debug.DrawRay(transform.position + WallCheck_Start, -transform.up * DistanceFromFloorRequiredToWallRun, Color.blue);
-            print(IsWallRunning + " wallrunning State");
+                Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
+                Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
+                Debug.DrawRay(transform.position + WallCheck_Start, transform.forward * wallCheckDistance, Color.blue);
+                Debug.DrawRay(transform.position + WallCheck_Start, -transform.forward * wallCheckDistance, Color.blue);
+                Debug.DrawRay(transform.position + WallCheck_Start, -transform.up * DistanceFromFloorRequiredToWallRun, Color.blue);
+                Debug.Log(IsWallRunning + " wallrunning State");
+            }
         }
     }
 
     // Custom gravity application
     private void ApplyGravity()
     {
-        if(!Gravity)
-        {
-            return;
-        }
+        if (!Gravity) return;
+
         if (!Grounded || !IsWallRunning)
         {
             rb.AddForce(Vector3.down * gameController.GC.Gravity_force, ForceMode.Acceleration);
         }
-
     }
 }
