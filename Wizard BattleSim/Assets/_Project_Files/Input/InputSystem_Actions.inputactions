@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ChargeMana",
+                    "type": "Button",
+                    "id": "1cced997-b16e-4352-a91c-b522eeba3229",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -139,30 +148,8 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "right",
-                    "id": "d28c0f39-c96c-4216-9986-13329f4f7ccb",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "9f225cae-7afc-4b02-97c4-be7b095c4c1c",
-                    "path": "<Joystick>/stick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "left",
-                    "id": "64799b36-a4e4-4a81-bf81-827f94482642",
+                    "id": "6f023f08-23b6-42ce-8d82-cb9f46e02acf",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -172,9 +159,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "fc2cea03-20d6-4864-85e2-ea833a029e7d",
-                    "path": "<Joystick>/stick/left",
+                    "name": "right",
+                    "id": "b9d3a51b-2170-4acd-b41c-77bdbc5ac0d0",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -278,6 +265,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5344a61-6327-4ce3-aa38-22b3db7049b8",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChargeMana",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

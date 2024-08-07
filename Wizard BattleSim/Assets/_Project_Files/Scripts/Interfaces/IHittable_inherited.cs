@@ -16,7 +16,7 @@ public class IHittable_inherited : MonoBehaviour, IHitable
 
 
     public void GotHit(GameObject ObjectThatHitMe, Spell Spell, GameObject Caster ) {
-
+        
         if(Type == ObjectType.nullify) {
 
             Destroy(ObjectThatHitMe);

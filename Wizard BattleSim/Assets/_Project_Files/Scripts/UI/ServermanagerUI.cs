@@ -33,7 +33,6 @@ public class ServermanagerUI : NetworkBehaviour
 
     private void Update()
     {
-        print("Connected Player Count : " + PLayerNum.Value.ToString());
         PLayerNumText.text = "Connected Player Count : " + PLayerNum.Value.ToString();
 
 

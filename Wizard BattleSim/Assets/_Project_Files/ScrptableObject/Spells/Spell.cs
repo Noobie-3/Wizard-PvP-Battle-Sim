@@ -10,6 +10,7 @@ public class Spell : ScriptableObject {
     public GameObject Spell_Prefab;
     public float CooldownDuration; // Cooldown duration in seconds
     public float LifeTime;
+    public float ManaCost;
 
     public enum SpellType { // The Types Of Spells
         Spawnable_Spell,

@@ -1,31 +1,69 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using Unity.Netcode;
 using UnityEngine;
-[RequireComponent(typeof(Rigidbody))]
 
-public class First_Spell_Test_DELETELATER : MonoBehaviour, ISpell_Interface
+[RequireComponent(typeof(Rigidbody))]
+public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 {
     public Spell Curernt_spell;
     public Rigidbody Rb;
     public GameObject Caster { get; set; }
 
-    private void Start() {
-
+    private void Start()
+    {
+        if (!IsOwner) return;
+        if (!IsServer) return;
         Rb = GetComponent<Rigidbody>();
-        Destroy(gameObject, Curernt_spell.LifeTime);
+        DestroyObjectServerRpc(Curernt_spell.LifeTime);
     }
-
 
     private void OnTriggerEnter(Collider other)
     {
-        //check to see if object has Ihitable interface
-        //check to make sure ibject is not caster of spell
-        if (other.GetComponent<IHittable_inherited>() || other.GetComponentInChildren<IHittable_inherited>() && other.gameObject.GetComponent<PlayerController>())
+        if (!IsServer) return;
+
+        // Check to see if the object is hittable
+        if (other.gameObject.GetComponent<PlayerController>() != null)
         {
-            //if it does, call the GotHit method
-            other.GetComponent<IHittable_inherited>().GotHit(gameObject, Curernt_spell, Caster);
+            // If not caster
+            if (other.gameObject == Caster) return;
+
+            // If the object is hittable
+            Debug.Log("Hit someone besides the caster");
+            if (other.gameObject.GetComponent<IHitable>() == null) return;
+
+            // Call the ServerRpc to handle the hit
+            HandleHitServerRpc(other.gameObject.GetComponent<NetworkObject>().NetworkObjectId, Curernt_spell.Spell_Damage);
+            Debug.Log("Hit someone besides the caster and should do damage");
+
+            // Destroy the object
+            DestroyObjectServerRpc(0);
         }
     }
 
+    [ServerRpc]
+    void HandleHitServerRpc(ulong targetNetworkObjectId, float damage)
+    {
+        NetworkObject targetObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[targetNetworkObjectId];
+        if (targetObject != null)
+        {
+            var hittable = targetObject.GetComponent<IHitable>();
+            if (hittable != null)
+            {
+                hittable.GotHit(gameObject, Curernt_spell, Caster);
+                print("Supposed to call gothit");
+            }
+            else
+            {
+                Debug.Log("Object hit is not hittable");
+            }
+        }
+    }
+
+    // Server rpc to destroy the object
+    [ServerRpc]
+    void DestroyObjectServerRpc(float time)
+    {
+        Destroy(gameObject, time);
+    }
 }
