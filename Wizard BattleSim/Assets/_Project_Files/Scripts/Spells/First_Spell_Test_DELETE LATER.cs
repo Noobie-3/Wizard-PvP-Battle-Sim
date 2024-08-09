@@ -32,8 +32,8 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
             Debug.Log("Hit someone besides the caster");
             if (other.gameObject.GetComponent<IHitable>() == null) return;
 
-            // Call the ServerRpc to handle the hit
-            HandleHitServerRpc(other.gameObject.GetComponent<NetworkObject>().NetworkObjectId, Curernt_spell.Spell_Damage);
+            other.gameObject.GetComponent<PlayerController>().GotHit(gameObject, Curernt_spell, Caster);
+
             Debug.Log("Hit someone besides the caster and should do damage");
 
             // Destroy the object

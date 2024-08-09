@@ -300,7 +300,7 @@ public class PlayerController : NetworkBehaviour, IHitable
         GotHitServerRpc(spell.Spell_Damage);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     private void GotHitServerRpc(float damage)
     {
         Debug.Log($"GotHitServerRpc called on {gameObject.name} with damage: {damage}");
