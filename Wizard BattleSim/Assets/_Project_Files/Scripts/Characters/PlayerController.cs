@@ -59,6 +59,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] public Vector2 MoveInput;
     [SerializeField] public Vector2 MouseInput;
     [SerializeField] public bool Grounded;
+    [SerializeField]public bool IsRunning;
 
     // Spell variables
     [Header("Spell Settings")]
@@ -71,6 +72,8 @@ public class PlayerController : NetworkBehaviour, IHitable
     private float rotationX = 0f;
     private float rotationY = 0f;
     [SerializeField] private GameObject PlayerUi;
+    [SerializeField] private Animator Anim;
+
 
 
 
@@ -195,6 +198,15 @@ public class PlayerController : NetworkBehaviour, IHitable
     public void GetMoveInput(InputAction.CallbackContext context)
     {
         MoveInput = context.ReadValue<Vector2>();
+        if(MoveInput.x != 0 || MoveInput.y != 0)
+        {
+            IsRunning = true;
+        }
+        else
+        {
+            IsRunning = false;
+        }
+
     }
 
     public void GetMouseInput(InputAction.CallbackContext context)
@@ -347,6 +359,8 @@ public class PlayerController : NetworkBehaviour, IHitable
                 {
                     SetWallRunningServerRpc(true);
                     Debug.Log("Wall Running");
+
+
                 }
                 else
                 {
@@ -444,5 +458,40 @@ public class PlayerController : NetworkBehaviour, IHitable
     private void Start_ServerRpc()
     {
         Debug.Log("ServerRpc started");
+    }
+
+    private void AnimateObject()
+    {
+        if(!IsOwner) return;
+        if(Anim == null) return;
+        //Animation
+
+        if(IsRunning)
+        {
+            
+            Anim.SetBool("IsRunning", true);
+        }
+        else if(!IsRunning)
+        {
+            Anim.SetBool("IsRunning", false);
+        }
+
+        else if(Charging)
+        {
+            Anim.SetBool("IsCharging", true);
+        }
+        else if(!Charging)
+        {
+            Anim.SetBool("IsCharging", false);
+        }
+        else if(IsWallRunning)
+        {
+            Anim.SetBool("IsWallRunning", true);
+        }
+        else
+        {
+            Anim.SetBool("IsWallRunning", false);
+        }
+
     }
 }

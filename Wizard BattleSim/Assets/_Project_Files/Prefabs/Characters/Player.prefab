@@ -169,7 +169,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -440, y: 308.71}
+  m_AnchoredPosition: {x: -776.5, y: 447.00006}
   m_SizeDelta: {x: 100, y: 142.5879}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1288980185770303182
@@ -772,7 +772,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -321, y: 308.71}
+  m_AnchoredPosition: {x: -657.5, y: 447.00006}
   m_SizeDelta: {x: 100, y: 142.5879}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7939287980197321765
@@ -941,10 +941,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1550,7 +1550,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -555.5, y: 308.71}
+  m_AnchoredPosition: {x: -892, y: 447}
   m_SizeDelta: {x: 100, y: 142.5879}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5186573852953414109
@@ -1684,6 +1684,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5045131933928580335}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 691549921895159077}
   m_SourcePrefab: {fileID: 100100000, guid: 0aecf1900e79196499eda09b56842151, type: 3}
 --- !u!1 &5865634993870737861 stripped
 GameObject:
@@ -1744,6 +1747,27 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!95 &691549921895159077
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5865634993870737861}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cc68bf83ddd8bef4099933d0cc307b93, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &6497915119080852351 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0aecf1900e79196499eda09b56842151, type: 3}
