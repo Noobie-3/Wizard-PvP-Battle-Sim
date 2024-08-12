@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3626433132922035695}
   m_Layer: 5
   m_Name: Text (TMP)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 2376041510687936099}
   m_Layer: 5
   m_Name: Stamina
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -169,7 +169,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -776.5, y: 447.00006}
+  m_AnchoredPosition: {x: -776.5, y: 313.00003}
   m_SizeDelta: {x: 100, y: 142.5879}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1288980185770303182
@@ -251,6 +251,7 @@ Transform:
   - {fileID: 3515196710709728275}
   - {fileID: 2348575475153230355}
   - {fileID: 8184469214846069749}
+  - {fileID: 2571704665685252525}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7686046711235604627
@@ -554,12 +555,13 @@ MonoBehaviour:
   MaxStamina:
     m_InternalValue: 50
   StaminaRegenRate: 0.05
-  StaminaRegenRateDefault: 1
+  StaminaConsumptionRate: 10
   Charging: 0
   ChargeTime: 1
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
   Grounded: 0
+  IsRunning: 0
   currentSpells:
   - {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
   selectedSpellIndex: 0
@@ -568,6 +570,7 @@ MonoBehaviour:
   - 0
   - 0
   PlayerUi: {fileID: 0}
+  Anim: {fileID: 0}
 --- !u!1 &3333199694232863727
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,9 +634,9 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
+  m_XDamping: 0
+  m_YDamping: 0
+  m_ZDamping: 0
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
@@ -750,7 +753,7 @@ GameObject:
   - component: {fileID: 893224518585528183}
   m_Layer: 5
   m_Name: Mana
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -772,7 +775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -657.5, y: 447.00006}
+  m_AnchoredPosition: {x: -657.5, y: 313.00003}
   m_SizeDelta: {x: 100, y: 142.5879}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7939287980197321765
@@ -825,7 +828,7 @@ GameObject:
   - component: {fileID: 805464053671374558}
   m_Layer: 0
   m_Name: PlayerUI
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -879,7 +882,7 @@ GameObject:
   - component: {fileID: 6000363783203653949}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -982,7 +985,7 @@ GameObject:
   - component: {fileID: 7332015333973524520}
   m_Layer: 5
   m_Name: Text (TMP)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1117,7 +1120,7 @@ GameObject:
   - component: {fileID: 2047697510750450490}
   m_Layer: 0
   m_Name: PlayerCam
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1131,7 +1134,7 @@ Transform:
   m_GameObject: {fileID: 6085331379833305553}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15188564, y: -0.82120156, z: 0.25627035, w: 0.48670757}
-  m_LocalPosition: {x: 9.535222, y: 9.457469, z: 2.8447638}
+  m_LocalPosition: {x: 8.965223, y: 9.457468, z: 2.844764}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1243,7 +1246,7 @@ GameObject:
   - component: {fileID: 5417294205330549752}
   m_Layer: 5
   m_Name: Text (TMP)
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1375,7 +1378,7 @@ GameObject:
   - component: {fileID: 2571704665685252525}
   m_Layer: 0
   m_Name: Look_follow
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1389,11 +1392,11 @@ Transform:
   m_GameObject: {fileID: 6542100716797313235}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.32, y: 3.77, z: -1.104059}
+  m_LocalPosition: {x: 1.75, y: 3.77, z: -1.104059}
   m_LocalScale: {x: 1.9002737, y: 1.9002737, z: 1.9002737}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6497915119080852351}
+  m_Father: {fileID: 3790431187164763372}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7293953794906868307
 GameObject:
@@ -1409,7 +1412,7 @@ GameObject:
   - component: {fileID: 4162732838249144520}
   m_Layer: 0
   m_Name: Player_VCam
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1423,7 +1426,7 @@ Transform:
   m_GameObject: {fileID: 7293953794906868307}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15188564, y: -0.82120156, z: 0.25627035, w: 0.48670757}
-  m_LocalPosition: {x: 9.535222, y: 9.457469, z: 2.8447638}
+  m_LocalPosition: {x: 8.965223, y: 9.457469, z: 2.844764}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1446,7 +1449,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 10
+  m_Priority: 1
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 2571704665685252525}
   m_Follow: {fileID: 2571704665685252525}
@@ -1495,7 +1498,7 @@ MonoBehaviour:
   m_CameraRadius: 0.1
   m_Strategy: 1
   m_MaximumEffort: 4
-  m_SmoothingTime: 0
+  m_SmoothingTime: 0.3
   m_Damping: 0
   m_DampingWhenOccluded: 0
   m_OptimalTargetDistance: 0
@@ -1528,7 +1531,7 @@ GameObject:
   - component: {fileID: 8360457891193039325}
   m_Layer: 5
   m_Name: Health
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1550,7 +1553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -892, y: 447}
+  m_AnchoredPosition: {x: -892, y: 313}
   m_SizeDelta: {x: 100, y: 142.5879}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5186573852953414109
@@ -1651,6 +1654,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8088474374341014392, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: -6970754201476652721, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: -1556511518161076874, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: -1172867698588546884, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1663,6 +1678,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Amongus
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4521955081141223707, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 7513065131683079571, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1673,10 +1696,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 73c6242de84811e4c9f5fae1cf3f680d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0aecf1900e79196499eda09b56842151, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2571704665685252525}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       insertIndex: -1
@@ -1755,7 +1775,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5865634993870737861}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: cc68bf83ddd8bef4099933d0cc307b93, type: 2}
   m_CullingMode: 0

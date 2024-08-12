@@ -13,7 +13,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Movement variables
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private bool Gravity;
+    [SerializeField] private bool Gravity = true;
     [SerializeField] private float JumpHeight = 5f;
 
     // Ground check variables
@@ -23,11 +23,11 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     // Wall check variables
     [Header("Wall Check Settings")]
-    [SerializeField] private Vector3 WallCheck_Start = new Vector3(0, 3, 0);
+    [SerializeField] private Vector3 WallCheck_Start = new Vector3(0, 1.5f, 0);
     [SerializeField] private float wallCheckDistance = 1f;
-    [SerializeField] private float DistanceFromFloorRequiredToWallRun = 3f;
+    [SerializeField] private float DistanceFromFloorRequiredToWallRun = 1.5f;
     [SerializeField] private bool IsWallRunning = false;
-    [SerializeField] private bool AbleToWallRun = false;
+    [SerializeField] private bool AbleToWallRun = true;
 
     // Camera settings
     [Header("Camera Settings")]
@@ -49,8 +49,8 @@ public class PlayerController : NetworkBehaviour, IHitable
     public NetworkVariable<float> MaxMana = new NetworkVariable<float>(100);
     public NetworkVariable<float> Stamina = new NetworkVariable<float>(50);
     public NetworkVariable<float> MaxStamina = new NetworkVariable<float>(50);
-    [SerializeField] private float StaminaRegenRate = 1;
-    [SerializeField] private float StaminaRegenRateDefault = 1;
+    [SerializeField] private float StaminaRegenRate = 1f;
+    [SerializeField] private float StaminaConsumptionRate = 10f;
     public bool Charging = false;
     public float ChargeTime = 1f;
 
@@ -59,13 +59,13 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] public Vector2 MoveInput;
     [SerializeField] public Vector2 MouseInput;
     [SerializeField] public bool Grounded;
-    [SerializeField]public bool IsRunning;
+    [SerializeField] public bool IsRunning;
 
     // Spell variables
     [Header("Spell Settings")]
-    public List<Spell> currentSpells;
+    public List<Spell> currentSpells = new List<Spell>();
     [SerializeField] private int selectedSpellIndex = 0;
-    public List<float> spellCooldownTimers;
+    public List<float> spellCooldownTimers = new List<float>();
 
     // Private variables
     private Rigidbody rb;
@@ -74,8 +74,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] private GameObject PlayerUi;
     [SerializeField] private Animator Anim;
 
-
-
+    Vector3 moveDirection;
 
     public override void OnNetworkSpawn()
     {
@@ -89,6 +88,9 @@ public class PlayerController : NetworkBehaviour, IHitable
 
             rb = GetComponent<Rigidbody>();
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+            // Initialize spell cooldown timers based on current spells
+            UpdateSpellCooldownTimers();
         }
         else
         {
@@ -106,12 +108,15 @@ public class PlayerController : NetworkBehaviour, IHitable
     private void Update()
     {
         if (!IsOwner) return;
+
         SpellCooldown();
+        AnimateObject();
     }
 
     private void FixedUpdate()
     {
         if (!IsOwner) return;
+
         MoveObject();
         GroundCheck();
         WallCheck();
@@ -122,31 +127,47 @@ public class PlayerController : NetworkBehaviour, IHitable
     {
         if (Charging)
         {
-            print("Charging: cannot move");
+            // If charging a spell, prevent movement
             return;
         }
 
-        //Apply Gravity
+        // Apply Gravity if enabled
         if (Gravity)
         {
             rb.AddForce(Vector3.down * gameController.GC.Gravity_force, ForceMode.Acceleration);
         }
 
         // Calculate movement direction
-        Vector3 moveDirection = (Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y);
-        moveDirection.y = 0;
-
-        // Apply movement
-        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
-
-        // Rotate the player towards camera forward
-        if (MoveInput != Vector2.zero)
+        if (!IsWallRunning)
         {
-            MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
+            moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
+            moveDirection.y = 0;
+            // Apply movement
+            rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
+
+            // Rotate the player towards movement direction
+            if (MoveInput != Vector2.zero)
+            {
+                MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
+            }
+            else if (Grounded)
+            {
+                // If no input and grounded, stop horizontal movement
+                rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            }
         }
-        else if (Grounded)
+        else
         {
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            // If wall running, adjust velocity to maintain wall run
+            Vector3 wallRunDirection = Vector3.Cross(currentWallNormal, Vector3.up).normalized;
+
+            // Determine if player is moving forward along the wall
+            if (Vector3.Dot(wallRunDirection, Cam.forward) < 0)
+            {
+                wallRunDirection = -wallRunDirection;
+            }
+
+            rb.velocity = wallRunDirection * moveSpeed + Vector3.up * rb.velocity.y;
         }
     }
 
@@ -156,13 +177,13 @@ public class PlayerController : NetworkBehaviour, IHitable
         if (!IsOwner) return;
 
         int newSpellIndex = selectedSpellIndex;
-        if (scrollInput >= 0)
+        if (scrollInput > 0)
         {
             newSpellIndex--;
             if (newSpellIndex < 0)
                 newSpellIndex = currentSpells.Count - 1;
         }
-        else if (scrollInput <= 0)
+        else if (scrollInput < 0)
         {
             newSpellIndex++;
             if (newSpellIndex >= currentSpells.Count)
@@ -198,15 +219,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     public void GetMoveInput(InputAction.CallbackContext context)
     {
         MoveInput = context.ReadValue<Vector2>();
-        if(MoveInput.x != 0 || MoveInput.y != 0)
-        {
-            IsRunning = true;
-        }
-        else
-        {
-            IsRunning = false;
-        }
-
+        IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
     }
 
     public void GetMouseInput(InputAction.CallbackContext context)
@@ -233,10 +246,14 @@ public class PlayerController : NetworkBehaviour, IHitable
 
         if (spellCooldownTimers[selectedSpellIndex] <= 0)
         {
-            CastSpellServerRpc(new Vector3(transform.position.x, transform.position.y + 2, transform.position.z), transform.rotation, selectedSpellIndex, Cam.transform.forward);
+            Vector3 spawnPosition = transform.position + Vector3.up * 2; // Adjust spawn position as needed
+            Vector3 shotDirection = Cam.forward;
+
+            CastSpellServerRpc(spawnPosition, transform.rotation, selectedSpellIndex, shotDirection);
             spellCooldownTimers[selectedSpellIndex] = currentSpells[selectedSpellIndex].CooldownDuration;
         }
     }
+
     [ServerRpc]
     private void CastSpellServerRpc(Vector3 position, Quaternion rotation, int spellIndex, Vector3 shotDir)
     {
@@ -258,11 +275,10 @@ public class PlayerController : NetworkBehaviour, IHitable
         Mana.Value -= spellUsed.ManaCost;
         castedSpell.GetComponent<ISpell_Interface>().Caster = gameObject;
 
-        print(castedSpell.GetComponent<ISpell_Interface>().Caster.name + " is the name of the caster");
-
         Rigidbody spellRb = castedSpell.GetComponent<Rigidbody>();
         spellRb.velocity = shotDir * spellUsed.Spell_Speed;
     }
+
     private void SpellCooldown()
     {
         for (int i = 0; i < spellCooldownTimers.Count; i++)
@@ -277,9 +293,16 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Jump logic
     public void JumpInput(InputAction.CallbackContext context)
     {
-        if (context.performed && Grounded)
+        if (context.performed && (Grounded || IsWallRunning))
         {
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
+
+            if (IsWallRunning)
+            {
+                // Upon jumping off the wall, reset wall running state
+                SetWallRunningServerRpc(false);
+                AbleToWallRun = false; // Prevent immediate wall running again
+            }
         }
     }
 
@@ -308,7 +331,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Health, Mana, Stamina handling
     public void GotHit(GameObject self, Spell spell, GameObject caster)
     {
-         Debug.Log($"GotHit called on {gameObject.name} by {caster.name} with {spell.name}");
+        Debug.Log($"GotHit called on {gameObject.name} by {caster.name} with {spell.name}");
         GotHitServerRpc(spell.Spell_Damage);
     }
 
@@ -328,21 +351,31 @@ public class PlayerController : NetworkBehaviour, IHitable
             Health.Value = MaxHealth.Value;
             Mana.Value = MaxMana.Value;
             Stamina.Value = MaxStamina.Value;
+
+            // Implement respawn logic here (e.g., move player to spawn point)
         }
     }
+
     // Ground check
     private void GroundCheck()
     {
-        Grounded = Physics.Raycast(transform.position + GroundCheck_Start, -transform.up, GroundCheck_Distance, gameController.GC.GroundLayer);
+        Grounded = Physics.Raycast(MeshToRotate.transform.position + GroundCheck_Start, Vector3.down, GroundCheck_Distance, gameController.GC.GroundLayer);
 
-        Debug.DrawRay(transform.position + GroundCheck_Start, -transform.up * GroundCheck_Distance, Color.red);
+        if (Grounded)
+        {
+            JumpUsed = false;
+        }
+
+        Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
     }
 
-    // Wall check
+    // Wall check and wall running logic
+    private Vector3 currentWallNormal = Vector3.zero;
+
     private void WallCheck()
     {
         if (!IsOwner) return;
-        if (MoveInput.x == 0 && MoveInput.y == 0) return;
+        if (MoveInput == Vector2.zero) return;
 
         if (!Grounded)
         {
@@ -350,17 +383,40 @@ public class PlayerController : NetworkBehaviour, IHitable
 
             RaycastHit hit;
 
-            if (!Physics.Raycast(transform.position, -transform.up, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
+            // Check if player is high enough from the ground to wall run
+            if (!Physics.Raycast(MeshToRotate.transform.position, Vector3.down, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
             {
-                if (Physics.Raycast(transform.position + WallCheck_Start, transform.right, out hit, wallCheckDistance, LayerMask.GetMask("Wall")) ||
-                    Physics.Raycast(transform.position, -transform.right, out hit, wallCheckDistance, LayerMask.GetMask("Wall")) ||
-                    Physics.Raycast(transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, LayerMask.GetMask("Wall")) ||
-                    Physics.Raycast(transform.position, -transform.forward, out hit, wallCheckDistance, LayerMask.GetMask("Wall")))
+                // Perform raycasts in multiple directions to detect walls
+                if (Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, MeshToRotate.transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, -transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, -transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (MeshToRotate.transform.right + MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-MeshToRotate.transform.right + MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer))
                 {
-                    SetWallRunningServerRpc(true);
-                    Debug.Log("Wall Running");
+                    Vector3 wallNormal = hit.normal;
 
+                    // Determine if the wall is suitable for wall running (e.g., not too steep)
+                    if (Vector3.Dot(wallNormal, Vector3.up) < 0.1f)
+                    {
+                        currentWallNormal = wallNormal;
 
+                        // Rotate the player to face 90 degrees along the wall
+                        Vector3 wallForward = Vector3.Cross(wallNormal, Vector3.up).normalized;
+
+                        // Determine the correct direction based on player's input
+                        if (Vector3.Dot(wallForward, Cam.forward) < 0)
+                        {
+                            wallForward = -wallForward;
+                        }
+
+                        Quaternion targetRotation = Quaternion.LookRotation(wallForward, Vector3.up);
+                        MeshToRotate.transform.rotation = targetRotation;
+
+                        SetWallRunningServerRpc(true);
+                    }
                 }
                 else
                 {
@@ -370,8 +426,9 @@ public class PlayerController : NetworkBehaviour, IHitable
 
                 if (IsWallRunning && AbleToWallRun)
                 {
+                    // Zero out vertical velocity to prevent falling
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-                    ReduceStaminaServerRpc(Time.deltaTime * 10);
+                    ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
 
                     if (Stamina.Value <= 0)
                     {
@@ -381,27 +438,16 @@ public class PlayerController : NetworkBehaviour, IHitable
                     }
                 }
 
-                Vector3 hitDirection = hit.normal;
-                if ((MoveInput.x > 0 && hitDirection == transform.right) ||
-                    (MoveInput.x < 0 && hitDirection == -transform.right) ||
-                    (MoveInput.y > 0 && hitDirection == transform.forward) ||
-                    (MoveInput.y < 0 && hitDirection == -transform.forward))
-                {
-                    SetWallRunningServerRpc(false);
-                }
-
-                if (Vector3.Dot(transform.forward, hitDirection) > 0.5f)
-                {
-                    SetWallRunningServerRpc(false);
-                }
-
+                // Debugging raycasts
                 Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, transform.forward * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, -transform.forward * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, -transform.up * DistanceFromFloorRequiredToWallRun, Color.blue);
-
-                Debug.Log(IsWallRunning + " wallrunning State");
+                Debug.DrawRay(transform.position + WallCheck_Start, (transform.right + transform.forward).normalized * wallCheckDistance, Color.blue);
+                Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right + transform.forward).normalized * wallCheckDistance, Color.blue);
+                Debug.DrawRay(transform.position + WallCheck_Start, (transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
+                Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
+                Debug.DrawRay(transform.position + WallCheck_Start, Vector3.down * DistanceFromFloorRequiredToWallRun, Color.blue);
             }
         }
         else
@@ -415,6 +461,13 @@ public class PlayerController : NetworkBehaviour, IHitable
     private void SetWallRunningServerRpc(bool isWallRunning)
     {
         IsWallRunning = isWallRunning;
+
+        if (!IsWallRunning)
+        {
+            // Reset rotation to face the direction of the camera smoothly
+            Quaternion targetRotation = Quaternion.Euler(0, Cam.eulerAngles.y, 0);
+            MeshToRotate.transform.rotation = Quaternion.Slerp(MeshToRotate.transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
     }
 
     [ServerRpc]
@@ -433,6 +486,7 @@ public class PlayerController : NetworkBehaviour, IHitable
                 if (Mana.Value < MaxMana.Value)
                 {
                     Mana.Value += 1f;
+                    Mana.Value = Mathf.Min(Mana.Value, MaxMana.Value); // Clamp to MaxMana
                 }
             }
             yield return new WaitForSeconds(1f);
@@ -448,50 +502,22 @@ public class PlayerController : NetworkBehaviour, IHitable
                 if (Stamina.Value < MaxStamina.Value && !IsWallRunning)
                 {
                     Stamina.Value += StaminaRegenRate;
+                    Stamina.Value = Mathf.Min(Stamina.Value, MaxStamina.Value); // Clamp to MaxStamina
                 }
             }
             yield return new WaitForSeconds(0.5f);
         }
     }
 
-    [ServerRpc]
-    private void Start_ServerRpc()
-    {
-        Debug.Log("ServerRpc started");
-    }
-
+    // Animation handling
     private void AnimateObject()
     {
-        if(!IsOwner) return;
-        if(Anim == null) return;
-        //Animation
+        if (!IsOwner) return;
+        if (Anim == null) return;
 
-        if(IsRunning)
-        {
-            
-            Anim.SetBool("IsRunning", true);
-        }
-        else if(!IsRunning)
-        {
-            Anim.SetBool("IsRunning", false);
-        }
-
-        else if(Charging)
-        {
-            Anim.SetBool("IsCharging", true);
-        }
-        else if(!Charging)
-        {
-            Anim.SetBool("IsCharging", false);
-        }
-        else if(IsWallRunning)
-        {
-            Anim.SetBool("IsWallRunning", true);
-        }
-        else
-        {
-            Anim.SetBool("IsWallRunning", false);
-        }
-
+        // Update animation parameters
+        Anim.SetBool("IsRunning", IsRunning);
+        Anim.SetBool("IsCharging", Charging);
+        Anim.SetBool("IsWallRunning", IsWallRunning);
     }
 }
