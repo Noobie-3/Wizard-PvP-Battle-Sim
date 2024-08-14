@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 8413427847099256021}
   - component: {fileID: 2780197439549934678}
   m_Layer: 0
-  m_Name: Player
+  m_Name: BluePlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -266,7 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1558211036
+  GlobalObjectIdHash: 1648132711
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1147,7 +1147,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6085331379833305553}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -1673,7 +1673,7 @@ PrefabInstance:
     - target: {fileID: -527856836801495606, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 73c6242de84811e4c9f5fae1cf3f680d, type: 2}
+      objectReference: {fileID: 2100000, guid: 4cdaf683efe0a9e47a0d28301ac0ba54, type: 2}
     - target: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       propertyPath: m_Name
       value: Amongus
@@ -1689,11 +1689,11 @@ PrefabInstance:
     - target: {fileID: 7513065131683079571, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 73c6242de84811e4c9f5fae1cf3f680d, type: 2}
+      objectReference: {fileID: 2100000, guid: 4cdaf683efe0a9e47a0d28301ac0ba54, type: 2}
     - target: {fileID: 7895844864049628588, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 73c6242de84811e4c9f5fae1cf3f680d, type: 2}
+      objectReference: {fileID: 2100000, guid: 4cdaf683efe0a9e47a0d28301ac0ba54, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
