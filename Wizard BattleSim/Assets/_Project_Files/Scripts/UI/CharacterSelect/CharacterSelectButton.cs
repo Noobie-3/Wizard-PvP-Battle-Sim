@@ -17,7 +17,7 @@ public class CharacterSelectButton : MonoBehaviour
         iconImage.sprite = character.Icon;
 
         this.characterSelect = characterSelect;
-        
+
         Character = character;
     }
 
@@ -33,3 +33,4 @@ public class CharacterSelectButton : MonoBehaviour
         button.interactable = false;
     }
 }
+

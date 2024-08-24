@@ -32,6 +32,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Camera settings
     [Header("Camera Settings")]
     [SerializeField] private Transform Cam;
+    [SerializeField] private Camera camComponent;
     [SerializeField] private CinemachineVirtualCamera Vcam;
     [SerializeField] private float CamSpeed = 1f;
     [SerializeField] private float RotateSpeed = 1f;
@@ -80,6 +81,10 @@ public class PlayerController : NetworkBehaviour, IHitable
     {
         if (IsOwner)
         {
+            DontDestroyOnLoad(gameObject);
+            camComponent.enabled = false;
+            camComponent.enabled = true;
+
             audioListener.enabled = true;
             Vcam.Priority = 1;
 
@@ -100,6 +105,7 @@ public class PlayerController : NetworkBehaviour, IHitable
 
         if (IsServer)
         {
+
             StartCoroutine(ManaRegen());
             StartCoroutine(StaminaRegen());
         }
@@ -116,7 +122,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     private void FixedUpdate()
     {
         if (!IsOwner) return;
-
+        if(gameController.GC == null) return;
         MoveObject();
         GroundCheck();
         WallCheck();
@@ -125,6 +131,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Movement logic
     private void MoveObject()
     {
+
         if (Charging)
         {
             // If charging a spell, prevent movement

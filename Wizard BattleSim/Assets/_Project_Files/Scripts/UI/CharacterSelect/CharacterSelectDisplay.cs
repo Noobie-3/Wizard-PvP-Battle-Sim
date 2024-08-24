@@ -16,10 +16,12 @@ public class CharacterSelectDisplay : NetworkBehaviour
     [SerializeField] private Transform introSpawnPoint;
     [SerializeField] private TMP_Text joinCodeText;
     [SerializeField] private Button lockInButton;
+    [SerializeField] private Button StartButton;
+    [SerializeField] ServerManager serverManager;
 
     private GameObject introInstance;
     private List<CharacterSelectButton> characterButtons = new List<CharacterSelectButton>();
-    private NetworkList<CharacterSelectState> players;
+    public NetworkList<CharacterSelectState> players;
 
     private void Awake()
     {
@@ -30,6 +32,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     {
         if (IsClient)
         {
+            StartButton.gameObject.SetActive(false);
             Character[] allCharacters = characterDatabase.GetAllCharacters();
 
             foreach (var character in allCharacters)
@@ -52,6 +55,10 @@ public class CharacterSelectDisplay : NetworkBehaviour
             {
                 HandleClientConnected(client.ClientId);
             }
+        }
+        if(IsHost)
+        {
+            StartButton.gameObject.SetActive(true);
         }
     }
 
@@ -103,12 +110,13 @@ public class CharacterSelectDisplay : NetworkBehaviour
     {
         for (int i = 0; i < players.Count; i++)
         {
+            // Skip if the player is not the local player
             if (players[i].ClientId != NetworkManager.Singleton.LocalClientId) { continue; }
-
+            // Skip if the player is already locked in
             if (players[i].IsLockedIn) { return; }
-
+            // Skip if the player is selecting the same character
             if (players[i].CharacterId == character.Id) { return; }
-
+            // Skip if the character is already taken
             if (IsCharacterTaken(character.Id, false)) { return; }
         }
 
@@ -237,4 +245,14 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
         return false;
     }
+
+
+    //Start Game Button
+    public void StartGame()
+    {
+        serverManager.StartGame();
+    }
+
+
+
 }

@@ -534,6 +534,7 @@ MonoBehaviour:
   IsWallRunning: 0
   AbleToWallRun: 0
   Cam: {fileID: 3515196710709728275}
+  camComponent: {fileID: 8520869707384783922}
   Vcam: {fileID: 2560195394970560980}
   CamSpeed: 15
   RotateSpeed: 1

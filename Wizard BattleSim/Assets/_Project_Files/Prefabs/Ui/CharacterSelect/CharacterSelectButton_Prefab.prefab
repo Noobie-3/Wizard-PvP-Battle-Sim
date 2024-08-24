@@ -32,7 +32,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4059586910225399153}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -91,7 +90,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1639168958307097048}
+      - m_Target: {fileID: 5994071008651975570}
         m_TargetAssemblyTypeName: CharacterSelectButton, Assembly-CSharp
         m_MethodName: SelectCharacter
         m_Mode: 1
@@ -142,9 +141,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4059586910225399153}
-  - component: {fileID: 1639168958307097048}
+  - component: {fileID: 5994071008651975570}
   m_Layer: 0
-  m_Name: CharacterSelectButton
+  m_Name: CharacterSelectButton_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -165,14 +164,13 @@ RectTransform:
   - {fileID: 7077975074430131171}
   - {fileID: 7894480512048976082}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1639168958307097048
+--- !u!114 &5994071008651975570
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -181,7 +179,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7221047252617048192}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fd84e14584c7074fa5d795992f7059c, type: 3}
+  m_Script: {fileID: 11500000, guid: 9fedcbfb1ae977d46bec307bf6a4f724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 911025431141497785}
@@ -218,7 +216,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4059586910225399153}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
