@@ -18,4 +18,5 @@ MonoBehaviour:
   CooldownDuration: 3
   LifeTime: 15
   ManaCost: 15
-  Spell_Type: 0
+  Spell_Name: FireBall_Test
+  Spell_Type: 1
