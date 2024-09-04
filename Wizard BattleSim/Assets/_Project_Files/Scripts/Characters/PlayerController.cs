@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
 using Cinemachine;
+using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : NetworkBehaviour, IHitable
@@ -13,6 +15,8 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Movement variables
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private int moveSpeedDefault;
+    [SerializeField] Vector3 moveDirection;
     [SerializeField] private bool Gravity = true;
     [SerializeField] private float JumpHeight = 5f;
 
@@ -67,15 +71,25 @@ public class PlayerController : NetworkBehaviour, IHitable
     public List<Spell> currentSpells = new List<Spell>();
     [SerializeField] private int selectedSpellIndex = 0;
     public List<float> spellCooldownTimers = new List<float>();
+    public float CastSpeed = 1f;
+    public bool IsCasting = false;
+    [SerializeField] private GameObject CastTimeUi;
+    [SerializeField] private string CastSpellChargeText;
+    [SerializeField] private float CastTimeProgress;
+    [SerializeField] private UnityEngine.UI.Image CastTimeProgressUI;
+
 
     // Private variables
     private Rigidbody rb;
     private float rotationX = 0f;
     private float rotationY = 0f;
+    [SerializeField] private Vector3 CurrentRotation;
     [SerializeField] private GameObject PlayerUi;
     [SerializeField] private Animator Anim;
 
-    Vector3 moveDirection;
+    // Wall check and wall running logic
+    private Vector3 currentWallNormal = Vector3.zero;
+    
 
     public override void OnNetworkSpawn()
     {
@@ -121,17 +135,25 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     private void FixedUpdate()
     {
+
+
+        
+
         if (!IsOwner) return;
         if(gameController.GC == null) return;
         MoveObject();
         GroundCheck();
         WallCheck();
+        if (MoveInput != Vector2.zero)
+        {
+            RotateObjectServerRpc(moveDirection);
+        }
+
     }
 
     // Movement logic
     private void MoveObject()
     {
-
         if (Charging)
         {
             // If charging a spell, prevent movement
@@ -152,12 +174,7 @@ public class PlayerController : NetworkBehaviour, IHitable
             // Apply movement
             rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
 
-            // Rotate the player towards movement direction
-            if (MoveInput != Vector2.zero)
-            {
-                MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
-            }
-            else if (Grounded)
+            if (MoveInput == Vector2.zero && Grounded)
             {
                 // If no input and grounded, stop horizontal movement
                 rb.velocity = new Vector3(0, rb.velocity.y, 0);
@@ -175,6 +192,22 @@ public class PlayerController : NetworkBehaviour, IHitable
             }
 
             rb.velocity = wallRunDirection * moveSpeed + Vector3.up * rb.velocity.y;
+        }
+    }
+
+    //Rotation logic
+    [ServerRpc]
+    private void RotateObjectServerRpc(Vector3 moveDirection)
+    {
+        RotateObjectClientRpc(moveDirection);
+    }
+
+    [ClientRpc]
+    private void RotateObjectClientRpc(Vector3 moveDirection)
+    {
+        if (MeshToRotate != null)
+        {
+            MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
         }
     }
 
@@ -243,7 +276,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Spell casting logic
     public void CastSpell()
     {
-        if (!IsOwner) return;
+        if (!IsOwner) return ;
 
         if (selectedSpellIndex < 0 || selectedSpellIndex >= currentSpells.Count)
         {
@@ -251,14 +284,13 @@ public class PlayerController : NetworkBehaviour, IHitable
             return;
         }
 
-        if (spellCooldownTimers[selectedSpellIndex] <= 0)
+        
+        if (spellCooldownTimers[selectedSpellIndex] <= 0 && IsCasting == false)
         {
-            Vector3 spawnPosition = transform.position + Vector3.up * 2; // Adjust spawn position as needed
-            Vector3 shotDirection = Cam.forward;
-
-            CastSpellServerRpc(spawnPosition, transform.rotation, selectedSpellIndex, shotDirection);
-            spellCooldownTimers[selectedSpellIndex] = currentSpells[selectedSpellIndex].CooldownDuration;
+            IsCasting = true;
+            StartCoroutine(ChargeSpell());
         }
+        return;
     }
 
     [ServerRpc]
@@ -302,6 +334,8 @@ public class PlayerController : NetworkBehaviour, IHitable
     {
         if (context.performed && (Grounded || IsWallRunning))
         {
+            IsCasting = false;
+            StopCoroutine(ChargeSpell());
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
 
             if (IsWallRunning)
@@ -376,8 +410,7 @@ public class PlayerController : NetworkBehaviour, IHitable
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
     }
 
-    // Wall check and wall running logic
-    private Vector3 currentWallNormal = Vector3.zero;
+
 
     private void WallCheck()
     {
@@ -526,5 +559,40 @@ public class PlayerController : NetworkBehaviour, IHitable
         Anim.SetBool("IsRunning", IsRunning);
         Anim.SetBool("IsCharging", Charging);
         Anim.SetBool("IsWallRunning", IsWallRunning);
+    }
+
+    public IEnumerator ChargeSpell()
+    {
+        while (IsCasting)
+        {
+            moveSpeed = moveSpeedDefault / 2;
+
+            yield return new WaitForSeconds(CastSpeed);
+
+            Vector3 spawnPosition = transform.position + Vector3.up * 2; // Adjust spawn position as needed
+            Vector3 shotDirection = Cam.forward;
+            CastSpellServerRpc(spawnPosition, transform.rotation, selectedSpellIndex, shotDirection);
+            spellCooldownTimers[selectedSpellIndex] = currentSpells[selectedSpellIndex].CooldownDuration;
+             IsCasting = false;
+            if (CastTimeUi != null)
+            {
+                CastTimeUi.SetActive(false);
+            }
+        }
+
+        moveSpeed = moveSpeedDefault;
+    }
+
+    public IEnumerator ChargeSpellUI()
+    {
+        if (CastTimeUi != null)
+        {
+            CastTimeUi.SetActive(true);
+        }
+
+        CastTimeProgress += Time.deltaTime;
+        CastTimeProgressUI.fillAmount = CastTimeProgress / ChargeTime;
+        CastSpellChargeText = "Casting: " + currentSpells[selectedSpellIndex].Spell_Name + " (" + (int)(CastTimeProgress * 100 / ChargeTime) + "%)";
+        yield return new WaitForSeconds(.06f);
     }
 }
