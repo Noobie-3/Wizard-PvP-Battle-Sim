@@ -6,6 +6,7 @@ using Unity.Netcode;
 using Cinemachine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
+using TMPro;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : NetworkBehaviour, IHitable
@@ -74,9 +75,11 @@ public class PlayerController : NetworkBehaviour, IHitable
     public float CastSpeed = 1f;
     public bool IsCasting = false;
     [SerializeField] private GameObject CastTimeUi;
-    [SerializeField] private string CastSpellChargeText;
+    [SerializeField] private TextMeshProUGUI CastSpellChargeText;
     [SerializeField] private float CastTimeProgress;
     [SerializeField] private UnityEngine.UI.Image CastTimeProgressUI;
+    [SerializeField] private Coroutine CastTimeProgressEnum;
+    [SerializeField] private Coroutine ChargeSpellIEnum;
 
 
     // Private variables
@@ -288,7 +291,9 @@ public class PlayerController : NetworkBehaviour, IHitable
         if (spellCooldownTimers[selectedSpellIndex] <= 0 && IsCasting == false)
         {
             IsCasting = true;
-            StartCoroutine(ChargeSpell());
+             ChargeSpellIEnum = StartCoroutine(ChargeSpell());
+            CastTimeProgressEnum = StartCoroutine(ChargeSpellUI());
+
         }
         return;
     }
@@ -332,10 +337,13 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Jump logic
     public void JumpInput(InputAction.CallbackContext context)
     {
+
+        ResetChargeSpell();
         if (context.performed && (Grounded || IsWallRunning))
         {
-            IsCasting = false;
-            StopCoroutine(ChargeSpell());
+
+
+            
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
 
             if (IsWallRunning)
@@ -344,6 +352,20 @@ public class PlayerController : NetworkBehaviour, IHitable
                 SetWallRunningServerRpc(false);
                 AbleToWallRun = false; // Prevent immediate wall running again
             }
+        }
+    }
+
+    public void ResetChargeSpell()
+    {
+        //Stop the casting of a spell and reset the charge time and move speed
+        IsCasting = false;
+        StopCoroutine(ChargeSpellIEnum);
+        StopCoroutine(CastTimeProgressEnum);
+        moveSpeed = moveSpeedDefault;
+        CastTimeProgress = 0;
+        if (CastTimeUi != null)
+        {
+            CastTimeUi.SetActive(false);
         }
     }
 
@@ -585,14 +607,22 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     public IEnumerator ChargeSpellUI()
     {
-        if (CastTimeUi != null)
+        while (IsCasting)
         {
-            CastTimeUi.SetActive(true);
-        }
+            if (CastTimeUi != null)
+            {
+                CastTimeUi.SetActive(true);
+            }
 
-        CastTimeProgress += Time.deltaTime;
-        CastTimeProgressUI.fillAmount = CastTimeProgress / ChargeTime;
-        CastSpellChargeText = "Casting: " + currentSpells[selectedSpellIndex].Spell_Name + " (" + (int)(CastTimeProgress * 100 / ChargeTime) + "%)";
-        yield return new WaitForSeconds(.06f);
+            CastTimeProgress += Time.deltaTime;
+            CastTimeProgressUI.fillAmount = CastTimeProgress / ChargeTime;
+            CastSpellChargeText.text = "Casting: " + currentSpells[selectedSpellIndex].Spell_Name + " (" + (int)(CastTimeProgress * 100 / ChargeTime) + "%)";
+            if(CastTimeProgress * 100 / ChargeTime >= 100)
+            {
+                CastTimeProgress = 1;
+            }
+            yield return new WaitForSeconds(.01f);
+        }
+        CastTimeProgress = 0;
     }
 }

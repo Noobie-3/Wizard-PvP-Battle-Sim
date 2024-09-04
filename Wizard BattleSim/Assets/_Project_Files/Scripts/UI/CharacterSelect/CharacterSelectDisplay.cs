@@ -250,6 +250,12 @@ public class CharacterSelectDisplay : NetworkBehaviour
     //Start Game Button
     public void StartGame()
     {
+        if(players.Count < 2)
+        {
+            print("Not enough players to start game");
+            return;
+        }
+
         serverManager.StartGame();
     }
 

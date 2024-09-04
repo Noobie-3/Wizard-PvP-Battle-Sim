@@ -12,6 +12,8 @@ public class ServerManager : NetworkBehaviour
     [SerializeField] CharacterSelectDisplay characterSelectDisplay;
     [SerializeField] private CharacterDatabase characterDatabase;
     public Dictionary<ulong, int> playerCharacterIds = new Dictionary<ulong, int>();
+    public Coroutine DataPrintCoRo;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +30,7 @@ public class ServerManager : NetworkBehaviour
             Destroy(gameObject);
         }
 
-
+        DataPrintCoRo = StartCoroutine(PrintData());
 
     }
 
@@ -36,7 +38,6 @@ public class ServerManager : NetworkBehaviour
     {
         if (characterSelectDisplay != null)
         {
-            print(characterSelectDisplay.players.Count + " Player Count in Select Display");
 
             // Update dictionary with current players
             foreach (var player in characterSelectDisplay.players)
@@ -79,11 +80,7 @@ public class ServerManager : NetworkBehaviour
                 playerCharacterIds.Remove(key);
             }
 
-            // Print out dictionary
-            foreach (var item in playerCharacterIds)
-            {
-                Debug.Log("Key: " + item.Key + " Value: " + item.Value);
-            }
+
         }
     }
 
@@ -123,6 +120,8 @@ public class ServerManager : NetworkBehaviour
 
     public void StartGame()
     {
+        StopCoroutine(DataPrintCoRo);
+
         if (IsHost)
         {
             StartGameServerRpc();
@@ -140,6 +139,24 @@ public class ServerManager : NetworkBehaviour
         }
         // Load the new scene on the server and all clients
         NetworkManager.Singleton.SceneManager.LoadScene("Scene_01", UnityEngine.SceneManagement.LoadSceneMode.Single);
+
+    }
+
+
+    public IEnumerator PrintData()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5);
+            
+
+            // Print out dictionary
+            foreach (var item in playerCharacterIds)
+            {
+                Debug.Log("Key: " + item.Key + " Value: " + item.Value);
+            }
+            print(characterSelectDisplay.players.Count + " Player Count in Select Display");
+        }
 
     }
 }
