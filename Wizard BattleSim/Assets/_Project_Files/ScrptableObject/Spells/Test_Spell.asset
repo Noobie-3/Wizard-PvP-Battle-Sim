@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: Test_Spell
   m_EditorClassIdentifier: 
-  Spell_Speed: 30
+  Spell_Speed: 55
   Spell_Damage: 99
   Spell_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
   CooldownDuration: 3

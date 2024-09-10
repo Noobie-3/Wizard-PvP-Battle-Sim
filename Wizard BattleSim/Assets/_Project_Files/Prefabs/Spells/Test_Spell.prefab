@@ -4973,9 +4973,9 @@ MonoBehaviour:
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
-  SyncRotAngleX: 0
-  SyncRotAngleY: 0
-  SyncRotAngleZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
   SyncScaleX: 0
   SyncScaleY: 0
   SyncScaleZ: 0
@@ -5013,4 +5013,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Curernt_spell: {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
-  Rb: {fileID: 0}
+  Rb: {fileID: 3609423411881503315}

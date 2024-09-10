@@ -7,6 +7,7 @@ using Cinemachine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : NetworkBehaviour, IHitable
@@ -39,6 +40,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] private Transform Cam;
     [SerializeField] private Camera camComponent;
     [SerializeField] private CinemachineVirtualCamera Vcam;
+    [SerializeField] public Vector3 CameraRotation = new Vector3(0, 0, 0);
     [SerializeField] private float CamSpeed = 1f;
     [SerializeField] private float RotateSpeed = 1f;
     [SerializeField] private float minXRotation = -45f;   // Minimum X rotation (pitch)
@@ -134,6 +136,7 @@ public class PlayerController : NetworkBehaviour, IHitable
 
         SpellCooldown();
         AnimateObject();
+        
     }
 
     private void FixedUpdate()
@@ -312,15 +315,42 @@ public class PlayerController : NetworkBehaviour, IHitable
             // Play "cannot cast" sound and animation
             return;
         }
-
+        print("Made it here 1");
         Spell spellUsed = currentSpells[spellIndex];
-        GameObject castedSpell = Instantiate(spellUsed.Spell_Prefab, position, rotation);
-        castedSpell.GetComponent<NetworkObject>().Spawn();
-        Mana.Value -= spellUsed.ManaCost;
-        castedSpell.GetComponent<ISpell_Interface>().Caster = gameObject;
+        // Instantiate the spell prefab and set its properties
 
-        Rigidbody spellRb = castedSpell.GetComponent<Rigidbody>();
-        spellRb.velocity = shotDir * spellUsed.Spell_Speed;
+        GameObject castedSpell = Instantiate(spellUsed.Spell_Prefab.gameObject, position, rotation);
+        NetworkObject networkObject = castedSpell.GetComponent<NetworkObject>();
+
+        networkObject.Spawn();
+
+        //You were tryig to figur e out why caster is not working
+
+        print("Made it here 2");
+        Mana.Value -= spellUsed.ManaCost;
+        if(castedSpell.GetComponent<ISpell_Interface>() == null)
+        {
+            print("Spell interface is null could not set");
+        }
+        else if (castedSpell.GetComponentInChildren<ISpell_Interface>() == null)
+        {
+
+           print("Spell interface is null in children could not set");
+        }
+        else if (castedSpell.GetComponent<ISpell_Interface>() != null)  
+        {
+            print("Spell interface is not null");
+            castedSpell.GetComponent<ISpell_Interface>().Caster = gameObject;
+
+        }
+        else if (castedSpell.GetComponentInChildren<ISpell_Interface>() != null)
+        {
+            print("Spell interface is not null in children");
+            castedSpell.GetComponentInChildren<ISpell_Interface>().Caster = gameObject;
+        }
+
+        print(spellUsed.Spell_Name + " casted by " + castedSpell.GetComponent<ISpell_Interface>().Caster.name + " at " + position + " in direction " + shotDir);
+ 
     }
 
     private void SpellCooldown()
@@ -593,7 +623,13 @@ public class PlayerController : NetworkBehaviour, IHitable
 
             Vector3 spawnPosition = transform.position + Vector3.up * 2; // Adjust spawn position as needed
             Vector3 shotDirection = Cam.forward;
+            RaycastHit hit;
+            if (Physics.Raycast(Cam.position, Cam.forward, out hit, Mathf.Infinity))
+            {
+                shotDirection = hit.point;
+            }
             CastSpellServerRpc(spawnPosition, transform.rotation, selectedSpellIndex, shotDirection);
+            SetSpellData();
             spellCooldownTimers[selectedSpellIndex] = currentSpells[selectedSpellIndex].CooldownDuration;
              IsCasting = false;
             if (CastTimeUi != null)
@@ -604,6 +640,15 @@ public class PlayerController : NetworkBehaviour, IHitable
 
         moveSpeed = moveSpeedDefault;
     }
+
+    public void SetSpellData()
+    {
+        var RayCastHit = Physics.Raycast(Cam.position, Cam.forward, out RaycastHit hit, Mathf.Infinity);
+
+        this.CameraRotation = RayCastHit ? hit.point : Cam.forward;
+        print("Looking at " + CameraRotation);
+    }
+
 
     public IEnumerator ChargeSpellUI()
     {

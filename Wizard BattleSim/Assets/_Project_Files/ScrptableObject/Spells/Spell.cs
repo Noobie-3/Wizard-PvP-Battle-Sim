@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Spell", menuName = "Spell")]
 public class Spell : ScriptableObject {
+
     public float Spell_Speed; // Spell Travel Speed
     public float Spell_Damage; // Spell's Damage
     public GameObject Spell_Prefab;

@@ -60,10 +60,27 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
         }
     }
 
+    
+
     // Server rpc to destroy the object
     [ServerRpc]
     void DestroyObjectServerRpc(float time)
     {
         Destroy(gameObject, time);
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if(Caster == null)
+        {
+            print("Caster is null");
+        }
+        else
+        {
+            var Player = Caster.GetComponent<PlayerController>();
+            Rb.AddForce(Player.CameraRotation * Curernt_spell.Spell_Speed);
+            print("Shot in the dir of the camera" + Player.CameraRotation+ " the speed is " + Curernt_spell.Spell_Speed);
+
+        }
     }
 }
