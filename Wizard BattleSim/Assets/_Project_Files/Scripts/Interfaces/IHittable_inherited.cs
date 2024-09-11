@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class IHittable_inherited : MonoBehaviour, IHitable
@@ -15,7 +16,7 @@ public class IHittable_inherited : MonoBehaviour, IHitable
     [SerializeField] ObjectType Type;
 
 
-    public void GotHit(GameObject ObjectThatHitMe, Spell Spell, GameObject Caster ) {
+    public void GotHit(GameObject ObjectThatHitMe, Spell Spell, NetworkObject Caster ) {
         
         if(Type == ObjectType.nullify) {
 
@@ -27,7 +28,7 @@ public class IHittable_inherited : MonoBehaviour, IHitable
         else if(Type == ObjectType.Player) {
 
 
-            if(gameObject != Caster)
+            if(gameObject.GetComponent<NetworkObject>() != Caster)
             {
                 print("Player got hit");
             }

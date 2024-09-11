@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public interface ISpell_Interface
 {
-    GameObject Caster { get; set; }
+    NetworkObject Caster { get; set; }
 }

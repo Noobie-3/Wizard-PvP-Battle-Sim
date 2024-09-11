@@ -23,7 +23,7 @@ public class Spell : ScriptableObject {
     };
     public SpellType Spell_Type;
 
-    public void SpellHit(GameObject other, GameObject self, GameObject Caster)
+    public void SpellHit(GameObject other, GameObject self, NetworkObject Caster)
     {
         if (other.GetComponent<IHittable_inherited>() || other.GetComponentInChildren<IHittable_inherited>())
         { 

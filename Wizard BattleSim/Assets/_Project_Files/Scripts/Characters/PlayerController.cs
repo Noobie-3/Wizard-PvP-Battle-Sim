@@ -322,32 +322,24 @@ public class PlayerController : NetworkBehaviour, IHitable
         GameObject castedSpell = Instantiate(spellUsed.Spell_Prefab.gameObject, position, rotation);
         NetworkObject networkObject = castedSpell.GetComponent<NetworkObject>();
 
+        //print true if caster can be set
+        if(castedSpell.GetComponentInChildren<ISpell_Interface>() != null) {
+
+            print("Caster can be set");
+            // set caster
+
+            castedSpell.GetComponentInChildren<ISpell_Interface>().Caster = NetworkObject;
+        }
+
+
+
+
         networkObject.Spawn();
 
         //You were tryig to figur e out why caster is not working
 
         print("Made it here 2");
         Mana.Value -= spellUsed.ManaCost;
-        if(castedSpell.GetComponent<ISpell_Interface>() == null)
-        {
-            print("Spell interface is null could not set");
-        }
-        else if (castedSpell.GetComponentInChildren<ISpell_Interface>() == null)
-        {
-
-           print("Spell interface is null in children could not set");
-        }
-        else if (castedSpell.GetComponent<ISpell_Interface>() != null)  
-        {
-            print("Spell interface is not null");
-            castedSpell.GetComponent<ISpell_Interface>().Caster = gameObject;
-
-        }
-        else if (castedSpell.GetComponentInChildren<ISpell_Interface>() != null)
-        {
-            print("Spell interface is not null in children");
-            castedSpell.GetComponentInChildren<ISpell_Interface>().Caster = gameObject;
-        }
 
         print(spellUsed.Spell_Name + " casted by " + castedSpell.GetComponent<ISpell_Interface>().Caster.name + " at " + position + " in direction " + shotDir);
  
@@ -422,7 +414,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     }
 
     // Health, Mana, Stamina handling
-    public void GotHit(GameObject self, Spell spell, GameObject caster)
+    public void GotHit(GameObject self, Spell spell, NetworkObject caster)
     {
         Debug.Log($"GotHit called on {gameObject.name} by {caster.name} with {spell.name}");
         GotHitServerRpc(spell.Spell_Damage);
