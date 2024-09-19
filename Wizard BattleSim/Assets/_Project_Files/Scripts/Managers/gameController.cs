@@ -13,6 +13,7 @@ public class gameController : MonoBehaviour
     public string PLayerTag = "Player";
     public LayerMask GroundLayer;
     public LayerMask WallLayer;
+    public bool DebugMode;
     private void Awake() {
 
         if(GC == null) {

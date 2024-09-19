@@ -10,10 +10,11 @@ public class Spell : ScriptableObject {
     public float Spell_Speed; // Spell Travel Speed
     public float Spell_Damage; // Spell's Damage
     public GameObject Spell_Prefab;
-    public float CooldownDuration; // Cooldown duration in seconds
+    public float CooldownDuration = 1; // Cooldown duration in seconds
     public float LifeTime;
     public float ManaCost;
     public string Spell_Name; // Spell Name
+    public float Spell_CastTime = 2; // Spell Cast Time
 
     public enum SpellType { // The Types Of Spells
         Spawnable_Spell,
@@ -23,11 +24,11 @@ public class Spell : ScriptableObject {
     };
     public SpellType Spell_Type;
 
-    public void SpellHit(GameObject other, GameObject self, NetworkObject Caster)
+    public void SpellHit(GameObject other, GameObject self, ulong CasterId)
     {
         if (other.GetComponent<IHittable_inherited>() || other.GetComponentInChildren<IHittable_inherited>())
         { 
-           other.GetComponent<IHittable_inherited>().GotHit(self, this, Caster);
+           other.GetComponent<IHittable_inherited>().GotHit(self, this, CasterId);
         }
     }
 }

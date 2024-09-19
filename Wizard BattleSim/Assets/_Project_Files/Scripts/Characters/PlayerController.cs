@@ -9,15 +9,14 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Rendering.UI;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(SpellCaster))]
 public class PlayerController : NetworkBehaviour, IHitable
 {
-    // Serialized variables (Editor exposed)
 
     // Movement variables
     [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private int moveSpeedDefault;
+    [SerializeField] public float moveSpeed = 5f;
+    [SerializeField] public float moveSpeedDefault;
     [SerializeField] Vector3 moveDirection;
     [SerializeField] private bool Gravity = true;
     [SerializeField] private float JumpHeight = 5f;
@@ -37,10 +36,10 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     // Camera settings
     [Header("Camera Settings")]
-    [SerializeField] private Transform Cam;
-    [SerializeField] private Camera camComponent;
+    [SerializeField] public Transform Cam;
+    [SerializeField] public Camera camComponent;
     [SerializeField] private CinemachineVirtualCamera Vcam;
-    [SerializeField] public Vector3 CameraRotation = new Vector3(0, 0, 0);
+    public Vector3 CameraRotation;
     [SerializeField] private float CamSpeed = 1f;
     [SerializeField] private float RotateSpeed = 1f;
     [SerializeField] private float minXRotation = -45f;   // Minimum X rotation (pitch)
@@ -61,6 +60,9 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] private float StaminaConsumptionRate = 10f;
     public bool Charging = false;
     public float ChargeTime = 1f;
+    [SerializeField] private bool IsDebug = true;
+
+    public ulong MyClientID => NetworkObject.OwnerClientId;
 
     // Input variables
     [Header("Input Settings")]
@@ -69,28 +71,28 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] public bool Grounded;
     [SerializeField] public bool IsRunning;
 
+
     // Spell variables
     [Header("Spell Settings")]
     public List<Spell> currentSpells = new List<Spell>();
-    [SerializeField] private int selectedSpellIndex = 0;
+    [SerializeField] public int selectedSpellIndex = 0;
     public List<float> spellCooldownTimers = new List<float>();
-    public float CastSpeed = 1f;
+    public SpellCaster SpellCasterScript;
     public bool IsCasting = false;
-    [SerializeField] private GameObject CastTimeUi;
-    [SerializeField] private TextMeshProUGUI CastSpellChargeText;
-    [SerializeField] private float CastTimeProgress;
-    [SerializeField] private UnityEngine.UI.Image CastTimeProgressUI;
-    [SerializeField] private Coroutine CastTimeProgressEnum;
-    [SerializeField] private Coroutine ChargeSpellIEnum;
+    public float CastSpeed = 1f;
+    public Coroutine CastIenum;
+    public Vector3 CastDir;
 
 
     // Private variables
     private Rigidbody rb;
     private float rotationX = 0f;
     private float rotationY = 0f;
-    [SerializeField] private Vector3 CurrentRotation;
+    [SerializeField] private NetworkVariable<Vector3> CurrentRotation;
     [SerializeField] private GameObject PlayerUi;
     [SerializeField] private Animator Anim;
+
+
 
     // Wall check and wall running logic
     private Vector3 currentWallNormal = Vector3.zero;
@@ -115,6 +117,7 @@ public class PlayerController : NetworkBehaviour, IHitable
 
             // Initialize spell cooldown timers based on current spells
             UpdateSpellCooldownTimers();
+            StartCoroutine(PrintData());
         }
         else
         {
@@ -154,6 +157,8 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             RotateObjectServerRpc(moveDirection);
         }
+
+
 
     }
 
@@ -200,6 +205,19 @@ public class PlayerController : NetworkBehaviour, IHitable
             rb.velocity = wallRunDirection * moveSpeed + Vector3.up * rb.velocity.y;
         }
     }
+    public void StartCast()
+    {
+        if(!IsOwner) return;
+        if(!IsCasting)
+        {
+            print("StartingCast from player");
+            IsCasting = true;
+
+
+
+        }
+    }
+    
 
     //Rotation logic
     [ServerRpc]
@@ -215,52 +233,9 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
         }
+        
+
     }
-
-    // Spell selection logic
-    public void ScrollSpellSelection(float scrollInput)
-    {
-        if (!IsOwner) return;
-
-        int newSpellIndex = selectedSpellIndex;
-        if (scrollInput > 0)
-        {
-            newSpellIndex--;
-            if (newSpellIndex < 0)
-                newSpellIndex = currentSpells.Count - 1;
-        }
-        else if (scrollInput < 0)
-        {
-            newSpellIndex++;
-            if (newSpellIndex >= currentSpells.Count)
-                newSpellIndex = 0;
-        }
-
-        SetSelectedSpellIndexServerRpc(newSpellIndex);
-    }
-
-    [ServerRpc]
-    private void SetSelectedSpellIndexServerRpc(int newSpellIndex)
-    {
-        selectedSpellIndex = newSpellIndex;
-        Debug.Log("Selected Spell: " + selectedSpellIndex + " out of " + currentSpells.Count);
-    }
-
-    public void SelectSpellWithKeyBoard(int spellIndex)
-    {
-        if (!IsOwner) return;
-
-        if (spellIndex >= 0 && spellIndex < currentSpells.Count)
-        {
-            SetSelectedSpellIndexServerRpc(spellIndex);
-            Debug.Log("Selected Spell: " + selectedSpellIndex + " out of " + currentSpells.Count);
-        }
-        else
-        {
-            Debug.LogWarning("Spell index out of range");
-        }
-    }
-
     // Input handlers
     public void GetMoveInput(InputAction.CallbackContext context)
     {
@@ -279,71 +254,6 @@ public class PlayerController : NetworkBehaviour, IHitable
         Charging = context.ReadValueAsButton();
     }
 
-    // Spell casting logic
-    public void CastSpell()
-    {
-        if (!IsOwner) return ;
-
-        if (selectedSpellIndex < 0 || selectedSpellIndex >= currentSpells.Count)
-        {
-            Debug.LogWarning("Spell index out of range");
-            return;
-        }
-
-        
-        if (spellCooldownTimers[selectedSpellIndex] <= 0 && IsCasting == false)
-        {
-            IsCasting = true;
-             ChargeSpellIEnum = StartCoroutine(ChargeSpell());
-            CastTimeProgressEnum = StartCoroutine(ChargeSpellUI());
-
-        }
-        return;
-    }
-
-    [ServerRpc]
-    private void CastSpellServerRpc(Vector3 position, Quaternion rotation, int spellIndex, Vector3 shotDir)
-    {
-        if (spellIndex < 0 || spellIndex >= currentSpells.Count)
-        {
-            Debug.LogWarning("Spell index out of range");
-            return;
-        }
-
-        if (Mana.Value < currentSpells[spellIndex].ManaCost)
-        {
-            // Play "cannot cast" sound and animation
-            return;
-        }
-        print("Made it here 1");
-        Spell spellUsed = currentSpells[spellIndex];
-        // Instantiate the spell prefab and set its properties
-
-        GameObject castedSpell = Instantiate(spellUsed.Spell_Prefab.gameObject, position, rotation);
-        NetworkObject networkObject = castedSpell.GetComponent<NetworkObject>();
-
-        //print true if caster can be set
-        if(castedSpell.GetComponentInChildren<ISpell_Interface>() != null) {
-
-            print("Caster can be set");
-            // set caster
-
-            castedSpell.GetComponentInChildren<ISpell_Interface>().Caster = NetworkObject;
-        }
-
-
-
-
-        networkObject.Spawn();
-
-        //You were tryig to figur e out why caster is not working
-
-        print("Made it here 2");
-        Mana.Value -= spellUsed.ManaCost;
-
-        print(spellUsed.Spell_Name + " casted by " + castedSpell.GetComponent<ISpell_Interface>().Caster.name + " at " + position + " in direction " + shotDir);
- 
-    }
 
     private void SpellCooldown()
     {
@@ -360,10 +270,10 @@ public class PlayerController : NetworkBehaviour, IHitable
     public void JumpInput(InputAction.CallbackContext context)
     {
 
-        ResetChargeSpell();
+        //SpellCasterScript.ResetChargeSpell();
         if (context.performed && (Grounded || IsWallRunning))
         {
-
+            SpellCasterScript.TristanCast();
 
             
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
@@ -377,19 +287,6 @@ public class PlayerController : NetworkBehaviour, IHitable
         }
     }
 
-    public void ResetChargeSpell()
-    {
-        //Stop the casting of a spell and reset the charge time and move speed
-        IsCasting = false;
-        StopCoroutine(ChargeSpellIEnum);
-        StopCoroutine(CastTimeProgressEnum);
-        moveSpeed = moveSpeedDefault;
-        CastTimeProgress = 0;
-        if (CastTimeUi != null)
-        {
-            CastTimeUi.SetActive(false);
-        }
-    }
 
     // Spell management
     public void AddSpell(Spell newSpell)
@@ -414,9 +311,8 @@ public class PlayerController : NetworkBehaviour, IHitable
     }
 
     // Health, Mana, Stamina handling
-    public void GotHit(GameObject self, Spell spell, NetworkObject caster)
+    public void GotHit(GameObject self, Spell spell, ulong casterID)
     {
-        Debug.Log($"GotHit called on {gameObject.name} by {caster.name} with {spell.name}");
         GotHitServerRpc(spell.Spell_Damage);
     }
 
@@ -605,61 +501,13 @@ public class PlayerController : NetworkBehaviour, IHitable
         Anim.SetBool("IsWallRunning", IsWallRunning);
     }
 
-    public IEnumerator ChargeSpell()
+    public IEnumerator PrintData()
     {
-        while (IsCasting)
+        if (!IsOwner) yield return null;
+        while (IsDebug)
         {
-            moveSpeed = moveSpeedDefault / 2;
 
-            yield return new WaitForSeconds(CastSpeed);
-
-            Vector3 spawnPosition = transform.position + Vector3.up * 2; // Adjust spawn position as needed
-            Vector3 shotDirection = Cam.forward;
-            RaycastHit hit;
-            if (Physics.Raycast(Cam.position, Cam.forward, out hit, Mathf.Infinity))
-            {
-                shotDirection = hit.point;
-            }
-            CastSpellServerRpc(spawnPosition, transform.rotation, selectedSpellIndex, shotDirection);
-            SetSpellData();
-            spellCooldownTimers[selectedSpellIndex] = currentSpells[selectedSpellIndex].CooldownDuration;
-             IsCasting = false;
-            if (CastTimeUi != null)
-            {
-                CastTimeUi.SetActive(false);
-            }
+           yield  return new WaitForSeconds(5f);
         }
-
-        moveSpeed = moveSpeedDefault;
-    }
-
-    public void SetSpellData()
-    {
-        var RayCastHit = Physics.Raycast(Cam.position, Cam.forward, out RaycastHit hit, Mathf.Infinity);
-
-        this.CameraRotation = RayCastHit ? hit.point : Cam.forward;
-        print("Looking at " + CameraRotation);
-    }
-
-
-    public IEnumerator ChargeSpellUI()
-    {
-        while (IsCasting)
-        {
-            if (CastTimeUi != null)
-            {
-                CastTimeUi.SetActive(true);
-            }
-
-            CastTimeProgress += Time.deltaTime;
-            CastTimeProgressUI.fillAmount = CastTimeProgress / ChargeTime;
-            CastSpellChargeText.text = "Casting: " + currentSpells[selectedSpellIndex].Spell_Name + " (" + (int)(CastTimeProgress * 100 / ChargeTime) + "%)";
-            if(CastTimeProgress * 100 / ChargeTime >= 100)
-            {
-                CastTimeProgress = 1;
-            }
-            yield return new WaitForSeconds(.01f);
-        }
-        CastTimeProgress = 0;
     }
 }

@@ -5,5 +5,19 @@ using UnityEngine;
 
 public interface ISpell_Interface
 {
-    NetworkObject Caster { get; set; }
+    ulong CasterId { get; set; }
+
+    // bool CanCastSpell();
+
+
+    void FireSpell();
+
+
+
+    void Initialize(ulong casterId, Vector3 direction);
+
+
+
+
+
 }

@@ -89,6 +89,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CancelSpell_Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""7f138805-4659-4696-a481-b4c96ce30ad8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -300,6 +309,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""ChargeMana"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e96f8973-a20a-4fe6-b659-6949415fa7ec"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CancelSpell_Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a2b9dab-f11d-4d87-9fa4-a7f9acf6e5b4"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CancelSpell_Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -315,6 +346,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_ChangeSpellMouseScroll = m_Player.FindAction("ChangeSpellMouseScroll", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_ChargeMana = m_Player.FindAction("ChargeMana", throwIfNotFound: true);
+        m_Player_CancelSpell_Dash = m_Player.FindAction("CancelSpell_Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -383,6 +415,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ChangeSpellMouseScroll;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_ChargeMana;
+    private readonly InputAction m_Player_CancelSpell_Dash;
     public struct PlayerActions
     {
         private @InputSystem_Actions m_Wrapper;
@@ -394,6 +427,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         public InputAction @ChangeSpellMouseScroll => m_Wrapper.m_Player_ChangeSpellMouseScroll;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @ChargeMana => m_Wrapper.m_Player_ChargeMana;
+        public InputAction @CancelSpell_Dash => m_Wrapper.m_Player_CancelSpell_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -424,6 +458,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @ChargeMana.started += instance.OnChargeMana;
             @ChargeMana.performed += instance.OnChargeMana;
             @ChargeMana.canceled += instance.OnChargeMana;
+            @CancelSpell_Dash.started += instance.OnCancelSpell_Dash;
+            @CancelSpell_Dash.performed += instance.OnCancelSpell_Dash;
+            @CancelSpell_Dash.canceled += instance.OnCancelSpell_Dash;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -449,6 +486,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @ChargeMana.started -= instance.OnChargeMana;
             @ChargeMana.performed -= instance.OnChargeMana;
             @ChargeMana.canceled -= instance.OnChargeMana;
+            @CancelSpell_Dash.started -= instance.OnCancelSpell_Dash;
+            @CancelSpell_Dash.performed -= instance.OnCancelSpell_Dash;
+            @CancelSpell_Dash.canceled -= instance.OnCancelSpell_Dash;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -475,5 +515,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         void OnChangeSpellMouseScroll(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnChargeMana(InputAction.CallbackContext context);
+        void OnCancelSpell_Dash(InputAction.CallbackContext context);
     }
 }

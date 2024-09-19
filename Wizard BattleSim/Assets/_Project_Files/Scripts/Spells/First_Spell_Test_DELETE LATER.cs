@@ -1,113 +1,121 @@
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 {
-    public Spell Curernt_spell;
+    public Spell Curernt_spell;  // Your spell data object
     public Rigidbody Rb;
-    public NetworkObject Caster { get; set; }
-    public bool Printdata = true;
+    public ulong CasterId { get; set; }
+    public bool Printdata = false;
+    public bool hasShotSpell = false;
+    public Vector3 Direction;
 
     private void Start()
     {
-        if (!IsOwner) return;
 
 
+        if (IsServer)
+        {
+            DestroyObjectServerRpc(Curernt_spell.LifeTime);  // Destroy object after lifetime on the server
+        }
+    }
 
-        if (!IsServer) return;
+    // This method is called by the player to initialize the spell
+    public void Initialize(ulong casterId, Vector3 direction)
+    {
         Rb = GetComponent<Rigidbody>();
-        DestroyObjectServerRpc(Curernt_spell.LifeTime);
+        this.CasterId = casterId;  // Set the caster's ID
+        this.Direction = direction; // Set the movement direction
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!IsServer) return;
-
-        // Check to see if the object is hittable
-        if (other.gameObject.GetComponent<PlayerController>() != null)
-        {
-            // If not caster
-            if (other.GetComponent<NetworkObject>() == Caster) return;
-
-            // If the object is hittable
-            Debug.Log("Hit someone besides the caster");
-            if (other.gameObject.GetComponent<IHitable>() == null) return;
-
-            other.gameObject.GetComponent<PlayerController>().GotHit(gameObject, Curernt_spell, Caster);
-
-            Debug.Log("Hit someone besides the caster and should do damage");
-
-            // Destroy the object
-            DestroyObjectServerRpc(0);
-        }
-    }
-
-    [ServerRpc]
-    void HandleHitServerRpc(ulong targetNetworkObjectId, float damage)
-    {
-        NetworkObject targetObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[targetNetworkObjectId];
-        if (targetObject != null)
-        {
-            var hittable = targetObject.GetComponent<IHitable>();
-            if (hittable != null)
-            {
-                hittable.GotHit(gameObject, Curernt_spell, Caster);
-                print("Supposed to call gothit");
-            }
-            else
-            {
-                Debug.Log("Object hit is not hittable");
-            }
-        }
-    }
-
     
+    public void FireSpell()
+    {
+        Rb.AddForce(Direction * Curernt_spell.Spell_Speed, ForceMode.Impulse);
+        print("Fired the spell");
+    }
 
-    // Server rpc to destroy the object
-    [ServerRpc]
-    void DestroyObjectServerRpc(float time)
+
+
+
+    // Server RPC to destroy the object after a set amount of time
+    [ServerRpc(RequireOwnership = false)]
+    private void DestroyObjectServerRpc(float time)
     {
         Destroy(gameObject, time);
     }
 
-    public override void OnNetworkSpawn()
+    private void OnTriggerEnter(Collider collision)
     {
-        if(Caster == null)
+        NetworkObject networkObject;
+        if(collision.transform.root.GetComponent<NetworkObject>() == null)
         {
-            print("Caster is null");
+            if (collision.transform.root.GetComponentInChildren<NetworkObject>() == null)
+            {
+                return;
+            }
+            else
+            {
+                networkObject = collision.transform.root.GetComponentInChildren<NetworkObject>();
+            }
         }
         else
         {
-            var Player = Caster.gameObject.transform.root.GetComponent<PlayerController>();
-            if(Player == null) {
-                print("Player is null");
-            }
-            else {
-                print("Player is " + Player.name);
-            }
+            networkObject = collision.transform.root.GetComponent<NetworkObject>();
+        }
+        // Ignore collision with the caster
+        if (networkObject.NetworkObjectId == CasterId)
+        {
+            return; // Do nothing if the collision is with the caster
+        }
 
-            if (Curernt_spell == null) {
-                print("Spell is null");
-            }
-            else {
-                print("Spell is " + Curernt_spell.Spell_Name);
-            }
-            Rb.AddForce(Player.CameraRotation * Curernt_spell.Spell_Speed);
-            print("Shot in the dir of the camera" + Player.CameraRotation+ " the speed is " + Curernt_spell.Spell_Speed);
+        IHitable ihitable;
+        networkObject.TryGetComponent<IHitable>(out ihitable);
+        if (ihitable == null)
+        {
+            ihitable = networkObject.GetComponentInChildren<IHitable>();
+        }
 
+
+
+        // Trigger the spell's effects when it hits something
+        TriggerEffect(ihitable);
+
+        // Destroy the spell after the collision (on the server)
+        if (IsServer)
+        {
+            Destroy(gameObject); // This will sync with clients due to network synchronization
         }
     }
 
+    // Method to trigger any spell effects (like damage or visual effects)
+    private void TriggerEffect(IHitable IHitable)
+    {
+        if(IHitable == null)
+        {
+            return;
+        }
+        IHitable.GotHit(gameObject, Curernt_spell, CasterId);  // Call the GotHit method on the object that was hit
+        // Add custom effects here, such as damage or explosions
 
-    public IEnumerator PrintData() {
-        while (Printdata) {
+    }
 
-            print("The spell is " + Curernt_spell.Spell_Name + " the speed is " + Curernt_spell.Spell_Speed + " the damage is " + Curernt_spell.Spell_Damage + "caster is " + Caster.name);
+    public IEnumerator PrintData()
+    {
+        while (Printdata)
+        {
+            if (Curernt_spell == null)
+            {
+                print("Spell is null");
+            }
 
-            yield return 5f;
+            if (Rb == null)
+            {
+                print("Rb is null");
+            }
+
+            yield return 1f;
         }
         yield return null;
     }

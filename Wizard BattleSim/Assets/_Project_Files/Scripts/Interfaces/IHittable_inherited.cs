@@ -16,7 +16,7 @@ public class IHittable_inherited : MonoBehaviour, IHitable
     [SerializeField] ObjectType Type;
 
 
-    public void GotHit(GameObject ObjectThatHitMe, Spell Spell, NetworkObject Caster ) {
+    public void GotHit(GameObject ObjectThatHitMe, Spell Spell, ulong CasterId ) {
         
         if(Type == ObjectType.nullify) {
 
@@ -28,10 +28,7 @@ public class IHittable_inherited : MonoBehaviour, IHitable
         else if(Type == ObjectType.Player) {
 
 
-            if(gameObject.GetComponent<NetworkObject>() != Caster)
-            {
-                print("Player got hit");
-            }
+            print("Got hit by a spell" + Spell.Spell_Name + "from" + CasterId);
 
         }   
         

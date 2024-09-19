@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 2780197439549934678}
   - component: {fileID: 7650289928224766538}
   - component: {fileID: 2349790136761067290}
+  - component: {fileID: 6344507787613272955}
   m_Layer: 0
   m_Name: BluePlayer
   m_TagString: Player
@@ -176,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1648132711
+  GlobalObjectIdHash: 1606857192
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -295,8 +296,8 @@ MonoBehaviour:
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/d,/Keyboard/a]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2780197439549934678}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 6344507787613272955}
+        m_TargetAssemblyTypeName: SpellCaster, Assembly-CSharp
         m_MethodName: CastSpell
         m_Mode: 1
         m_Arguments:
@@ -327,8 +328,8 @@ MonoBehaviour:
     m_ActionName: Player/ChangeSpellKeyBoard[/Keyboard/1,/Keyboard/2,/Keyboard/3]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2780197439549934678}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 6344507787613272955}
+        m_TargetAssemblyTypeName: SpellCaster, Assembly-CSharp
         m_MethodName: ScrollSpellSelection
         m_Mode: 4
         m_Arguments:
@@ -373,6 +374,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1cced997-b16e-4352-a91c-b522eeba3229
     m_ActionName: Player/ChargeMana[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7f138805-4659-4696-a481-b4c96ce30ad8
+    m_ActionName: Player/CancelSpell_Dash[/Keyboard/ctrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -405,6 +410,7 @@ MonoBehaviour:
   Cam: {fileID: 1268512142287369520}
   camComponent: {fileID: 7643569436653525090}
   Vcam: {fileID: 63737811755778350}
+  CameraRotation: {x: 0, y: 0, z: 0}
   CamSpeed: 15
   RotateSpeed: 1
   minXRotation: -45
@@ -428,6 +434,7 @@ MonoBehaviour:
   StaminaConsumptionRate: 10
   Charging: 0
   ChargeTime: 1
+  IsDebug: 1
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
   Grounded: 0
@@ -439,13 +446,12 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  CastSpeed: 2
+  SpellCasterScript: {fileID: 6344507787613272955}
   IsCasting: 0
-  CastTimeUi: {fileID: 477735268436977550}
-  CastSpellChargeText: {fileID: 7297526403532924771}
-  CastTimeProgress: 0
-  CastTimeProgressUI: {fileID: 7764115807126176781}
-  CurrentRotation: {x: 0, y: 0, z: 0}
+  CastSpeed: 1
+  CastDir: {x: 0, y: 0, z: 0}
+  CurrentRotation:
+    m_InternalValue: {x: 0, y: 0, z: 0}
   PlayerUi: {fileID: 5401508036957598647}
   Anim: {fileID: 691549921895159077}
 --- !u!114 &7650289928224766538
@@ -491,6 +497,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6344507787613272955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2657112206591253793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9068b074c0a50034ebc1801ae2ea613c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpellBook: {fileID: 11400000, guid: b1d00285386ba37429ae6313800792d7, type: 2}
+  CastTimeUi: {fileID: 477735268436977550}
+  CastSpellChargeText: {fileID: 7297526403532924771}
+  CastTimeProgress: 0
+  CastTimeProgressUI: {fileID: 7764115807126176781}
+  Player: {fileID: 2780197439549934678}
+  CurrentSpells: 000000000100000002000000
+  CurrentSpellsTimers:
+  - 0
+  - 0
+  - 0
+  SelectedSpell: 0
+  MaxSpells: 3
+  IsChangingSpell: 0
+  IsCasting: 0
 --- !u!1 &4375391853159626425
 GameObject:
   m_ObjectHideFlags: 0
