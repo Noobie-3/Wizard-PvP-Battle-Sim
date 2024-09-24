@@ -28,7 +28,7 @@ public class Spell : ScriptableObject {
     {
         if (other.GetComponent<IHittable_inherited>() || other.GetComponentInChildren<IHittable_inherited>())
         { 
-           other.GetComponent<IHittable_inherited>().GotHit(self, this, CasterId);
+           other.GetComponent<IHittable_inherited>().GotHit(other ,this, CasterId);
         }
     }
 }

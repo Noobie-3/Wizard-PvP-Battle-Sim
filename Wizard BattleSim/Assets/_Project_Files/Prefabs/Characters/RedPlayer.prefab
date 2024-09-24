@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3790431187164763372}
   - component: {fileID: 7686046711235604627}
   - component: {fileID: 2966315332542189909}
-  - component: {fileID: 72179803445369145}
   - component: {fileID: 6637796250706131817}
   - component: {fileID: 8413427847099256021}
   - component: {fileID: 2780197439549934678}
@@ -57,7 +56,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3197713211
+  GlobalObjectIdHash: 458084762
   InScenePlacedSourceGlobalObjectIdHash: 3197713211
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -93,19 +92,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 2
---- !u!114 &72179803445369145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2657112206591253793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9097abceb871d9b46bf0e82842e18af3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Type: 1
 --- !u!136 &6637796250706131817
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -178,7 +164,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6344507787613272955}
         m_TargetAssemblyTypeName: SpellCaster, Assembly-CSharp
-        m_MethodName: CastSpell
+        m_MethodName: StartSpellCast
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -298,18 +284,12 @@ MonoBehaviour:
   MeshToRotate: {fileID: 5865634993870737861}
   audioListener: {fileID: 383817550984596914}
   JumpUsed: 0
-  Health:
-    m_InternalValue: 100
-  MaxHealth:
-    m_InternalValue: 100
-  Mana:
-    m_InternalValue: 100
-  MaxMana:
-    m_InternalValue: 100
-  Stamina:
-    m_InternalValue: 50
-  MaxStamina:
-    m_InternalValue: 50
+  Health: 100
+  MaxHealth: 100
+  Mana: 100
+  MaxMana: 100
+  Stamina: 100
+  MaxStamina: 100
   StaminaRegenRate: 0.05
   StaminaConsumptionRate: 10
   Charging: 0
@@ -900,6 +880,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 452962257110877721, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 452962257110877721, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_FillMethod
       value: 0
       objectReference: {fileID: 0}
@@ -910,6 +894,10 @@ PrefabInstance:
     - target: {fileID: 1635612689318341362, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_Type
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635612689318341362, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: m_FillAmount
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1635612689318341362, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_FillMethod
@@ -926,6 +914,10 @@ PrefabInstance:
     - target: {fileID: 4192542079427431398, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_FillMethod
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4910413971199165845, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 458084762
       objectReference: {fileID: 0}
     - target: {fileID: 5792540429419270302, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_SizeDelta.x
@@ -978,6 +970,10 @@ PrefabInstance:
     - target: {fileID: 7985396490152012888, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_Type
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985396490152012888, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: m_FillAmount
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7985396490152012888, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_FillMethod

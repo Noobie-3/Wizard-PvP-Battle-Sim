@@ -50,12 +50,12 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] private GameObject MeshToRotate;
     [SerializeField] private AudioListener audioListener;
     [SerializeField] private bool JumpUsed = false;
-    public NetworkVariable<float> Health = new NetworkVariable<float>(100);
-    public NetworkVariable<float> MaxHealth = new NetworkVariable<float>(100);
-    public NetworkVariable<float> Mana = new NetworkVariable<float>(100);
-    public NetworkVariable<float> MaxMana = new NetworkVariable<float>(100);
-    public NetworkVariable<float> Stamina = new NetworkVariable<float>(50);
-    public NetworkVariable<float> MaxStamina = new NetworkVariable<float>(50);
+    public float Health;
+    public float MaxHealth;
+    public float Mana;
+    public float MaxMana;
+    public float Stamina;
+    public float MaxStamina;
     [SerializeField] private float StaminaRegenRate = 1f;
     [SerializeField] private float StaminaConsumptionRate = 10f;
     public bool Charging = false;
@@ -123,6 +123,7 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             audioListener.enabled = false;
             Vcam.Priority = 0;
+            PlayerUi.SetActive(false);
         }
 
         if (IsServer)
@@ -144,10 +145,6 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     private void FixedUpdate()
     {
-
-
-        
-
         if (!IsOwner) return;
         if(gameController.GC == null) return;
         MoveObject();
@@ -205,18 +202,7 @@ public class PlayerController : NetworkBehaviour, IHitable
             rb.velocity = wallRunDirection * moveSpeed + Vector3.up * rb.velocity.y;
         }
     }
-    public void StartCast()
-    {
-        if(!IsOwner) return;
-        if(!IsCasting)
-        {
-            print("StartingCast from player");
-            IsCasting = true;
 
-
-
-        }
-    }
     
 
     //Rotation logic
@@ -269,7 +255,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Jump logic
     public void JumpInput(InputAction.CallbackContext context)
     {
-
+        
         //SpellCasterScript.ResetChargeSpell();
         if (context.performed && (Grounded || IsWallRunning))
         {
@@ -311,31 +297,35 @@ public class PlayerController : NetworkBehaviour, IHitable
     }
 
     // Health, Mana, Stamina handling
-    public void GotHit(GameObject self, Spell spell, ulong casterID)
-    {
-        GotHitServerRpc(spell.Spell_Damage);
+    public void GotHit(GameObject ThingThatHitMe, Spell spell, ulong casterID)
+    {if(!IsOwner) return;
+        print("Got hid by caster Id : " + casterID + " My Caster Id Is : " + MyClientID);
+        //check to make sure not caster
+        if (casterID == MyClientID)
+        {
+            return;
+        }
+
+        else
+        {
+            GotHitServerRpc(spell.Spell_Damage, casterID);
+        }
+
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void GotHitServerRpc(float damage)
+    [ServerRpc]
+    public void GotHitServerRpc(float SpellDamage, ulong casterID)
     {
-        Debug.Log($"GotHitServerRpc called on {gameObject.name} with damage: {damage}");
-        Health.Value -= damage;
-        Debug.Log($"Updated Health: {Health.Value}");
+        Health -= SpellDamage;
+        print("Player got hit by a spell from " + casterID + " for " + SpellDamage + " damage");
 
-        if (Health.Value <= 0)
+        if (Health <= 0)
         {
-            // Play death animation and sound
-            Debug.Log($"Player {gameObject.name} should be killed.");
-
-            // Respawn player
-            Health.Value = MaxHealth.Value;
-            Mana.Value = MaxMana.Value;
-            Stamina.Value = MaxStamina.Value;
-
-            // Implement respawn logic here (e.g., move player to spawn point)
+            print("Player( " + gameObject.name + " )has died");
         }
     }
+
+
 
     // Ground check
     private void GroundCheck()
@@ -410,7 +400,7 @@ public class PlayerController : NetworkBehaviour, IHitable
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
 
-                    if (Stamina.Value <= 0)
+                    if (Stamina <= 0)
                     {
                         SetWallRunningServerRpc(false);
                         Gravity = true;
@@ -453,7 +443,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     [ServerRpc]
     private void ReduceStaminaServerRpc(float amount)
     {
-        Stamina.Value -= amount;
+        Stamina -= amount;
     }
 
     // Regeneration
@@ -463,10 +453,10 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             if (IsServer)
             {
-                if (Mana.Value < MaxMana.Value)
+                if (Mana < MaxMana)
                 {
-                    Mana.Value += 1f;
-                    Mana.Value = Mathf.Min(Mana.Value, MaxMana.Value); // Clamp to MaxMana
+                    Mana += 1f;
+                    Mana = Mathf.Min(Mana, MaxMana); // Clamp to MaxMana
                 }
             }
             yield return new WaitForSeconds(1f);
@@ -479,10 +469,10 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             if (IsServer)
             {
-                if (Stamina.Value < MaxStamina.Value && !IsWallRunning)
+                if (Stamina < MaxStamina && !IsWallRunning)
                 {
-                    Stamina.Value += StaminaRegenRate;
-                    Stamina.Value = Mathf.Min(Stamina.Value, MaxStamina.Value); // Clamp to MaxStamina
+                    Stamina += StaminaRegenRate;
+                    Stamina = Mathf.Min(Stamina, MaxStamina); // Clamp to MaxStamina
                 }
             }
             yield return new WaitForSeconds(0.5f);

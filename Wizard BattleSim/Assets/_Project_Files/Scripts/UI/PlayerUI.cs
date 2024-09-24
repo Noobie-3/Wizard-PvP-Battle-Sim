@@ -23,20 +23,16 @@ public class PlayerUI : NetworkBehaviour
         {
             player = GetComponentInParent<PlayerController>();
         }
-        if (!IsOwner) 
-        {
-            this.gameObject.SetActive(false);
-        }
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(!IsOwner) return;
         // Convert values to percentages
-        float health = player.Health.Value / player.MaxHealth.Value;
-        float mana = player.Mana.Value / player.MaxMana.Value;
-        float stamina = player.Stamina.Value / player.MaxStamina.Value;
+        float health = player.Health / player.MaxHealth;
+        float mana = player.Mana / player.MaxMana;
+        float stamina = player.Stamina / player.MaxStamina;
 
         // Fill the bars
         healthBar.fillAmount = health;
@@ -44,9 +40,9 @@ public class PlayerUI : NetworkBehaviour
         manaBar.fillAmount = mana;
 
         // Update the text
-        healthText.text = $"Health: {player.Health.Value}/{player.MaxHealth.Value}";
-        staminaText.text = $"Stamina: {player.Stamina.Value}/{player.MaxStamina.Value}";
-        manaText.text = $"Mana: {player.Mana.Value}/{player.MaxMana.Value}";
+        healthText.text = $"Health: {player.Health}/{player.MaxHealth}";
+        staminaText.text = $"Stamina: {player.Stamina}/{player.MaxStamina}";
+        manaText.text = $"Mana: {player.Mana}/{player.MaxMana}";
     }
 
 

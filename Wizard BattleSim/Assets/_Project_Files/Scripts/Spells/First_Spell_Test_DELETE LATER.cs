@@ -14,11 +14,12 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 
     private void Start()
     {
-
-
-        if (IsServer)
+        if (IsOwner)
         {
-            DestroyObjectServerRpc(Curernt_spell.LifeTime);  // Destroy object after lifetime on the server
+
+            //Destroy(gameObject, Curernt_spell.LifeTime);
+
+            //DestroyObjectServerRpc(Curernt_spell.LifeTime);  // Destroy object after lifetime on the server
         }
     }
 
@@ -26,49 +27,55 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     public void Initialize(ulong casterId, Vector3 direction)
     {
         Rb = GetComponent<Rigidbody>();
-        this.CasterId = casterId;  // Set the caster's ID
-        this.Direction = direction; // Set the movement direction
+        CasterId = casterId;  // Set the caster's ID
+        Direction = direction; // Set the movement direction
+
+        print("The spell says the caster is " + CasterId);
     }
     
     public void FireSpell()
     {
-        Rb.AddForce(Direction * Curernt_spell.Spell_Speed, ForceMode.Impulse);
-        print("Fired the spell");
+        if (!hasShotSpell)
+        {
+            transform.LookAt(Direction);
+            Rb.AddForce(Direction * Curernt_spell.Spell_Speed, ForceMode.Impulse);
+            print("Fired the spell");
+            hasShotSpell = true;
+        }
     }
 
 
 
 
     // Server RPC to destroy the object after a set amount of time
-    [ServerRpc(RequireOwnership = false)]
+/*    [ServerRpc(RequireOwnership = false)]
     private void DestroyObjectServerRpc(float time)
     {
+        print("SpellDied");
         Destroy(gameObject, time);
-    }
+    }*/
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider other)
     {
+        if (!IsOwner) return;
+        if (!IsClient) return;
         NetworkObject networkObject;
-        if(collision.transform.root.GetComponent<NetworkObject>() == null)
+        if(other.transform.root.GetComponent<NetworkObject>() == null)
         {
-            if (collision.transform.root.GetComponentInChildren<NetworkObject>() == null)
+            if (other.transform.root.GetComponentInChildren<NetworkObject>() == null)
             {
                 return;
             }
             else
             {
-                networkObject = collision.transform.root.GetComponentInChildren<NetworkObject>();
+                networkObject = other.transform.root.GetComponentInChildren<NetworkObject>();
             }
         }
         else
         {
-            networkObject = collision.transform.root.GetComponent<NetworkObject>();
+            networkObject = other.transform.root.GetComponent<NetworkObject>();
         }
-        // Ignore collision with the caster
-        if (networkObject.NetworkObjectId == CasterId)
-        {
-            return; // Do nothing if the collision is with the caster
-        }
+
 
         IHitable ihitable;
         networkObject.TryGetComponent<IHitable>(out ihitable);
@@ -77,26 +84,20 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
             ihitable = networkObject.GetComponentInChildren<IHitable>();
         }
 
-
-
+        ihitable.GotHit(this.gameObject, Curernt_spell, CasterId); // Call the GotHit method on the object that was hit (if it has one
         // Trigger the spell's effects when it hits something
-        TriggerEffect(ihitable);
+        TriggerEffect();
 
-        // Destroy the spell after the collision (on the server)
-        if (IsServer)
-        {
-            Destroy(gameObject); // This will sync with clients due to network synchronization
-        }
+
     }
 
     // Method to trigger any spell effects (like damage or visual effects)
-    private void TriggerEffect(IHitable IHitable)
+    private void TriggerEffect()
     {
-        if(IHitable == null)
-        {
-            return;
-        }
-        IHitable.GotHit(gameObject, Curernt_spell, CasterId);  // Call the GotHit method on the object that was hit
+        print("SpellTriggered effect");
+
+        
+
         // Add custom effects here, such as damage or explosions
 
     }

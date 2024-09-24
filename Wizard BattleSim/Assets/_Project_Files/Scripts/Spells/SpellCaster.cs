@@ -35,6 +35,7 @@ public class SpellCaster : NetworkBehaviour
     {
         if (!IsOwner) return;
         HandleCoolDowns();
+        isCastingSpell();
     }
     // Spell selection logic
     public void ScrollSpellSelection(float scrollInput)
@@ -59,28 +60,48 @@ public class SpellCaster : NetworkBehaviour
     }
 
 
+
+    public void StartSpellCast()
+    {
+        if(!IsOwner) return;
+        IsCasting = true;
+    }
     public  void CastSpell()
-    { if (!IsOwner) return;
-        //RayCastTo Set Shot Direction
-        UpdateUIForCasting();
-        float CurrentCastTime = 0;
-        while(CurrentCastTime < SpellBook.SpellBook[SelectedSpell].Spell_CastTime) { }
+    { 
+        if(!IsOwner) return;
+
+            Player.Mana -= SpellBook.SpellBook[SelectedSpell].ManaCost;
+        
+        print("Casting spell");
+        if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
         {
-            CurrentCastTime += Time.deltaTime;
+            Vector3 ShotDir;
+            ShotDir = Player.camComponent.transform.forward * 100;       
+            print("the spell is being casted" + CurrentSpells[SelectedSpell] + " the client who fired the shots id is " + OwnerClientId);
+            CastSpellServerRpc(CurrentSpells[SelectedSpell], transform.position, OwnerClientId, ShotDir);
+            print("Spell casted");
+            CurrentSpellsTimers[SelectedSpell] = SpellBook.SpellBook[SelectedSpell].CooldownDuration;
         }
-        RaycastHit hit;
-        Vector3 ShotDir;
-        if (Physics.Raycast(Player.camComponent.transform.position, Player.camComponent.transform.forward, out hit, Mathf.Infinity))
-        {
-            ShotDir = hit.point;
+    }
+    public void isCastingSpell()
+    {
+
+        CastTimeUi.SetActive(true);
+        if (IsCasting)
+        { 
+            CastTimeProgress += Time.deltaTime;
+            var CastTimeProgressDecimal = CastTimeProgress / SpellBook.SpellBook[SelectedSpell].Spell_CastTime;
+            CastTimeProgressUI.fillAmount = CastTimeProgressDecimal;
+            CastSpellChargeText.text = (CastTimeProgressDecimal * 100).ToString() + "%";
+            if(CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
+            {
+                CastSpell();
+                CastTimeProgress = 0;
+                IsCasting = false;
+            }
+
         }
-        else
-        {
-            ShotDir = Player.camComponent.transform.forward;
-        }
-        print("the spell is being casted" + CurrentSpells[SelectedSpell]);
-        CastSpellServerRpc(CurrentSpells[SelectedSpell], transform.position, NetworkObjectId, ShotDir );
-        CurrentSpellsTimers[SelectedSpell] = SpellBook.SpellBook[SelectedSpell].CooldownDuration;
+
     }
 
     //cancels Cast (name inspired by a dude named tristan)
@@ -99,12 +120,10 @@ public class SpellCaster : NetworkBehaviour
     {
         print("Casting spell on server\n" + "Spell id is " + SpellToCast);
         GameObject CastedSpell =  Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
-        CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
         CastedSpell.GetComponent<NetworkObject>().Spawn();
+        CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
         CastedSpell.GetComponent<ISpell_Interface>().FireSpell();
-
     }
-
     public void SelectSpellWithKeyBoard(int spellIndex)
     {
         if (!IsOwner) return;
@@ -129,21 +148,7 @@ public class SpellCaster : NetworkBehaviour
         }
     }
 
-    void UpdateUIForCasting()
-    {
-        CastTimeUi.SetActive(true);
-        while(CastTimeProgress < 1 && IsCasting)
-        {
-            CastTimeProgress += Time.deltaTime / SpellBook.SpellBook[SelectedSpell].Spell_CastTime;
-            CastTimeProgressUI.fillAmount = CastTimeProgress;
-            CastSpellChargeText.text = (CastTimeProgress * 100).ToString() + "%";
-        
-        }
-        print("Finished UI for casting ");
-        CastTimeProgress = 0;
-        CastTimeUi.SetActive(false);
 
-    }
 
     void HandleCoolDowns()
     {

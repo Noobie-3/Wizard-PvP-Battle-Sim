@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class IHittable_inherited : MonoBehaviour, IHitable
+public class IHittable_inherited : NetworkBehaviour, IHitable
 {
 
    [SerializeField] private enum ObjectType {
@@ -16,11 +16,11 @@ public class IHittable_inherited : MonoBehaviour, IHitable
     [SerializeField] ObjectType Type;
 
 
-    public void GotHit(GameObject ObjectThatHitMe, Spell Spell, ulong CasterId ) {
-        
+    public void GotHit(GameObject ThingThatHitMe, Spell Spell, ulong CasterId ) {
+        if(!IsOwner) return;
         if(Type == ObjectType.nullify) {
 
-            Destroy(ObjectThatHitMe);
+            Destroy(gameObject);
             print("Spell  Nullable obj got hit");
 
         }    
@@ -37,7 +37,7 @@ public class IHittable_inherited : MonoBehaviour, IHitable
 
         }
 
-
+        Destroy(ThingThatHitMe);
 
 
 

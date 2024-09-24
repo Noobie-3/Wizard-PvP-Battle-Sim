@@ -20,4 +20,6 @@ public class SpellBookManager : MonoBehaviour
             Destroy(gameObject);
         }
     } 
+
+
 }
