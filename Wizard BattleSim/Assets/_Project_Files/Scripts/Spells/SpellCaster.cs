@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine.Rendering.UI;
 using System.Globalization;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(PlayerController))]
 public class SpellCaster : NetworkBehaviour
@@ -28,6 +29,7 @@ public class SpellCaster : NetworkBehaviour
     [SerializeField] public int MaxSpells;
     [SerializeField] public bool IsChangingSpell;
     [SerializeField] public bool IsCasting;
+    [SerializeField] public  Transform CastPosition;
 
 
 
@@ -38,25 +40,34 @@ public class SpellCaster : NetworkBehaviour
         isCastingSpell();
     }
     // Spell selection logic
-    public void ScrollSpellSelection(float scrollInput)
+    public void ScrollSpellSelection(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-
-        if (scrollInput > 0)
+        //cycle through spells with mouse wheel
+        var Scroll = context.ReadValue<float>();
+        print("Scroll input " + Scroll);
+        if (Scroll < 0)
         {
             SelectedSpell--;
+            print(SelectedSpell + "what  Spell is selected ");
+
             if (SelectedSpell < 0)
-                SelectedSpell = CurrentSpells[MaxSpells - 1];
+            {
+                SelectedSpell =  MaxSpells - 1;
+            }
         }
-        else if (scrollInput < 0)
+        else if (Scroll > 0)
         {
             SelectedSpell++;
-            if (SelectedSpell >= MaxSpells)
+            print(SelectedSpell + "what  Spell is selected ");
+            if (SelectedSpell >= MaxSpells - 1)
             {
                 SelectedSpell = 0;
             }
+
         }
-        print("The selected spell is: " + SelectedSpell + " out of " + MaxSpells);
+          print("Final Spell Selction affte scroll" + SelectedSpell);
+
     }
 
 
@@ -75,10 +86,22 @@ public class SpellCaster : NetworkBehaviour
         print("Casting spell");
         if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
         {
+            RaycastHit raycastHit;
             Vector3 ShotDir;
-            ShotDir = Player.camComponent.transform.forward * 100;       
+
+            if (Physics.Raycast(Player.camComponent.transform.position, Player.camComponent.transform.forward, out raycastHit, 10))
+            {
+                ShotDir = raycastHit.point;
+
+            }
+            else
+            {
+                ShotDir = Player.camComponent.transform.forward * 10;
+            }
+
             print("the spell is being casted" + CurrentSpells[SelectedSpell] + " the client who fired the shots id is " + OwnerClientId);
-            CastSpellServerRpc(CurrentSpells[SelectedSpell], transform.position, OwnerClientId, ShotDir);
+            
+            CastSpellServerRpc(CurrentSpells[SelectedSpell], CastPosition.position, OwnerClientId, ShotDir);
             print("Spell casted");
             CurrentSpellsTimers[SelectedSpell] = SpellBook.SpellBook[SelectedSpell].CooldownDuration;
         }
@@ -118,7 +141,7 @@ public class SpellCaster : NetworkBehaviour
     [ServerRpc()]
     private void CastSpellServerRpc(int SpellToCast, Vector3 positon, ulong CasterId, Vector3 camDir)
     {
-        print("Casting spell on server\n" + "Spell id is " + SpellToCast);
+        print("Casting spell on server\n" + "Spell id" + SpellBook.SpellBook[SpellToCast].Spell_Name);
         GameObject CastedSpell =  Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
         CastedSpell.GetComponent<NetworkObject>().Spawn();
         CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
@@ -128,7 +151,7 @@ public class SpellCaster : NetworkBehaviour
     {
         if (!IsOwner) return;
         TristanCast();
-        if (spellIndex >= 0 && spellIndex < MaxSpells - 1)
+        if (spellIndex >= 0 && spellIndex < MaxSpells )
         {
             Debug.Log("Selected Spell: " + SelectedSpell + " out of " + MaxSpells);
         }

@@ -256,6 +256,17 @@ public class CharacterSelectDisplay : NetworkBehaviour
             return;
         }
 
+        foreach(var player in players)
+        {
+            if(!player.IsLockedIn)
+            {
+
+                print("Some Players are not locked in");
+
+                break;
+            }
+        }
+
         serverManager.StartGame();
     }
 

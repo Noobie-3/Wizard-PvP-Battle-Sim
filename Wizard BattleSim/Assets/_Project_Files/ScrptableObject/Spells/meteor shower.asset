@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
-  m_Name: Test_Spell
+  m_Name: meteor shower
   m_EditorClassIdentifier: 
-  Spell_Speed: 30
-  Spell_Damage: 99
-  Spell_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
-  CooldownDuration: 3
-  LifeTime: 15
-  ManaCost: 15
-  Spell_Name: FireBall_Test
+  Spell_Speed: 60
+  Spell_Damage: 2
+  Spell_Prefab: {fileID: 5631925080883307570, guid: 029f0439c868a6e46bb0b9e1dca7b5de, type: 3}
+  CooldownDuration: 7
+  LifeTime: 8
+  ManaCost: 20
+  Spell_Name: meteor shower
   Spell_CastTime: 2
-  MultiHitCooldown: 0.5
-  Spell_Type: 1
+  MultiHitCooldown: 0.1
+  Spell_Type: 0

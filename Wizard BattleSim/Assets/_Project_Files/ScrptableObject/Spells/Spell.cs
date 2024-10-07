@@ -15,6 +15,7 @@ public class Spell : ScriptableObject {
     public float ManaCost;
     public string Spell_Name; // Spell Name
     public float Spell_CastTime = 2; // Spell Cast Time
+    public float MultiHitCooldown = 0.5f; // Multi Hit Cooldown
 
     public enum SpellType { // The Types Of Spells
         Spawnable_Spell,
@@ -31,4 +32,7 @@ public class Spell : ScriptableObject {
            other.GetComponent<IHittable_inherited>().GotHit(other ,this, CasterId);
         }
     }
+
+
+
 }

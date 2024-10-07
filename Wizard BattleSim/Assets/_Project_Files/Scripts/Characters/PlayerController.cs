@@ -60,7 +60,9 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] private float StaminaConsumptionRate = 10f;
     public bool Charging = false;
     public float ChargeTime = 1f;
+    public bool CanDie = true;
     [SerializeField] private bool IsDebug = true;
+    public bool isSpawned;
 
     public ulong MyClientID => NetworkObject.OwnerClientId;
 
@@ -70,6 +72,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] public Vector2 MouseInput;
     [SerializeField] public bool Grounded;
     [SerializeField] public bool IsRunning;
+
 
 
     // Spell variables
@@ -91,7 +94,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] private NetworkVariable<Vector3> CurrentRotation;
     [SerializeField] private GameObject PlayerUi;
     [SerializeField] private Animator Anim;
-
+    [SerializeField] private GameObject DevMenu;
 
 
     // Wall check and wall running logic
@@ -100,6 +103,12 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     public override void OnNetworkSpawn()
     {
+        if(!IsHost)
+        {
+            Destroy(DevMenu);
+        }
+        
+
         if (IsOwner)
         {
             DontDestroyOnLoad(gameObject);
@@ -131,6 +140,8 @@ public class PlayerController : NetworkBehaviour, IHitable
 
             StartCoroutine(ManaRegen());
             StartCoroutine(StaminaRegen());
+
+            
         }
     }
 
@@ -152,7 +163,7 @@ public class PlayerController : NetworkBehaviour, IHitable
         WallCheck();
         if (MoveInput != Vector2.zero)
         {
-            RotateObjectServerRpc(moveDirection);
+            MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
         }
 
 
@@ -299,9 +310,9 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Health, Mana, Stamina handling
     public void GotHit(GameObject ThingThatHitMe, Spell spell, ulong casterID)
     {if(!IsOwner) return;
-        print("Got hid by caster Id : " + casterID + " My Caster Id Is : " + MyClientID);
+        print("Got hid by caster Id : " + casterID + " My Caster Id Is : " + NetworkObject.OwnerClientId);
         //check to make sure not caster
-        if (casterID == MyClientID)
+        if (casterID == NetworkObject.OwnerClientId)
         {
             return;
         }
@@ -319,7 +330,7 @@ public class PlayerController : NetworkBehaviour, IHitable
         Health -= SpellDamage;
         print("Player got hit by a spell from " + casterID + " for " + SpellDamage + " damage");
 
-        if (Health <= 0)
+        if (Health <= 0 && CanDie)
         {
             print("Player( " + gameObject.name + " )has died");
         }

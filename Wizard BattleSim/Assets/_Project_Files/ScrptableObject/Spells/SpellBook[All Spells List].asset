@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: SpellBook[All Spells List]
   m_EditorClassIdentifier: 
   SpellBook:
+  - {fileID: 11400000, guid: 5c6577c3a14e89a4da2d4bd9277ba1d3, type: 2}
   - {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
-  - {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
-  - {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
+  - {fileID: 11400000, guid: 58c4e5d6799024445b5eaf69948059f3, type: 2}

@@ -1,7 +1,9 @@
 using AssetInventory;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class gameController : MonoBehaviour
 {
@@ -42,7 +44,7 @@ public class gameController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Confined;
 
         }
-
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoaded;
 
     }
 
@@ -69,6 +71,27 @@ public class gameController : MonoBehaviour
             Players = FindObjectsOfType<PlayerController>();
         }
     }
+
+    private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+    {
+
+        var spawnLocations = FindObjectsOfType<PlayerSpawnLocation>();
+
+        for(int i = 0; i < Players.Length; i++ )
+        {
+            if (spawnLocations[i].CanSpawnPlayer && !Players[i].isSpawned )
+            {
+                Players[i].isSpawned = true;
+                Players[i].transform.position = spawnLocations[i].transform.position;
+                spawnLocations[i].CanSpawnPlayer = false;
+                print("the player " + Players[i].name + " has been spawned at " + spawnLocations[i].transform.position);
+            }
+
+
+        }
+    }
+
+
 
 }
 

@@ -4948,7 +4948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1492249054
+  GlobalObjectIdHash: 4206399805
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -5012,7 +5012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94545a79935a11f489f55bd1419661bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Curernt_spell: {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
+  Spell: {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
   Rb: {fileID: 3609423411881503315}
   Printdata: 0
   hasShotSpell: 0

@@ -20,7 +20,7 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
         if(!IsOwner) return;
         if(Type == ObjectType.nullify) {
 
-            Destroy(gameObject);
+            Destroy(ThingThatHitMe);
             print("Spell  Nullable obj got hit");
 
         }    

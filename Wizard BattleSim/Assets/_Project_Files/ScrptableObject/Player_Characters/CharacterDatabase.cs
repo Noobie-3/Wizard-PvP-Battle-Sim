@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Character Database", menuName = "Characters/Database")]
 public class CharacterDatabase : ScriptableObject
 {
-    [SerializeField] private Character[] characters = new Character[0];
+    [SerializeField] public Character[] characters = new Character[0];
 
     public Character[] GetAllCharacters() => characters;
 

@@ -6,7 +6,6 @@ using UnityEngine;
 public interface ISpell_Interface
 {
     ulong CasterId { get; set; }
-
     // bool CanCastSpell();
 
 

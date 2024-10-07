@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &297346830186388531
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6451566787427242802}
+  m_Layer: 0
+  m_Name: CastPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6451566787427242802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 297346830186388531}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.652, z: 2.33}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3790431187164763372}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2657112206591253793
 GameObject:
   m_ObjectHideFlags: 0
@@ -38,6 +69,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6497915119080852351}
+  - {fileID: 6451566787427242802}
   - {fileID: 3515196710709728275}
   - {fileID: 2348575475153230355}
   - {fileID: 2571704665685252525}
@@ -127,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: e609c04720187384886f09d7199c1c44, type: 3}
+  m_Actions: {fileID: -944628639613478452, guid: 908fd5c034041be43b5b85a472da0e60, type: 3}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -141,7 +173,19 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2780197439549934678}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: GetMouseInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 80d726a1-c93f-4c9b-beb4-7038db0b86c7
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
@@ -159,7 +203,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 40de297c-6f4d-457e-a216-5814b5b33597
-    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/d,/Keyboard/a]
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6344507787613272955}
@@ -177,19 +221,7 @@ MonoBehaviour:
     m_ActionId: 4fdc28da-71e6-4304-8e0d-28696f2c1509
     m_ActionName: Player/Cast[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2780197439549934678}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 97f1ab70-a0da-4ffe-b762-8b3721db48ff
     m_ActionName: Player/ChangeSpellKeyBoard[/Keyboard/1,/Keyboard/2,/Keyboard/3]
   - m_PersistentCalls:
@@ -197,7 +229,7 @@ MonoBehaviour:
       - m_Target: {fileID: 6344507787613272955}
         m_TargetAssemblyTypeName: SpellCaster, Assembly-CSharp
         m_MethodName: ScrollSpellSelection
-        m_Mode: 4
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -207,7 +239,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 6420ba1d-8920-49f8-bc0b-16bf87df7d43
-    m_ActionName: Player/ChangeSpellMouseScroll[/Mouse/scroll/down,/Mouse/scroll/up]
+    m_ActionName: Player/ChangeSpellMouseScroll[/Mouse/scroll/y]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2780197439549934678}
@@ -294,6 +326,7 @@ MonoBehaviour:
   StaminaConsumptionRate: 10
   Charging: 0
   ChargeTime: 1
+  CanDie: 1
   IsDebug: 1
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
@@ -314,6 +347,7 @@ MonoBehaviour:
     m_InternalValue: {x: 0, y: 0, z: 0}
   PlayerUi: {fileID: 4129479299228091817}
   Anim: {fileID: 0}
+  DevMenu: {fileID: 0}
 --- !u!114 &-1075313111063767886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,6 +418,7 @@ MonoBehaviour:
   MaxSpells: 3
   IsChangingSpell: 0
   IsCasting: 0
+  CastPosition: {fileID: 6451566787427242802}
 --- !u!1 &3333199694232863727
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,8 +896,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerIndex: -1
   AutoEnableInputs: 1
-  XYAxis: {fileID: 5245429920911508882, guid: e609c04720187384886f09d7199c1c44, type: 3}
-  ZAxis: {fileID: 5245429920911508882, guid: e609c04720187384886f09d7199c1c44, type: 3}
+  XYAxis: {fileID: 5245429920911508882, guid: 908fd5c034041be43b5b85a472da0e60, type: 3}
+  ZAxis: {fileID: 5245429920911508882, guid: 908fd5c034041be43b5b85a472da0e60, type: 3}
 --- !u!1001 &2183763747222795274
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -917,7 +952,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4910413971199165845, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 458084762
+      value: 2236185093
       objectReference: {fileID: 0}
     - target: {fileID: 5792540429419270302, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1151,6 +1186,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
       insertIndex: -1
       addedObject: {fileID: 691549921895159077}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 502390685761829773}
   m_SourcePrefab: {fileID: 100100000, guid: 0aecf1900e79196499eda09b56842151, type: 3}
 --- !u!1 &5865634993870737861 stripped
 GameObject:
@@ -1201,6 +1239,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &502390685761829773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5865634993870737861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!4 &6497915119080852351 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0aecf1900e79196499eda09b56842151, type: 3}

@@ -140,6 +140,8 @@ public class ServerManager : NetworkBehaviour
         // Load the new scene on the server and all clients
         NetworkManager.Singleton.SceneManager.LoadScene("Scene_01", UnityEngine.SceneManagement.LoadSceneMode.Single);
 
+        //Set Players Positons
+
     }
 
 

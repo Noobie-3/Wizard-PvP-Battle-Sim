@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 {
-    public Spell Curernt_spell;  // Your spell data object
+    public Spell Spell;  // Your spell data object
     public Rigidbody Rb;
     public ulong CasterId { get; set; }
     public bool Printdata = false;
@@ -17,9 +17,9 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
         if (IsOwner)
         {
 
-            //Destroy(gameObject, Curernt_spell.LifeTime);
+            //Destroy(gameObject, spell.LifeTime);
 
-            //DestroyObjectServerRpc(Curernt_spell.LifeTime);  // Destroy object after lifetime on the server
+            //DestroyObjectServerRpc(spell.LifeTime);  // Destroy object after lifetime on the server
         }
     }
 
@@ -38,7 +38,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
         if (!hasShotSpell)
         {
             transform.LookAt(Direction);
-            Rb.AddForce(Direction * Curernt_spell.Spell_Speed, ForceMode.Impulse);
+            Rb.AddForce(Direction * Spell.Spell_Speed, ForceMode.Impulse);
             print("Fired the spell");
             hasShotSpell = true;
         }
@@ -84,7 +84,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
             ihitable = networkObject.GetComponentInChildren<IHitable>();
         }
 
-        ihitable.GotHit(this.gameObject, Curernt_spell, CasterId); // Call the GotHit method on the object that was hit (if it has one
+        ihitable.GotHit(this.gameObject, Spell, CasterId); // Call the GotHit method on the object that was hit (if it has one
         // Trigger the spell's effects when it hits something
         TriggerEffect();
 
@@ -94,6 +94,10 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     // Method to trigger any spell effects (like damage or visual effects)
     private void TriggerEffect()
     {
+        if (IsServer)
+        {
+            Destroy(gameObject);
+        }
         print("SpellTriggered effect");
 
         
@@ -106,7 +110,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     {
         while (Printdata)
         {
-            if (Curernt_spell == null)
+            if (Spell == null)
             {
                 print("Spell is null");
             }

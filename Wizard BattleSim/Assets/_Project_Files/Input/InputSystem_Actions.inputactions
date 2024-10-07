@@ -45,7 +45,7 @@
                     "name": "ChangeSpellMouseScroll",
                     "type": "Value",
                     "id": "6420ba1d-8920-49f8-bc0b-16bf87df7d43",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "Delta",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -236,20 +236,9 @@
                 {
                     "name": "",
                     "id": "9951a90f-e0a0-438d-8719-e87e3e0b069f",
-                    "path": "<Mouse>/scroll/down",
+                    "path": "<Mouse>/scroll/y",
                     "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ChangeSpellMouseScroll",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2466feb6-b44c-49cc-8148-d3ea98ab3a56",
-                    "path": "<Mouse>/scroll/up",
-                    "interactions": "",
-                    "processors": "",
+                    "processors": "NormalizeVector2",
                     "groups": "",
                     "action": "ChangeSpellMouseScroll",
                     "isComposite": false,
