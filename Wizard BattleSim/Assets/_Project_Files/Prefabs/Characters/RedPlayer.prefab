@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 458084762
+  GlobalObjectIdHash: 3197713211
   InScenePlacedSourceGlobalObjectIdHash: 3197713211
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -328,6 +328,7 @@ MonoBehaviour:
   ChargeTime: 1
   CanDie: 1
   IsDebug: 1
+  isSpawned: 0
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
   Grounded: 0
@@ -345,7 +346,7 @@ MonoBehaviour:
   CastDir: {x: 0, y: 0, z: 0}
   CurrentRotation:
     m_InternalValue: {x: 0, y: 0, z: 0}
-  PlayerUi: {fileID: 4129479299228091817}
+  PlayerUi: {fileID: 1131633999484018513}
   Anim: {fileID: 0}
   DevMenu: {fileID: 0}
 --- !u!114 &-1075313111063767886
@@ -377,7 +378,7 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
-  Interpolate: 0
+  Interpolate: 1
   SlerpPosition: 0
 --- !u!114 &-7092677976922389805
 MonoBehaviour:
@@ -926,6 +927,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 2780197439549934678}
+    - target: {fileID: 1295372782093790043, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: SpellCaster
+      value: 
+      objectReference: {fileID: 6344507787613272955}
     - target: {fileID: 1635612689318341362, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_Type
       value: 3
@@ -1039,6 +1044,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+--- !u!114 &1131633999484018513 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1295372782093790043, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+  m_PrefabInstance: {fileID: 2183763747222795274}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed587e692858f9b40ab50373365d9651, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1657004577717391741 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 626164641518429559, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
@@ -1061,11 +1077,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &4129479299228091817 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2810406721598976419, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 2183763747222795274}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8434354835751918202 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7728898823975628400, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}

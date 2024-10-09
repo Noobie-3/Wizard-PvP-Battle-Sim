@@ -23,7 +23,7 @@ public class SpellCaster : NetworkBehaviour
     [SerializeField] public Coroutine CastTimeProgressEnum;
     [SerializeField] public Coroutine ChargeSpellIEnum;
     [SerializeField] private PlayerController Player;
-    [SerializeField] int[] CurrentSpells = {0,1,2};
+    [SerializeField] public int[] CurrentSpells = {0,1,2};
     [SerializeField] float[] CurrentSpellsTimers = {0,0,0};
     [SerializeField] public  int SelectedSpell;
     [SerializeField] public int MaxSpells;

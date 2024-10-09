@@ -220,6 +220,7 @@ MonoBehaviour:
   joinCodeText: {fileID: 0}
   lockInButton: {fileID: 8588707090008052857}
   StartButton: {fileID: 0}
+  serverManager: {fileID: 0}
 --- !u!1 &2021340888148599946
 GameObject:
   m_ObjectHideFlags: 0
@@ -1508,7 +1509,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5040366668293957813, guid: b21d6d2b0f979e9479aee10dc7b5be9a, type: 3}
       propertyPath: m_fontSize
-      value: 30.7
+      value: 33.25
       objectReference: {fileID: 0}
     - target: {fileID: 5122558427387886801, guid: b21d6d2b0f979e9479aee10dc7b5be9a, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1524,7 +1525,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: a4aeff3221624274fa582a60d2dd68ad, type: 2}
     - target: {fileID: 7366818678255829306, guid: b21d6d2b0f979e9479aee10dc7b5be9a, type: 3}
       propertyPath: m_fontSize
-      value: 21.9
+      value: 23.75
       objectReference: {fileID: 0}
     - target: {fileID: 8573277628445242845, guid: b21d6d2b0f979e9479aee10dc7b5be9a, type: 3}
       propertyPath: m_IsActive

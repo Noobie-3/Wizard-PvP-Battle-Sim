@@ -21,4 +21,5 @@ MonoBehaviour:
   Spell_Name: meteor shower
   Spell_CastTime: 2
   MultiHitCooldown: 0.1
+  SpellIcon: {fileID: 21300000, guid: c61e9a5d230316d48b56325d4b074df3, type: 3}
   Spell_Type: 0

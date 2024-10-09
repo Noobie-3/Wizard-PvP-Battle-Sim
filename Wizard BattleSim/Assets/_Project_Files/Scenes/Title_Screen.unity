@@ -1197,7 +1197,7 @@ GameObject:
   - component: {fileID: 1252391468}
   - component: {fileID: 1252391467}
   m_Layer: 5
-  m_Name: HOst (1)
+  m_Name: Server
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1700,7 +1700,7 @@ GameObject:
   - component: {fileID: 1849368828}
   - component: {fileID: 1849368827}
   m_Layer: 5
-  m_Name: Server
+  m_Name: Client
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -8,12 +8,15 @@ using UnityEngine.UI;
 public class PlayerUI : NetworkBehaviour
 {
     public PlayerController player;
+    public SpellCaster SpellCaster;
+
     public Image healthBar;
     public TextMeshProUGUI healthText;
     public Image staminaBar;
     public TextMeshProUGUI staminaText;
     public Image manaBar;
     public TextMeshProUGUI manaText;
+    public Image[] SpellSlotsImages;
 
 
     // Start is called before the first frame update
@@ -27,8 +30,18 @@ public class PlayerUI : NetworkBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+
+
+    public void UpdateUI()
     {
+        for (int i = 0; i < SpellCaster.MaxSpells; i++)
+        {
+            if(SpellSlotsImages[i].sprite != SpellCaster.SpellBook.SpellBook[SpellCaster.CurrentSpells[i]].SpellIcon)
+            {
+                SpellSlotsImages[i].sprite = SpellCaster.SpellBook.SpellBook[SpellCaster.CurrentSpells[i]].SpellIcon;
+            }
+        }
+        
         // Convert values to percentages
         float health = player.Health / player.MaxHealth;
         float mana = player.Mana / player.MaxMana;
@@ -43,6 +56,10 @@ public class PlayerUI : NetworkBehaviour
         healthText.text = $"Health: {player.Health}/{player.MaxHealth}";
         staminaText.text = $"Stamina: {player.Stamina}/{player.MaxStamina}";
         manaText.text = $"Mana: {player.Mana}/{player.MaxMana}";
+
+        //Change Spell icons for selection
+
+
     }
 
 

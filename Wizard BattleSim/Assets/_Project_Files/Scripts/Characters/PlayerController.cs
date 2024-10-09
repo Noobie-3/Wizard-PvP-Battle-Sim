@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Rendering.UI;
+using UnityEngine.SceneManagement;
+using Unity.Netcode.Components;
 
 [RequireComponent(typeof(Rigidbody), typeof(SpellCaster))]
 public class PlayerController : NetworkBehaviour, IHitable
@@ -92,7 +94,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     private float rotationX = 0f;
     private float rotationY = 0f;
     [SerializeField] private NetworkVariable<Vector3> CurrentRotation;
-    [SerializeField] private GameObject PlayerUi;
+    [SerializeField] private PlayerUI PlayerUi;
     [SerializeField] private Animator Anim;
     [SerializeField] private GameObject DevMenu;
 
@@ -103,14 +105,16 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     public override void OnNetworkSpawn()
     {
-        if(!IsHost)
+        if (!IsHost && DevMenu != null)
         {
             Destroy(DevMenu);
         }
-        
+
 
         if (IsOwner)
         {
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += this.OnSceneLoaded;
+
             DontDestroyOnLoad(gameObject);
             camComponent.enabled = false;
             camComponent.enabled = true;
@@ -119,7 +123,8 @@ public class PlayerController : NetworkBehaviour, IHitable
             Vcam.Priority = 1;
 
             if (PlayerUi != null)
-                PlayerUi.SetActive(true);
+                PlayerUi.gameObject.SetActive(true);
+            PlayerUi.UpdateUI();
 
             rb = GetComponent<Rigidbody>();
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
@@ -127,12 +132,13 @@ public class PlayerController : NetworkBehaviour, IHitable
             // Initialize spell cooldown timers based on current spells
             UpdateSpellCooldownTimers();
             StartCoroutine(PrintData());
+
         }
         else
         {
             audioListener.enabled = false;
             Vcam.Priority = 0;
-            PlayerUi.SetActive(false);
+            PlayerUi.gameObject.SetActive(false);
         }
 
         if (IsServer)
@@ -290,6 +296,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     {
         currentSpells.Add(newSpell);
         UpdateSpellCooldownTimers();
+        PlayerUi.UpdateUI();
     }
 
     public void RemoveSpell(Spell spellToRemove)
@@ -299,6 +306,8 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             currentSpells.RemoveAt(index);
             UpdateSpellCooldownTimers();
+            PlayerUi.UpdateUI();
+
         }
     }
 
@@ -310,17 +319,21 @@ public class PlayerController : NetworkBehaviour, IHitable
     // Health, Mana, Stamina handling
     public void GotHit(GameObject ThingThatHitMe, Spell spell, ulong casterID)
     {if(!IsOwner) return;
-        print("Got hid by caster Id : " + casterID + " My Caster Id Is : " + NetworkObject.OwnerClientId);
+
         //check to make sure not caster
         if (casterID == NetworkObject.OwnerClientId)
         {
             return;
         }
 
+
         else
         {
             GotHitServerRpc(spell.Spell_Damage, casterID);
         }
+        PlayerUi.UpdateUI();
+
+        print("Got hit by caster Id : " + casterID + " My Caster Id Is : " + NetworkObject.OwnerClientId);
 
     }
 
@@ -334,6 +347,8 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             print("Player( " + gameObject.name + " )has died");
         }
+        //Update UI
+        PlayerUi.UpdateUI();
     }
 
 
@@ -429,6 +444,8 @@ public class PlayerController : NetworkBehaviour, IHitable
                 Debug.DrawRay(transform.position + WallCheck_Start, (transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, Vector3.down * DistanceFromFloorRequiredToWallRun, Color.blue);
+                PlayerUi.UpdateUI();
+
             }
         }
         else
@@ -468,6 +485,9 @@ public class PlayerController : NetworkBehaviour, IHitable
                 {
                     Mana += 1f;
                     Mana = Mathf.Min(Mana, MaxMana); // Clamp to MaxMana
+                    PlayerUi.UpdateUI();
+
+
                 }
             }
             yield return new WaitForSeconds(1f);
@@ -486,6 +506,8 @@ public class PlayerController : NetworkBehaviour, IHitable
                     Stamina = Mathf.Min(Stamina, MaxStamina); // Clamp to MaxStamina
                 }
             }
+            PlayerUi.UpdateUI();
+
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -511,4 +533,34 @@ public class PlayerController : NetworkBehaviour, IHitable
            yield  return new WaitForSeconds(5f);
         }
     }
+
+    private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+    {
+        if(!IsOwner) return;
+        var spawnLocations = FindObjectsOfType<PlayerSpawnLocation>();
+
+        for (int i = 0; i < spawnLocations.Length; ++i)
+        {
+            if (spawnLocations[i] == null)
+            {
+                return;
+            }
+            if (spawnLocations[i].CanSpawnPlayer && isSpawned == false)
+            {
+                isSpawned = true;
+                rb.MovePosition(spawnLocations[i].transform.position);
+                spawnLocations[i].CanSpawnPlayer = false;
+                isSpawned = true;
+                print("the player " + name + " has been spawned at " + spawnLocations[i].transform.position);
+                print(transform.position);
+                break;
+            }
+
+        }
+
+
+    }
+
+
+
 }
