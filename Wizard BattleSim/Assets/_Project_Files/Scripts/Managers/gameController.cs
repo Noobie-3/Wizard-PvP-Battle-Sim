@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class gameController : MonoBehaviour
+public class gameController : NetworkBehaviour
 {
 
     public static gameController GC;
@@ -72,7 +72,42 @@ public class gameController : MonoBehaviour
     }
 
 
+    public void SpawnPlayers(ulong ClientId)
+    {
+        var spawnLocations = FindObjectsOfType<PlayerSpawnLocation>();
+        var AllPlayerControllers = FindObjectsOfType<PlayerController>();
 
+
+        foreach (var PC in AllPlayerControllers)
+        {
+
+            if (PC.NetworkObject.OwnerClientId != ClientId)
+            {
+                continue;
+            }
+
+
+            for (int i = 0; i < spawnLocations.Length; ++i)
+            {
+                if (spawnLocations[i] == null)
+                {
+                    return;
+                }
+                if (spawnLocations[i].CanSpawnPlayer && PC.isSpawned == false)
+                {
+                    spawnLocations[i].SetCanSpawnClientRpc(false);
+                    PC.isSpawned = true;
+                    if (PC.rb == null) return;
+                    PC.rb.MovePosition(spawnLocations[i].transform.position);
+                    print("the player " + PC.name + " has been spawned at " + spawnLocations[i].transform.position);
+                    print(PC.transform.position);
+                }
+
+
+            }
+        }
+
+    }
 
 }
 

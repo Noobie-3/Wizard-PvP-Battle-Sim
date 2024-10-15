@@ -79,9 +79,10 @@ public class SpellCaster : NetworkBehaviour
     }
     public  void CastSpell()
     { 
-        if(!IsOwner) return;
 
-            Player.Mana -= SpellBook.SpellBook[SelectedSpell].ManaCost;
+
+        if (!IsOwner) return;
+
         
         print("Casting spell");
         if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
@@ -118,6 +119,11 @@ public class SpellCaster : NetworkBehaviour
             CastSpellChargeText.text = (CastTimeProgressDecimal * 100).ToString() + "%";
             if(CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
             {
+                if (IsServer)
+                {
+                    Player.Mana.Value -= SpellBook.SpellBook[SelectedSpell].ManaCost;
+
+                }
                 CastSpell();
                 CastTimeProgress = 0;
                 IsCasting = false;

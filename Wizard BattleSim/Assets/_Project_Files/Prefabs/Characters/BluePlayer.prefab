@@ -212,7 +212,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 2
+  m_CollisionDetection: 1
 --- !u!136 &6637796250706131817
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -229,7 +229,7 @@ CapsuleCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.3900874
@@ -417,11 +417,14 @@ MonoBehaviour:
   MeshToRotate: {fileID: 5865634993870737861}
   audioListener: {fileID: 8886416464124340638}
   JumpUsed: 0
-  Health: 100
+  Health:
+    m_InternalValue: 100
   MaxHealth: 100
-  Mana: 100
+  Mana:
+    m_InternalValue: 100
   MaxMana: 100
-  Stamina: 100
+  Stamina:
+    m_InternalValue: 100
   MaxStamina: 100
   StaminaRegenRate: 0.5
   StaminaConsumptionRate: 10

@@ -22,6 +22,7 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
 
             Destroy(ThingThatHitMe);
             print("Spell  Nullable obj got hit");
+            print(gameObject.name);
 
         }    
         
@@ -41,6 +42,19 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
 
 
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        ISpell_Interface ISpell;
+        other.gameObject.TryGetComponent<ISpell_Interface>(out ISpell);
+
+        if(ISpell != null) 
+        {
+            GotHit(other.gameObject, ISpell.spell, ISpell.CasterId);
+            ISpell.TriggerEffect();
+
+        }
     }
 
 

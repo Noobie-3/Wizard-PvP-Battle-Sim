@@ -5,6 +5,7 @@ using UnityEngine;
 
 public interface ISpell_Interface
 {
+    Spell spell { get;}
     ulong CasterId { get; set; }
     // bool CanCastSpell();
 
@@ -16,7 +17,7 @@ public interface ISpell_Interface
     void Initialize(ulong casterId, Vector3 direction);
 
 
-
+    void TriggerEffect();
 
 
 }

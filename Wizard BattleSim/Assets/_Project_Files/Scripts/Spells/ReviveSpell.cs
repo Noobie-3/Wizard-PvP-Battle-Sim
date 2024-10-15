@@ -10,6 +10,7 @@ public class ReviveSpell : NetworkBehaviour , ISpell_Interface
     public Vector3 Direction { get; set; }
     public Vector3 RevivePoint;
     public Spell Spell;
+    Spell ISpell_Interface.spell => Spell;
     public float CurrentLifeTime;
     public PlayerController playerController;
     public bool CanRevive = false;
@@ -72,9 +73,9 @@ public class ReviveSpell : NetworkBehaviour , ISpell_Interface
 
 
 
-        if (playerController.Health <= 0)
+        if (playerController.Health.Value <= 0)
         {
-            playerController.Health = playerController.MaxHealth;
+            playerController.Health.Value = playerController.MaxHealth;
 
 
             //Play some Sound effects and partcicals
@@ -91,11 +92,8 @@ public class ReviveSpell : NetworkBehaviour , ISpell_Interface
 
     }
 
-
-
-
-
-
-
-
+    public void TriggerEffect()
+    {
+        throw new System.NotImplementedException();
+    }
 }

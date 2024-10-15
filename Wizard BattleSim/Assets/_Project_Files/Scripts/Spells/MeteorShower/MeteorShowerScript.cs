@@ -16,6 +16,9 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
     [SerializeField] Coroutine SpawnCoroutine;
     
     public ulong CasterId { get; set; }
+
+    Spell ISpell_Interface.spell => spell;
+
     public Rigidbody rb;
 
 
@@ -75,5 +78,10 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
     public override void OnNetworkSpawn()
     {
         
+    }
+
+    public void TriggerEffect()
+    {
+        throw new System.NotImplementedException();
     }
 }

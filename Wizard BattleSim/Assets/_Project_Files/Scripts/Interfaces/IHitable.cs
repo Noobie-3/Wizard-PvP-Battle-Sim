@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IHitable
@@ -10,5 +11,6 @@ public interface IHitable
     void GotHit(GameObject ThingThatHitMe, Spell spell, ulong Casterid);
 
 
+    
     
 }

@@ -52,11 +52,11 @@ public class PlayerController : NetworkBehaviour, IHitable
     [SerializeField] private GameObject MeshToRotate;
     [SerializeField] private AudioListener audioListener;
     [SerializeField] private bool JumpUsed = false;
-    public float Health;
+    public NetworkVariable<float> Health = new NetworkVariable<float>(100f); // Example initial value
     public float MaxHealth;
-    public float Mana;
+    public NetworkVariable<float> Mana = new NetworkVariable<float>(100f); // Example initial value
     public float MaxMana;
-    public float Stamina;
+    public NetworkVariable<float> Stamina = new NetworkVariable<float>(100f); // Example initial value
     public float MaxStamina;
     [SerializeField] private float StaminaRegenRate = 1f;
     [SerializeField] private float StaminaConsumptionRate = 10f;
@@ -90,7 +90,7 @@ public class PlayerController : NetworkBehaviour, IHitable
 
 
     // Private variables
-    private Rigidbody rb;
+    public Rigidbody rb;
     private float rotationX = 0f;
     private float rotationY = 0f;
     [SerializeField] private NetworkVariable<Vector3> CurrentRotation;
@@ -105,6 +105,7 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     public override void OnNetworkSpawn()
     {
+
         if (!IsHost && DevMenu != null)
         {
             Destroy(DevMenu);
@@ -113,7 +114,8 @@ public class PlayerController : NetworkBehaviour, IHitable
 
         if (IsOwner)
         {
-            NetworkManager.Singleton.SceneManager.OnLoadComplete += this.OnSceneLoaded;
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoaded;
+
 
             DontDestroyOnLoad(gameObject);
             camComponent.enabled = false;
@@ -318,7 +320,7 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     // Health, Mana, Stamina handling
     public void GotHit(GameObject ThingThatHitMe, Spell spell, ulong casterID)
-    {if(!IsOwner) return;
+    {
 
         //check to make sure not caster
         if (casterID == NetworkObject.OwnerClientId)
@@ -337,18 +339,16 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void GotHitServerRpc(float SpellDamage, ulong casterID)
     {
-        Health -= SpellDamage;
+        Health.Value -= SpellDamage;
         print("Player got hit by a spell from " + casterID + " for " + SpellDamage + " damage");
 
-        if (Health <= 0 && CanDie)
+        if (Health.Value <= 0 && CanDie)
         {
             print("Player( " + gameObject.name + " )has died");
         }
-        //Update UI
-        PlayerUi.UpdateUI();
     }
 
 
@@ -426,7 +426,7 @@ public class PlayerController : NetworkBehaviour, IHitable
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
 
-                    if (Stamina <= 0)
+                    if (Stamina.Value <= 0)
                     {
                         SetWallRunningServerRpc(false);
                         Gravity = true;
@@ -471,7 +471,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     [ServerRpc]
     private void ReduceStaminaServerRpc(float amount)
     {
-        Stamina -= amount;
+        Stamina.Value -= amount;
     }
 
     // Regeneration
@@ -481,16 +481,18 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             if (IsServer)
             {
-                if (Mana < MaxMana)
+                if (Mana.Value < MaxMana)
                 {
-                    Mana += 1f;
-                    Mana = Mathf.Min(Mana, MaxMana); // Clamp to MaxMana
-                    PlayerUi.UpdateUI();
+                    Mana.Value  += 1f;
+                    Mana.Value = Mathf.Min(Mana.Value, MaxMana); // Clamp to MaxMana
 
 
                 }
             }
             yield return new WaitForSeconds(1f);
+            if(!IsOwner) yield return new WaitForSeconds(0f);
+            PlayerUi.UpdateUI();
+
         }
     }
 
@@ -500,10 +502,10 @@ public class PlayerController : NetworkBehaviour, IHitable
         {
             if (IsServer)
             {
-                if (Stamina < MaxStamina && !IsWallRunning)
+                if (Stamina.Value < MaxStamina && !IsWallRunning)
                 {
-                    Stamina += StaminaRegenRate;
-                    Stamina = Mathf.Min(Stamina, MaxStamina); // Clamp to MaxStamina
+                    Stamina.Value += StaminaRegenRate;
+                    Stamina.Value= Mathf.Min(Stamina.Value, MaxStamina); // Clamp to MaxStamina
                 }
             }
             PlayerUi.UpdateUI();
@@ -536,28 +538,25 @@ public class PlayerController : NetworkBehaviour, IHitable
 
     private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
-        if(!IsOwner) return;
-        var spawnLocations = FindObjectsOfType<PlayerSpawnLocation>();
+        gameController.GC.SpawnPlayers(NetworkManager.Singleton.LocalClientId);
 
-        for (int i = 0; i < spawnLocations.Length; ++i)
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        ISpell_Interface ISpell;
+        other.TryGetComponent<ISpell_Interface>(out ISpell);
+        if(ISpell == null)
         {
-            if (spawnLocations[i] == null)
-            {
-                return;
-            }
-            if (spawnLocations[i].CanSpawnPlayer && isSpawned == false)
-            {
-                isSpawned = true;
-                rb.MovePosition(spawnLocations[i].transform.position);
-                spawnLocations[i].CanSpawnPlayer = false;
-                isSpawned = true;
-                print("the player " + name + " has been spawned at " + spawnLocations[i].transform.position);
-                print(transform.position);
-                break;
-            }
-
+            ISpell =  other.GetComponentInChildren<ISpell_Interface>();
+        }
+        if(ISpell != null)
+        {
+            GotHit(other.gameObject,ISpell.spell,ISpell.CasterId);
+            ISpell.TriggerEffect();
         }
 
+        
+        
 
     }
 

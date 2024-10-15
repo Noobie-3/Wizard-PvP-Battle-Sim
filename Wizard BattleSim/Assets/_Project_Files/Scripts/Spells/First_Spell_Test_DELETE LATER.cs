@@ -5,9 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 {
-    public Spell Spell;  // Your spell data object
+    public Spell spell;  // Your spell data object
     public Rigidbody Rb;
     public ulong CasterId { get; set; }
+
+    Spell ISpell_Interface.spell => spell;
+
     public bool Printdata = false;
     public bool hasShotSpell = false;
     public Vector3 Direction;
@@ -38,7 +41,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
         if (!hasShotSpell)
         {
             transform.LookAt(Direction);
-            Rb.AddForce(Direction * Spell.Spell_Speed, ForceMode.Impulse);
+            Rb.AddForce(Direction * spell.Spell_Speed, ForceMode.Impulse);
             print("Fired the spell");
             hasShotSpell = true;
         }
@@ -55,11 +58,9 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
         Destroy(gameObject, time);
     }*/
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (!IsOwner) return;
-        if (!IsClient) return;
-        NetworkObject networkObject;
+/*        NetworkObject networkObject;
         if(other.transform.root.GetComponent<NetworkObject>() == null)
         {
             if (other.transform.root.GetComponentInChildren<NetworkObject>() == null)
@@ -84,15 +85,15 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
             ihitable = networkObject.GetComponentInChildren<IHitable>();
         }
 
-        ihitable.GotHit(this.gameObject, Spell, CasterId); // Call the GotHit method on the object that was hit (if it has one
+        ihitable.GotHit(this.gameObject, spell, CasterId); // Call the GotHit method on the object that was hit (if it has one
         // Trigger the spell's effects when it hits something
-        TriggerEffect();
+        TriggerEffect();*/
 
 
     }
 
     // Method to trigger any spell effects (like damage or visual effects)
-    private void TriggerEffect()
+    public void TriggerEffect()
     {
         if (IsServer)
         {
@@ -110,7 +111,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     {
         while (Printdata)
         {
-            if (Spell == null)
+            if (spell == null)
             {
                 print("Spell is null");
             }

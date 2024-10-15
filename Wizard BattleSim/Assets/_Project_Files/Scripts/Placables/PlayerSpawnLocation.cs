@@ -6,6 +6,11 @@ using UnityEngine;
 public class PlayerSpawnLocation : NetworkBehaviour
 {
     public bool CanSpawnPlayer;
-    
+
+    [ClientRpc(RequireOwnership = false)]
+    public void SetCanSpawnClientRpc(bool Value)
+    {
+        CanSpawnPlayer = Value;
+    }
 
 }

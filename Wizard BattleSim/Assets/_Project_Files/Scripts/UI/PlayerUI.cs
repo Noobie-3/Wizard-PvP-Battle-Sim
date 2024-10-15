@@ -33,7 +33,7 @@ public class PlayerUI : NetworkBehaviour
 
 
     public void UpdateUI()
-    {
+    { 
         for (int i = 0; i < SpellCaster.MaxSpells; i++)
         {
             if(SpellSlotsImages[i].sprite != SpellCaster.SpellBook.SpellBook[SpellCaster.CurrentSpells[i]].SpellIcon)
@@ -43,9 +43,9 @@ public class PlayerUI : NetworkBehaviour
         }
         
         // Convert values to percentages
-        float health = player.Health / player.MaxHealth;
-        float mana = player.Mana / player.MaxMana;
-        float stamina = player.Stamina / player.MaxStamina;
+        float health = player.Health.Value / player.MaxHealth;
+        float mana = player.Mana.Value / player.MaxMana;
+        float stamina = player.Stamina.Value / player.MaxStamina;
 
         // Fill the bars
         healthBar.fillAmount = health;
