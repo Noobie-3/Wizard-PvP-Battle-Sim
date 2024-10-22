@@ -90,14 +90,14 @@ public class SpellCaster : NetworkBehaviour
             RaycastHit raycastHit;
             Vector3 ShotDir;
 
-            if (Physics.Raycast(Player.camComponent.transform.position, Player.camComponent.transform.forward, out raycastHit, 10))
+            if (Physics.Raycast(Player.camComponent.transform.position, Player.camComponent.transform.forward, out raycastHit, 100))
             {
                 ShotDir = raycastHit.point;
 
             }
             else
             {
-                ShotDir = Player.camComponent.transform.forward * 10;
+                ShotDir = Player.camComponent.transform.forward * 100;
             }
 
             print("the spell is being casted" + CurrentSpells[SelectedSpell] + " the client who fired the shots id is " + OwnerClientId);
@@ -149,7 +149,7 @@ public class SpellCaster : NetworkBehaviour
     {
         print("Casting spell on server\n" + "Spell id" + SpellBook.SpellBook[SpellToCast].Spell_Name);
         GameObject CastedSpell =  Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
-        CastedSpell.GetComponent<NetworkObject>().Spawn();
+        CastedSpell.GetComponent<NetworkObject>().SpawnAsPlayerObject(CasterId);
         CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
         CastedSpell.GetComponent<ISpell_Interface>().FireSpell();
     }

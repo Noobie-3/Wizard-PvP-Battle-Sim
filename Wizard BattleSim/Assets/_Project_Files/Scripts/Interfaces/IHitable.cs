@@ -10,7 +10,16 @@ public interface IHitable
     //it takes in the object that hit it, the spell that hit it, and the object that cast the spell
     void GotHit(GameObject ThingThatHitMe, Spell spell, ulong Casterid);
 
+    [SerializeField]
+     enum ObjectType
+    {
 
-    
-    
+        nullify,
+        Player,
+        Breakable
+
+    }
+
+
+
 }

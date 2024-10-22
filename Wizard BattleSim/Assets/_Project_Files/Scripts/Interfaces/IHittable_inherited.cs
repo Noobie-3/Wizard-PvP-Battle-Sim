@@ -7,44 +7,41 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
 {
 
    [SerializeField] private enum ObjectType {
-
+        player,
         nullify,
-        Player,
         Breakable
 
     }
     [SerializeField] ObjectType Type;
-
+    [SerializeField] private PlayerController PC;
 
     public void GotHit(GameObject ThingThatHitMe, Spell Spell, ulong CasterId ) {
-        if(!IsOwner) return;
-        if(Type == ObjectType.nullify) {
+        if (Type == ObjectType.nullify)
+        {
 
-            Destroy(ThingThatHitMe);
             print("Spell  Nullable obj got hit");
             print(gameObject.name);
 
-        }    
-        
-        else if(Type == ObjectType.Player) {
+        }
+        else if(Type == ObjectType.player) {
+            print("Player got hit");
+            PC = GetComponent<PlayerController>();
+            PC.TakeDamage(Spell); 
+        }
 
-
-            print("Got hit by a spell" + Spell.Spell_Name + "from" + CasterId);
-
-        }   
-        
         else if(Type == ObjectType.Breakable) {
             print("Breakable got hit");
 
         }
 
-        Destroy(ThingThatHitMe);
+
 
 
 
     }
 
-    private void OnTriggerEnter(Collider other)
+
+    /*private void OnTriggerEnter(Collider other)
     {
         ISpell_Interface ISpell;
         other.gameObject.TryGetComponent<ISpell_Interface>(out ISpell);
@@ -55,7 +52,7 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
             ISpell.TriggerEffect();
 
         }
-    }
+    }*/
 
 
 

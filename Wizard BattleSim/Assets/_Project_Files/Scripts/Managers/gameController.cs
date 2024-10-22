@@ -96,6 +96,7 @@ public class gameController : NetworkBehaviour
                 if (spawnLocations[i].CanSpawnPlayer && PC.isSpawned == false)
                 {
                     spawnLocations[i].SetCanSpawnClientRpc(false);
+                    PC.MySpawn = spawnLocations[i];
                     PC.isSpawned = true;
                     if (PC.rb == null) return;
                     PC.rb.MovePosition(spawnLocations[i].transform.position);

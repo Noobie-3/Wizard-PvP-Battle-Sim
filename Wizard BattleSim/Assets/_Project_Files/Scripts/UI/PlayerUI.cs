@@ -53,9 +53,9 @@ public class PlayerUI : NetworkBehaviour
         manaBar.fillAmount = mana;
 
         // Update the text
-        healthText.text = $"Health: {player.Health}/{player.MaxHealth}";
-        staminaText.text = $"Stamina: {player.Stamina}/{player.MaxStamina}";
-        manaText.text = $"Mana: {player.Mana}/{player.MaxMana}";
+        healthText.text = $"Health: {player.Health.Value}/{player.MaxHealth}";
+        staminaText.text = $"Stamina: {player.Stamina.Value}/{player.MaxStamina}";
+        manaText.text = $"Mana: {player.Mana.Value}/{player.MaxMana}";
 
         //Change Spell icons for selection
 

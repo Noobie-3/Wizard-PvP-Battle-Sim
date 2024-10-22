@@ -10,9 +10,10 @@ using TMPro;
 using UnityEngine.Rendering.UI;
 using UnityEngine.SceneManagement;
 using Unity.Netcode.Components;
+using System.Threading;
 
 [RequireComponent(typeof(Rigidbody), typeof(SpellCaster))]
-public class PlayerController : NetworkBehaviour, IHitable
+public class PlayerController : NetworkBehaviour
 {
 
     // Movement variables
@@ -67,6 +68,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     public bool isSpawned;
 
     public ulong MyClientID => NetworkObject.OwnerClientId;
+    public PlayerSpawnLocation MySpawn;
 
     // Input variables
     [Header("Input Settings")]
@@ -318,21 +320,15 @@ public class PlayerController : NetworkBehaviour, IHitable
         spellCooldownTimers = new List<float>(new float[currentSpells.Count]);
     }
 
-    // Health, Mana, Stamina handling
+/*    // Health, Mana, Stamina handling
     public void GotHit(GameObject ThingThatHitMe, Spell spell, ulong casterID)
     {
 
-        //check to make sure not caster
-        if (casterID == NetworkObject.OwnerClientId)
-        {
-            return;
-        }
 
 
-        else
-        {
-            GotHitServerRpc(spell.Spell_Damage, casterID);
-        }
+
+        GotHitServerRpc(spell.Spell_Damage, casterID);
+
         PlayerUi.UpdateUI();
 
         print("Got hit by caster Id : " + casterID + " My Caster Id Is : " + NetworkObject.OwnerClientId);
@@ -348,9 +344,10 @@ public class PlayerController : NetworkBehaviour, IHitable
         if (Health.Value <= 0 && CanDie)
         {
             print("Player( " + gameObject.name + " )has died");
+            Respawn();
         }
     }
-
+*/
 
 
     // Ground check
@@ -543,7 +540,7 @@ public class PlayerController : NetworkBehaviour, IHitable
     }
     private void OnTriggerEnter(Collider other)
     {
-        ISpell_Interface ISpell;
+/*        ISpell_Interface ISpell;
         other.TryGetComponent<ISpell_Interface>(out ISpell);
         if(ISpell == null)
         {
@@ -554,12 +551,22 @@ public class PlayerController : NetworkBehaviour, IHitable
             GotHit(other.gameObject,ISpell.spell,ISpell.CasterId);
             ISpell.TriggerEffect();
         }
-
+*/
         
         
 
     }
 
 
+    public void Respawn()
+    {
+        if (!IsOwner) return;
+        rb.position = MySpawn.transform.position;
+        print("respawned " + name + "at the location" + MySpawn.transform.position);
+    }
 
+    public void TakeDamage(Spell spell)
+    {
+        print(name + "PLayer took dmaage from" + spell);
+    }
 }

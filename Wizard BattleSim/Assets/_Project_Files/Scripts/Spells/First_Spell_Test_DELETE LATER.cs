@@ -22,7 +22,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 
             //Destroy(gameObject, spell.LifeTime);
 
-            //DestroyObjectServerRpc(spell.LifeTime);  // Destroy object after lifetime on the server
+            DestroyObjectServerRpc(spell.LifeTime);  // Destroy object after lifetime on the server
         }
     }
 
@@ -41,8 +41,8 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
         if (!hasShotSpell)
         {
             transform.LookAt(Direction);
-            Rb.AddForce(Direction * spell.Spell_Speed, ForceMode.Impulse);
-            print("Fired the spell");
+            Rb.AddForce(transform.forward * spell.Spell_Speed, ForceMode.Impulse);
+            print("Fired the spell int the Direction" + Direction);
             hasShotSpell = true;
         }
     }
@@ -51,43 +51,33 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 
 
     // Server RPC to destroy the object after a set amount of time
-/*    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false)]
     private void DestroyObjectServerRpc(float time)
     {
         print("SpellDied");
         Destroy(gameObject, time);
-    }*/
+    }
 
-    private void OnTriggerStay(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-/*        NetworkObject networkObject;
-        if(other.transform.root.GetComponent<NetworkObject>() == null)
+        if (!IsOwner) return;
+
+
+
+        IHitable ihitable = other.transform.root.GetComponent<IHitable>();
+        print("spell hit the object " + ihitable);
+        if(ihitable == null)
         {
-            if (other.transform.root.GetComponentInChildren<NetworkObject>() == null)
-            {
-                return;
-            }
-            else
-            {
-                networkObject = other.transform.root.GetComponentInChildren<NetworkObject>();
-            }
+            print("ihitable is null");
+            return;
         }
         else
         {
-            networkObject = other.transform.root.GetComponent<NetworkObject>();
+            print("the object that should have been hit is " + other.gameObject);
         }
-
-
-        IHitable ihitable;
-        networkObject.TryGetComponent<IHitable>(out ihitable);
-        if (ihitable == null)
-        {
-            ihitable = networkObject.GetComponentInChildren<IHitable>();
-        }
-
         ihitable.GotHit(this.gameObject, spell, CasterId); // Call the GotHit method on the object that was hit (if it has one
         // Trigger the spell's effects when it hits something
-        TriggerEffect();*/
+        TriggerEffect();
 
 
     }
@@ -95,10 +85,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     // Method to trigger any spell effects (like damage or visual effects)
     public void TriggerEffect()
     {
-        if (IsServer)
-        {
-            Destroy(gameObject);
-        }
+        DestroyObjectServerRpc(0);
         print("SpellTriggered effect");
 
         
