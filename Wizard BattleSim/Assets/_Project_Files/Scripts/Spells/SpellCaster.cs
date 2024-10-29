@@ -30,9 +30,8 @@ public class SpellCaster : NetworkBehaviour
     [SerializeField] public bool IsChangingSpell;
     [SerializeField] public bool IsCasting;
     [SerializeField] public  Transform CastPosition;
-
-
-
+    [SerializeField] public Camera Cam;
+    public List<float> spellCooldownTimers = new List<float>();
     private void FixedUpdate()
     {
         if (!IsOwner) return;
@@ -50,7 +49,6 @@ public class SpellCaster : NetworkBehaviour
         {
             SelectedSpell--;
             print(SelectedSpell + "what  Spell is selected ");
-
             if (SelectedSpell < 0)
             {
                 SelectedSpell =  MaxSpells - 1;
@@ -64,7 +62,6 @@ public class SpellCaster : NetworkBehaviour
             {
                 SelectedSpell = 0;
             }
-
         }
           print("Final Spell Selction affte scroll" + SelectedSpell);
 
@@ -79,37 +76,17 @@ public class SpellCaster : NetworkBehaviour
     }
     public  void CastSpell()
     { 
-
-
-        if (!IsOwner) return;
-
-        
+        if (!IsOwner) return;        
         print("Casting spell");
         if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
         {
-            RaycastHit raycastHit;
-            Vector3 ShotDir;
-
-            if (Physics.Raycast(Player.camComponent.transform.position, Player.camComponent.transform.forward, out raycastHit, 100))
-            {
-                ShotDir = raycastHit.point;
-
-            }
-            else
-            {
-                ShotDir = Player.camComponent.transform.forward * 100;
-            }
-
-            print("the spell is being casted" + CurrentSpells[SelectedSpell] + " the client who fired the shots id is " + OwnerClientId);
-            
+            var ShotDir = Cam.transform.forward;
             CastSpellServerRpc(CurrentSpells[SelectedSpell], CastPosition.position, OwnerClientId, ShotDir);
-            print("Spell casted");
             CurrentSpellsTimers[SelectedSpell] = SpellBook.SpellBook[SelectedSpell].CooldownDuration;
         }
     }
     public void isCastingSpell()
     {
-
         CastTimeUi.SetActive(true);
         if (IsCasting)
         { 
@@ -149,7 +126,7 @@ public class SpellCaster : NetworkBehaviour
     {
         print("Casting spell on server\n" + "Spell id" + SpellBook.SpellBook[SpellToCast].Spell_Name);
         GameObject CastedSpell =  Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
-        CastedSpell.GetComponent<NetworkObject>().SpawnAsPlayerObject(CasterId);
+        CastedSpell.GetComponent<NetworkObject>().Spawn();
         CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
         CastedSpell.GetComponent<ISpell_Interface>().FireSpell();
     }
@@ -189,5 +166,41 @@ public class SpellCaster : NetworkBehaviour
             }
         }
     }
+    private void UpdateSpellCooldownTimers()
+    {
+     //   spellCooldownTimers = new List<float>(new float[currentSpells.Count]);
+    }
+
+    private void SpellCooldown()
+    {
+        for (int i = 0; i < spellCooldownTimers.Count; i++)
+        {
+            if (spellCooldownTimers[i] > 0)
+            {
+                spellCooldownTimers[i] -= Time.deltaTime;
+            }
+        }
+    }
+
+    /*  // Spell management
+      public void AddSpell(Spell newSpell)
+      {
+          CurrentSpells.Add(newSpell);
+          UpdateSpellCooldownTimers();
+          PlayerUi.UpdateUI();
+      }
+
+      public void RemoveSpell(Spell spellToRemove)
+      {
+          int index = CurrentSpells.IndexOf(spellToRemove);
+          if (index >= 0)
+          {
+              CurrentSpells.RemoveAt(index);
+              UpdateSpellCooldownTimers();
+              PlayerUi.UpdateUI();
+
+          }
+      }
+  */
 
 }

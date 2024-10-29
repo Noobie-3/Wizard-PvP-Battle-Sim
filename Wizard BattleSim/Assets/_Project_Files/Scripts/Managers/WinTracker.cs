@@ -7,19 +7,16 @@ public class WinTracker : MonoBehaviour
 {   
     public int winsNeeded;
     public Dictionary<ulong, int> PLayerWins = new Dictionary<ulong, int>();
-    public static WinTracker SingleTon;
+    public static WinTracker Singleton;
 
-    //SingleTon Pattern
+    //Singleton Pattern
     private void Start()
     {
-        if(SingleTon == null)
+        if(Singleton == null)
         {
-            SingleTon = this;
+            Singleton = this;
         }
-        else if(SingleTon != this)
-        {
-            Destroy(gameObject);
-        }
+
     }
 
     public  void AddWin(ulong ClientID)

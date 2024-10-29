@@ -17,6 +17,7 @@ public class Spell : ScriptableObject {
     public float Spell_CastTime = 2; // Spell Cast Time
     public float MultiHitCooldown = 0.5f; // Multi Hit Cooldown
     public Sprite SpellIcon;
+    public Character CasterChar;
 
     public enum SpellType { // The Types Of Spells
         Spawnable_Spell,

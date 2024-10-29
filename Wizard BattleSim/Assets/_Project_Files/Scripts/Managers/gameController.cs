@@ -72,7 +72,7 @@ public class gameController : NetworkBehaviour
     }
 
 
-    public void SpawnPlayers(ulong ClientId)
+/*    public void SpawnPlayers(ulong ClientId)
     {
         var spawnLocations = FindObjectsOfType<PlayerSpawnLocation>();
         var AllPlayerControllers = FindObjectsOfType<PlayerController>();
@@ -109,7 +109,7 @@ public class gameController : NetworkBehaviour
         }
 
     }
-
+*/
 }
 
 

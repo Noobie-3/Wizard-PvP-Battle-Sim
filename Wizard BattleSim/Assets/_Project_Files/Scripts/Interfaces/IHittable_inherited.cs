@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class IHittable_inherited : NetworkBehaviour, IHitable
 {
 
-   [SerializeField] private enum ObjectType {
+    [SerializeField]
+    private enum ObjectType
+    {
         player,
         nullify,
         Breakable
@@ -15,45 +18,45 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
     [SerializeField] ObjectType Type;
     [SerializeField] private PlayerController PC;
 
-    public void GotHit(GameObject ThingThatHitMe, Spell Spell, ulong CasterId ) {
-        if (Type == ObjectType.nullify)
+
+
+    public bool GotHit(GameObject ThingThatHitMe, Spell Spell, ulong CasterId)
+    {
+        if(!IsServer) return false;
+        if (ThingThatHitMe == null)
         {
-
-            print("Spell  Nullable obj got hit");
-            print(gameObject.name);
-
-        }
-        else if(Type == ObjectType.player) {
-            print("Player got hit");
-            PC = GetComponent<PlayerController>();
-            PC.TakeDamage(Spell); 
+            Debug.LogWarning("Spell hit null object.");
+            return true;
         }
 
-        else if(Type == ObjectType.Breakable) {
-            print("Breakable got hit");
-
+        if (Spell == null)
+        {
+            Debug.LogWarning("Spell is null.");
+            return false;
         }
 
+        Debug.Log(CasterId + " is the Caster ID. Spell hit.");
 
+        switch (Type)
+        {
+            case ObjectType.nullify:
+                Debug.Log("Nullable object got hit: " + gameObject.name);
+                break;
 
+            case ObjectType.player:
+                Debug.Log(OwnerClientId + "owner and casterId " + CasterId);
+                if (OwnerClientId == CasterId) return false;
+                Debug.Log("Player got hit.");
+                PC.TakeDamage(Spell, CasterId);
+                Destroy(ThingThatHitMe);
+                return true;
 
-
+            case ObjectType.Breakable:
+                Debug.Log("Breakable object got hit.");
+                return true;
+        }
+        return false;
     }
 
-
-    /*private void OnTriggerEnter(Collider other)
-    {
-        ISpell_Interface ISpell;
-        other.gameObject.TryGetComponent<ISpell_Interface>(out ISpell);
-
-        if(ISpell != null) 
-        {
-            GotHit(other.gameObject, ISpell.spell, ISpell.CasterId);
-            ISpell.TriggerEffect();
-
-        }
-    }*/
-
-
-
+    
 }

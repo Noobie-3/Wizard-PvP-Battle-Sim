@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
 
 public class ServerManager : NetworkBehaviour
@@ -85,17 +86,6 @@ public class ServerManager : NetworkBehaviour
     }
 
 
-    private void SpawnPlayer(int CharacterID, ulong ClientId)
-    {
-        //Spawn player
-        if (IsClient)
-        {
-
-            SpawnPlayerServerRpc(CharacterID, ClientId);
-        }
-
-    }
-    //Server RPc to spawn player
 
     [ServerRpc]
     private void SpawnPlayerServerRpc(int characterID, ulong clientId)
@@ -129,21 +119,37 @@ public class ServerManager : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void StartGameServerRpc()
+private void StartGameServerRpc()
     {
         print(playerCharacterIds.Count);
-        // Spawn players for each client after the scene is 
-        foreach(var Player in playerCharacterIds)
-        {
-            SpawnPlayer(Player.Value, Player.Key);
-        }
-        // Load the new scene on the server and all clients
-        NetworkManager.Singleton.SceneManager.LoadScene("Scene_01", UnityEngine.SceneManagement.LoadSceneMode.Single);
 
-        //Set Players Positons
+        // Load the new scene for all clients and the server
+        NetworkManager.Singleton.SceneManager.LoadScene("Scene_01", LoadSceneMode.Single);
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += StartGameHelper;
+
 
     }
+    public void StartGameHelper(ulong clientId, string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadMode)
+    {   // Register a callback to spawn players after the scene loads
+        
+        // Check if the server loaded the scene
+        SpawnManager.instance.spawnPoints = FindObjectsOfType<PlayerSpawnLocation>();
+        // Spawn players for each client after the scene loads
+        foreach (var playerEntry in playerCharacterIds)
+        {
+            SpawnPlayer(playerEntry.Key, characterDatabase.GetCharacterById(playerEntry.Value)); // Pass in clientId and prefab
+        }
+        NetworkManager.Singleton.SceneManager.OnLoadComplete -= StartGameHelper;
+    }
 
+    private void SpawnPlayer(ulong clientId, Character Player)
+    {
+
+        
+        // Register and spawn the player on the server
+        SpawnManager.instance.RegisterPlayerPrefab(clientId, Player.GameplayPrefab);
+        SpawnManager.instance.SpawnPlayer(clientId, Player.GameplayPrefab);
+    }
 
     public IEnumerator PrintData()
     {

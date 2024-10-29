@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class PlayerSpawnLocation : NetworkBehaviour
 {
-    public bool CanSpawnPlayer;
 
-    [ClientRpc(RequireOwnership = false)]
-    public void SetCanSpawnClientRpc(bool Value)
+    public bool IsAvailable = true;
+
+    public void SetAvailability(bool availability)
     {
-        CanSpawnPlayer = Value;
+        IsAvailable = availability;
     }
-
 }
+
+

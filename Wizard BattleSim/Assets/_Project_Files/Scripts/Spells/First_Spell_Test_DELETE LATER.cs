@@ -19,9 +19,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     {
         if (IsOwner)
         {
-
-            //Destroy(gameObject, spell.LifeTime);
-
+            Rb = GetComponent<Rigidbody>();  // Ensuring the Rigidbody is set
             DestroyObjectServerRpc(spell.LifeTime);  // Destroy object after lifetime on the server
         }
     }
@@ -29,22 +27,19 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     // This method is called by the player to initialize the spell
     public void Initialize(ulong casterId, Vector3 direction)
     {
-        Rb = GetComponent<Rigidbody>();
         CasterId = casterId;  // Set the caster's ID
         Direction = direction; // Set the movement direction
-
         print("The spell says the caster is " + CasterId);
     }
-    
+
     public void FireSpell()
     {
-        if (!hasShotSpell)
-        {
-            transform.LookAt(Direction);
-            Rb.AddForce(transform.forward * spell.Spell_Speed, ForceMode.Impulse);
-            print("Fired the spell int the Direction" + Direction);
-            hasShotSpell = true;
-        }
+
+/*        transform.LookAt(Direction);
+        Rb.AddForce(transform.forward * spell.Spell_Speed, ForceMode.Impulse);
+        Debug.Log("Fired the spell in the direction: " + Direction);
+        hasShotSpell = true;
+        */
     }
 
 
@@ -60,38 +55,30 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!IsOwner) return;
-
-
+        if (!IsServer) return;  // The server should handle hits
 
         IHitable ihitable = other.transform.root.GetComponent<IHitable>();
-        print("spell hit the object " + ihitable);
-        if(ihitable == null)
+        if (ihitable == null)
         {
-            print("ihitable is null");
+            Debug.LogWarning("No IHitable found on " + other.gameObject.name);
             return;
         }
-        else
-        {
-            print("the object that should have been hit is " + other.gameObject);
-        }
-        ihitable.GotHit(this.gameObject, spell, CasterId); // Call the GotHit method on the object that was hit (if it has one
-        // Trigger the spell's effects when it hits something
-        TriggerEffect();
 
+        Debug.Log($"Spell {gameObject.name} hit {other.gameObject.name} with spell {spell}. Caster ID: {CasterId}");
 
+        var HitData = ihitable.GotHit(gameObject, spell, CasterId);// Notify the hit object
+        if (HitData == false) return;
+        TriggerEffect();  // Trigger spell effects
     }
 
     // Method to trigger any spell effects (like damage or visual effects)
     public void TriggerEffect()
     {
-        DestroyObjectServerRpc(0);
-        print("SpellTriggered effect");
+        // Trigger VFX/SFX here before destroying the object
+        // Example: Instantiate an explosion effect, or play a sound effect
+        DestroyObjectServerRpc(.1f);
 
-        
-
-        // Add custom effects here, such as damage or explosions
-
+        Debug.Log("Spell triggered effect and is being destroyed.");
     }
 
     public IEnumerator PrintData()
@@ -100,16 +87,20 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
         {
             if (spell == null)
             {
-                print("Spell is null");
+                Debug.LogError("Spell is null");
             }
 
             if (Rb == null)
             {
-                print("Rb is null");
+                Debug.LogError("Rigidbody is null");
             }
 
-            yield return 1f;
+            yield return new WaitForSeconds(1f);  // Wait 1 second between logs
         }
-        yield return null;
+    }
+    private void FixedUpdate()
+    {
+        transform.Translate(Direction * spell.Spell_Speed * Time.deltaTime);
+
     }
 }

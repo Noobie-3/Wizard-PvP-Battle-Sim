@@ -50,6 +50,7 @@ public class PlayerController : NetworkBehaviour
 
     // Miscellaneous settings
     [Header("Miscellaneous Settings")]
+    [SerializeField] public Character CharacterChosen;
     [SerializeField] private GameObject MeshToRotate;
     [SerializeField] private AudioListener audioListener;
     [SerializeField] private bool JumpUsed = false;
@@ -67,8 +68,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private bool IsDebug = true;
     public bool isSpawned;
 
-    public ulong MyClientID => NetworkObject.OwnerClientId;
-    public PlayerSpawnLocation MySpawn;
+    public ulong MyClientID;
 
     // Input variables
     [Header("Input Settings")]
@@ -83,7 +83,6 @@ public class PlayerController : NetworkBehaviour
     [Header("Spell Settings")]
     public List<Spell> currentSpells = new List<Spell>();
     [SerializeField] public int selectedSpellIndex = 0;
-    public List<float> spellCooldownTimers = new List<float>();
     public SpellCaster SpellCasterScript;
     public bool IsCasting = false;
     public float CastSpeed = 1f;
@@ -116,30 +115,23 @@ public class PlayerController : NetworkBehaviour
 
         if (IsOwner)
         {
-            NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoaded;
-
-
+            MyClientID = OwnerClientId;
             DontDestroyOnLoad(gameObject);
             camComponent.enabled = false;
             camComponent.enabled = true;
-
             audioListener.enabled = true;
             Vcam.Priority = 1;
-
             if (PlayerUi != null)
                 PlayerUi.gameObject.SetActive(true);
             PlayerUi.UpdateUI();
-
             rb = GetComponent<Rigidbody>();
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-
             // Initialize spell cooldown timers based on current spells
-            UpdateSpellCooldownTimers();
             StartCoroutine(PrintData());
-
         }
         else
         {
+            Destroy(camComponent);
             audioListener.enabled = false;
             Vcam.Priority = 0;
             PlayerUi.gameObject.SetActive(false);
@@ -159,7 +151,6 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsOwner) return;
 
-        SpellCooldown();
         AnimateObject();
         
     }
@@ -175,11 +166,7 @@ public class PlayerController : NetworkBehaviour
         {
             MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
         }
-
-
-
     }
-
     // Movement logic
     private void MoveObject()
     {
@@ -188,13 +175,11 @@ public class PlayerController : NetworkBehaviour
             // If charging a spell, prevent movement
             return;
         }
-
         // Apply Gravity if enabled
         if (Gravity)
         {
             rb.AddForce(Vector3.down * gameController.GC.Gravity_force, ForceMode.Acceleration);
         }
-
         // Calculate movement direction
         if (!IsWallRunning)
         {
@@ -202,7 +187,6 @@ public class PlayerController : NetworkBehaviour
             moveDirection.y = 0;
             // Apply movement
             rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
-
             if (MoveInput == Vector2.zero && Grounded)
             {
                 // If no input and grounded, stop horizontal movement
@@ -213,26 +197,20 @@ public class PlayerController : NetworkBehaviour
         {
             // If wall running, adjust velocity to maintain wall run
             Vector3 wallRunDirection = Vector3.Cross(currentWallNormal, Vector3.up).normalized;
-
             // Determine if player is moving forward along the wall
             if (Vector3.Dot(wallRunDirection, Cam.forward) < 0)
             {
                 wallRunDirection = -wallRunDirection;
             }
-
             rb.velocity = wallRunDirection * moveSpeed + Vector3.up * rb.velocity.y;
         }
     }
-
-    
-
     //Rotation logic
     [ServerRpc]
     private void RotateObjectServerRpc(Vector3 moveDirection)
     {
         RotateObjectClientRpc(moveDirection);
     }
-
     [ClientRpc]
     private void RotateObjectClientRpc(Vector3 moveDirection)
     {
@@ -240,8 +218,6 @@ public class PlayerController : NetworkBehaviour
         {
             MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
         }
-        
-
     }
     // Input handlers
     public void GetMoveInput(InputAction.CallbackContext context)
@@ -249,42 +225,23 @@ public class PlayerController : NetworkBehaviour
         MoveInput = context.ReadValue<Vector2>();
         IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
     }
-
     public void GetMouseInput(InputAction.CallbackContext context)
     {
         MouseInput = context.ReadValue<Vector2>();
     }
-
     public void GetChargeStatus(InputAction.CallbackContext context)
     {
         if (!Grounded) return;
         Charging = context.ReadValueAsButton();
     }
-
-
-    private void SpellCooldown()
-    {
-        for (int i = 0; i < spellCooldownTimers.Count; i++)
-        {
-            if (spellCooldownTimers[i] > 0)
-            {
-                spellCooldownTimers[i] -= Time.deltaTime;
-            }
-        }
-    }
-
     // Jump logic
     public void JumpInput(InputAction.CallbackContext context)
-    {
-        
+    {        
         //SpellCasterScript.ResetChargeSpell();
         if (context.performed && (Grounded || IsWallRunning))
         {
-            SpellCasterScript.TristanCast();
-
-            
+            SpellCasterScript.TristanCast();            
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
-
             if (IsWallRunning)
             {
                 // Upon jumping off the wall, reset wall running state
@@ -293,93 +250,27 @@ public class PlayerController : NetworkBehaviour
             }
         }
     }
-
-
-    // Spell management
-    public void AddSpell(Spell newSpell)
-    {
-        currentSpells.Add(newSpell);
-        UpdateSpellCooldownTimers();
-        PlayerUi.UpdateUI();
-    }
-
-    public void RemoveSpell(Spell spellToRemove)
-    {
-        int index = currentSpells.IndexOf(spellToRemove);
-        if (index >= 0)
-        {
-            currentSpells.RemoveAt(index);
-            UpdateSpellCooldownTimers();
-            PlayerUi.UpdateUI();
-
-        }
-    }
-
-    private void UpdateSpellCooldownTimers()
-    {
-        spellCooldownTimers = new List<float>(new float[currentSpells.Count]);
-    }
-
-/*    // Health, Mana, Stamina handling
-    public void GotHit(GameObject ThingThatHitMe, Spell spell, ulong casterID)
-    {
-
-
-
-
-        GotHitServerRpc(spell.Spell_Damage, casterID);
-
-        PlayerUi.UpdateUI();
-
-        print("Got hit by caster Id : " + casterID + " My Caster Id Is : " + NetworkObject.OwnerClientId);
-
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void GotHitServerRpc(float SpellDamage, ulong casterID)
-    {
-        Health.Value -= SpellDamage;
-        print("Player got hit by a spell from " + casterID + " for " + SpellDamage + " damage");
-
-        if (Health.Value <= 0 && CanDie)
-        {
-            print("Player( " + gameObject.name + " )has died");
-            Respawn();
-        }
-    }
-*/
-
-
     // Ground check
     private void GroundCheck()
     {
         Grounded = Physics.Raycast(MeshToRotate.transform.position + GroundCheck_Start, Vector3.down, GroundCheck_Distance, gameController.GC.GroundLayer);
-
         if (Grounded)
         {
             JumpUsed = false;
         }
-
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
     }
-
-
-
     private void WallCheck()
     {
         if (!IsOwner) return;
         if (MoveInput == Vector2.zero) return;
-
         if (!Grounded)
         {
             if (!AbleToWallRun) return;
-
             RaycastHit hit;
-
             // Check if player is high enough from the ground to wall run
             if (!Physics.Raycast(MeshToRotate.transform.position, Vector3.down, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
-            {
-                // Perform raycasts in multiple directions to detect walls
+            {// Perform raycasts in multiple directions to detect walls
                 if (Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, MeshToRotate.transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, -transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
@@ -390,24 +281,19 @@ public class PlayerController : NetworkBehaviour
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer))
                 {
                     Vector3 wallNormal = hit.normal;
-
-                    // Determine if the wall is suitable for wall running (e.g., not too steep)
+                    // Determine if the wall is suitable for wall running (not too steep)
                     if (Vector3.Dot(wallNormal, Vector3.up) < 0.1f)
                     {
                         currentWallNormal = wallNormal;
-
                         // Rotate the player to face 90 degrees along the wall
                         Vector3 wallForward = Vector3.Cross(wallNormal, Vector3.up).normalized;
-
                         // Determine the correct direction based on player's input
                         if (Vector3.Dot(wallForward, Cam.forward) < 0)
                         {
                             wallForward = -wallForward;
                         }
-
                         Quaternion targetRotation = Quaternion.LookRotation(wallForward, Vector3.up);
                         MeshToRotate.transform.rotation = targetRotation;
-
                         SetWallRunningServerRpc(true);
                     }
                 }
@@ -418,11 +304,9 @@ public class PlayerController : NetworkBehaviour
                 }
 
                 if (IsWallRunning && AbleToWallRun)
-                {
-                    // Zero out vertical velocity to prevent falling
+                {   // Zero out vertical velocity to prevent falling
                     rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
                     ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
-
                     if (Stamina.Value <= 0)
                     {
                         SetWallRunningServerRpc(false);
@@ -430,7 +314,6 @@ public class PlayerController : NetworkBehaviour
                         AbleToWallRun = false;
                     }
                 }
-
                 // Debugging raycasts
                 Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
@@ -442,7 +325,6 @@ public class PlayerController : NetworkBehaviour
                 Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, Vector3.down * DistanceFromFloorRequiredToWallRun, Color.blue);
                 PlayerUi.UpdateUI();
-
             }
         }
         else
@@ -451,12 +333,10 @@ public class PlayerController : NetworkBehaviour
             AbleToWallRun = true;
         }
     }
-
     [ServerRpc]
     private void SetWallRunningServerRpc(bool isWallRunning)
     {
         IsWallRunning = isWallRunning;
-
         if (!IsWallRunning)
         {
             // Reset rotation to face the direction of the camera smoothly
@@ -464,14 +344,12 @@ public class PlayerController : NetworkBehaviour
             MeshToRotate.transform.rotation = Quaternion.Slerp(MeshToRotate.transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
     }
-
     [ServerRpc]
     private void ReduceStaminaServerRpc(float amount)
     {
         Stamina.Value -= amount;
     }
-
-    // Regeneration
+    // Regeneration make it one function later
     private IEnumerator ManaRegen()
     {
         while (true)
@@ -482,14 +360,11 @@ public class PlayerController : NetworkBehaviour
                 {
                     Mana.Value  += 1f;
                     Mana.Value = Mathf.Min(Mana.Value, MaxMana); // Clamp to MaxMana
-
-
                 }
             }
             yield return new WaitForSeconds(1f);
             if(!IsOwner) yield return new WaitForSeconds(0f);
             PlayerUi.UpdateUI();
-
         }
     }
 
@@ -506,7 +381,6 @@ public class PlayerController : NetworkBehaviour
                 }
             }
             PlayerUi.UpdateUI();
-
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -516,57 +390,49 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsOwner) return;
         if (Anim == null) return;
-
         // Update animation parameters
         Anim.SetBool("IsRunning", IsRunning);
         Anim.SetBool("IsCharging", Charging);
         Anim.SetBool("IsWallRunning", IsWallRunning);
     }
-
     public IEnumerator PrintData()
     {
         if (!IsOwner) yield return null;
         while (IsDebug)
         {
-
            yield  return new WaitForSeconds(5f);
         }
     }
 
-    private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+    [ServerRpc(RequireOwnership = false)]
+    public void DieServerRpc(ulong Hitter, ulong Sender)
     {
-        gameController.GC.SpawnPlayers(NetworkManager.Singleton.LocalClientId);
-
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-/*        ISpell_Interface ISpell;
-        other.TryGetComponent<ISpell_Interface>(out ISpell);
-        if(ISpell == null)
+        print("Sender is " + Sender + "Hitter is " + Hitter);
+        if(!IsServer) return;
+        if (WinTracker.Singleton != null)
         {
-            ISpell =  other.GetComponentInChildren<ISpell_Interface>();
+            WinTracker.Singleton.AddWin(Hitter);
+            print("Win added");
         }
-        if(ISpell != null)
-        {
-            GotHit(other.gameObject,ISpell.spell,ISpell.CasterId);
-            ISpell.TriggerEffect();
-        }
-*/
-        
-        
+        SpawnManager.instance.RespawnPlayer(Sender);
+
+        Destroy(gameObject);
 
     }
-
-
-    public void Respawn()
+    public void TakeDamage(Spell spell, ulong whoHitMeName)
     {
-        if (!IsOwner) return;
-        rb.position = MySpawn.transform.position;
-        print("respawned " + name + "at the location" + MySpawn.transform.position);
+        if(!IsServer) return;
+        print(name + "PLayer took dmaage from" + spell + " Cast by  " + CharacterChosen.DisplayName);
+        TakeDamageServerRpc(spell.Spell_Damage);
+        PlayerUi.UpdateUI();
+        if (Health.Value !<= 0) return;
+        if (!CanDie) return;
+        DieServerRpc(whoHitMeName, this.OwnerClientId);
+        print("called Die On " + CharacterChosen.DisplayName);
     }
-
-    public void TakeDamage(Spell spell)
+    [ServerRpc(RequireOwnership = false)]
+    public void TakeDamageServerRpc(float Damage)
     {
-        print(name + "PLayer took dmaage from" + spell);
+        Health.Value -= Damage;
     }
 }
