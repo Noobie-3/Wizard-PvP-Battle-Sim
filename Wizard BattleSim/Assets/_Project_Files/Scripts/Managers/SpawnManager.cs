@@ -14,6 +14,7 @@ public class SpawnManager : NetworkBehaviour
     private void Awake()
     {
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     // Method to register each player's prefab
@@ -85,6 +86,8 @@ public class SpawnManager : NetworkBehaviour
         // Instantiate and spawn the player at the assigned spawn point
         NetworkObject playerInstance = Instantiate(playerPrefab, assignedSpawnPoint.transform.position, Quaternion.identity);
         playerInstance.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+        Debug.Log($"spawned player {clientId} at {assignedSpawnPoint.transform.position} players actual position is {playerInstance.transform.position}");
+
     }
 
     public void RespawnPlayer(ulong clientId)
@@ -112,8 +115,7 @@ public class SpawnManager : NetworkBehaviour
         {
             NetworkObject playerInstance = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity);
             playerInstance.SpawnWithOwnership(clientId);
-
-            Debug.Log($"Respawned player {clientId} at {spawnPoint.transform.position}");
+            Debug.Log($"Respawned player {clientId} at {spawnPoint.transform.position} players actual position is {playerInstance.transform.position}" );
         }
         else
         {

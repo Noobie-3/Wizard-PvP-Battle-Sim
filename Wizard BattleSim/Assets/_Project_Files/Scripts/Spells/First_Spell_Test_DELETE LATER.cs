@@ -35,11 +35,11 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     public void FireSpell()
     {
 
-/*        transform.LookAt(Direction);
+        transform.LookAt(Direction);
         Rb.AddForce(transform.forward * spell.Spell_Speed, ForceMode.Impulse);
         Debug.Log("Fired the spell in the direction: " + Direction);
         hasShotSpell = true;
-        */
+
     }
 
 
@@ -100,7 +100,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     }
     private void FixedUpdate()
     {
-        transform.Translate(Direction * spell.Spell_Speed * Time.deltaTime);
-
+/*        transform.Translate(Direction * spell.Spell_Speed * Time.deltaTime);
+*/
     }
 }

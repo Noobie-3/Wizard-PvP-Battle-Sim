@@ -115,6 +115,7 @@ public class PlayerController : NetworkBehaviour
 
         if (IsOwner)
         {
+            print("My location is " + transform.position + name);
             MyClientID = OwnerClientId;
             DontDestroyOnLoad(gameObject);
             camComponent.enabled = false;
@@ -166,6 +167,7 @@ public class PlayerController : NetworkBehaviour
         {
             MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
         }
+        PlayerUi.UpdateUI();
     }
     // Movement logic
     private void MoveObject()
@@ -186,11 +188,11 @@ public class PlayerController : NetworkBehaviour
             moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
             moveDirection.y = 0;
             // Apply movement
-            rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
+            rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
             if (MoveInput == Vector2.zero && Grounded)
             {
                 // If no input and grounded, stop horizontal movement
-                rb.velocity = new Vector3(0, rb.velocity.y, 0);
+                rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
             }
         }
         else
@@ -202,7 +204,7 @@ public class PlayerController : NetworkBehaviour
             {
                 wallRunDirection = -wallRunDirection;
             }
-            rb.velocity = wallRunDirection * moveSpeed + Vector3.up * rb.velocity.y;
+            rb.linearVelocity = wallRunDirection * moveSpeed + Vector3.up * rb.linearVelocity.y;
         }
     }
     //Rotation logic
@@ -305,7 +307,7 @@ public class PlayerController : NetworkBehaviour
 
                 if (IsWallRunning && AbleToWallRun)
                 {   // Zero out vertical velocity to prevent falling
-                    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
                     ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
                     if (Stamina.Value <= 0)
                     {
@@ -425,14 +427,22 @@ public class PlayerController : NetworkBehaviour
         print(name + "PLayer took dmaage from" + spell + " Cast by  " + CharacterChosen.DisplayName);
         TakeDamageServerRpc(spell.Spell_Damage);
         PlayerUi.UpdateUI();
-        if (Health.Value !<= 0) return;
-        if (!CanDie) return;
-        DieServerRpc(whoHitMeName, this.OwnerClientId);
-        print("called Die On " + CharacterChosen.DisplayName);
+        if (Health.Value > 0)
+        {
+            print("Health is not low enough for death on " + name);
+            return;
+        }
+        if (CanDie)
+        {
+            DieServerRpc(whoHitMeName, this.OwnerClientId);
+            print("called Die On " + CharacterChosen.DisplayName);
+        }
     }
     [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(float Damage)
     {
         Health.Value -= Damage;
+        PlayerUi.UpdateUI();
+
     }
 }

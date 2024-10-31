@@ -80,7 +80,16 @@ public class SpellCaster : NetworkBehaviour
         print("Casting spell");
         if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
         {
-            var ShotDir = Cam.transform.forward;
+            Vector3 ShotDir;
+            RaycastHit hit;
+            if(Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, Mathf.Infinity))
+            {
+                ShotDir = hit.point;
+            }
+            else
+            {
+                ShotDir = Cam.transform.forward;
+            }
             CastSpellServerRpc(CurrentSpells[SelectedSpell], CastPosition.position, OwnerClientId, ShotDir);
             CurrentSpellsTimers[SelectedSpell] = SpellBook.SpellBook[SelectedSpell].CooldownDuration;
         }
@@ -96,11 +105,7 @@ public class SpellCaster : NetworkBehaviour
             CastSpellChargeText.text = (CastTimeProgressDecimal * 100).ToString() + "%";
             if(CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
             {
-                if (IsServer)
-                {
-                    Player.Mana.Value -= SpellBook.SpellBook[SelectedSpell].ManaCost;
 
-                }
                 CastSpell();
                 CastTimeProgress = 0;
                 IsCasting = false;
@@ -125,6 +130,7 @@ public class SpellCaster : NetworkBehaviour
     private void CastSpellServerRpc(int SpellToCast, Vector3 positon, ulong CasterId, Vector3 camDir)
     {
         print("Casting spell on server\n" + "Spell id" + SpellBook.SpellBook[SpellToCast].Spell_Name);
+        Player.Mana.Value -= SpellBook.SpellBook[SelectedSpell].ManaCost;
         GameObject CastedSpell =  Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
         CastedSpell.GetComponent<NetworkObject>().Spawn();
         CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
