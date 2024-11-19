@@ -11,10 +11,11 @@ public class ServerManager : NetworkBehaviour
 {
     public static ServerManager Instance { get; private set; }
     [SerializeField] CharacterSelectDisplay characterSelectDisplay;
+    public WandSelectDisplay wandSelectDisplay;
     [SerializeField] private CharacterDatabase characterDatabase;
     public Dictionary<ulong, int> playerCharacterIds = new Dictionary<ulong, int>();
     public Coroutine DataPrintCoRo;
-
+    public WandDatabase WandDataBase;
     // Start is called before the first frame update
     void Start()
     {
@@ -110,6 +111,7 @@ public class ServerManager : NetworkBehaviour
 
     public void StartGame()
     {
+        print("Called Start Game in Server Managaer");
         StopCoroutine(DataPrintCoRo);
 
         if (IsHost)
@@ -121,7 +123,7 @@ public class ServerManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
 private void StartGameServerRpc()
     {
-        print(playerCharacterIds.Count);
+        print(playerCharacterIds.Count + " PLayer character ids");
 
         // Load the new scene for all clients and the server
         NetworkManager.Singleton.SceneManager.LoadScene("Scene_01", LoadSceneMode.Single);
@@ -131,24 +133,28 @@ private void StartGameServerRpc()
     }
     public void StartGameHelper(ulong clientId, string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadMode)
     {   // Register a callback to spawn players after the scene loads
-        
+        print("Called Start Game helper in Server MNager");
         // Check if the server loaded the scene
         SpawnManager.instance.spawnPoints = FindObjectsOfType<PlayerSpawnLocation>();
         // Spawn players for each client after the scene loads
-        foreach (var playerEntry in playerCharacterIds)
+
+        foreach (var playerEntry in PlayerStateManager.Singleton.AllStatePlayers)
         {
-            SpawnPlayer(playerEntry.Key, characterDatabase.GetCharacterById(playerEntry.Value)); // Pass in clientId and prefab
+            print("made it to the foreach lo[ for player entries");
+
+            print("Called Spawn Player  in Server Manager");
+            SpawnPlayer(playerEntry.ClientId); // Pass in clientId and prefab for wands and player
         }
         NetworkManager.Singleton.SceneManager.OnLoadComplete -= StartGameHelper;
     }
 
-    private void SpawnPlayer(ulong clientId, Character Player)
+    private void SpawnPlayer(ulong clientId)
     {
-
         
+
         // Register and spawn the player on the server
-        SpawnManager.instance.RegisterPlayerPrefab(clientId, Player.GameplayPrefab);
-        SpawnManager.instance.SpawnPlayer(clientId, Player.GameplayPrefab);
+        SpawnManager.instance.SpawnPlayer(clientId);
+        print("Spawned PLayers in  server manager");
     }
 
     public IEnumerator PrintData()

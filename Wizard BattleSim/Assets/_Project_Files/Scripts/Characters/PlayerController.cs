@@ -11,6 +11,7 @@ using UnityEngine.Rendering.UI;
 using UnityEngine.SceneManagement;
 using Unity.Netcode.Components;
 using System.Threading;
+using UnityEngine.Video;
 
 [RequireComponent(typeof(Rigidbody), typeof(SpellCaster))]
 public class PlayerController : NetworkBehaviour
@@ -67,7 +68,7 @@ public class PlayerController : NetworkBehaviour
     public bool CanDie = true;
     [SerializeField] private bool IsDebug = true;
     public bool isSpawned;
-
+    public Transform WandSpawnLocation;
     public ulong MyClientID;
 
     // Input variables
@@ -413,7 +414,20 @@ public class PlayerController : NetworkBehaviour
         if(!IsServer) return;
         if (WinTracker.Singleton != null)
         {
-            WinTracker.Singleton.AddWin(Hitter);
+
+            for (int i = 0; i < gameController.GC.Players.Length; i++)
+            {
+                if (gameController.GC.Players[i].OwnerClientId == Hitter)
+                {
+                    WinTracker.Singleton.AddWin(Hitter, gameController.GC.Players[i].CharacterChosen);
+                    if (WinTracker.Singleton.CheckWin(Hitter))
+                    {
+                        WinTracker.Singleton.EndGame();
+                    }
+                    print("Win added");
+                }
+
+            }
             print("Win added");
         }
         SpawnManager.instance.RespawnPlayer(Sender);

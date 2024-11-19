@@ -32,6 +32,7 @@ public class SpellCaster : NetworkBehaviour
     [SerializeField] public  Transform CastPosition;
     [SerializeField] public Camera Cam;
     public List<float> spellCooldownTimers = new List<float>();
+    public Transform Hand;
     private void FixedUpdate()
     {
         if (!IsOwner) return;

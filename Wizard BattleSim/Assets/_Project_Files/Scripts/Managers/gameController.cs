@@ -1,6 +1,7 @@
 using AssetInventory;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,6 +17,8 @@ public class gameController : NetworkBehaviour
     public LayerMask GroundLayer;
     public LayerMask WallLayer;
     public bool DebugMode;
+    public string CharacterSelectSceneName;
+    public string EndScreenSceneName;
     private void Awake() {
 
         if(GC == null) {

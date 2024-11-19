@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1648132711
+  GlobalObjectIdHash: 2208407831
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -277,7 +277,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 80d726a1-c93f-4c9b-beb4-7038db0b86c7
-    m_ActionName: Player/Look[/Mouse/delta]
+    m_ActionName: 'Player/Look[/Mouse/delta]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2780197439549934678}
@@ -293,7 +293,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 40de297c-6f4d-457e-a216-5814b5b33597
-    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/d,/Keyboard/a]
+    m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/d,/Keyboard/a]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6344507787613272955}
@@ -309,7 +309,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 4fdc28da-71e6-4304-8e0d-28696f2c1509
-    m_ActionName: Player/Cast[/Mouse/leftButton]
+    m_ActionName: 'Player/Cast[/Mouse/leftButton]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2780197439549934678}
@@ -325,7 +325,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 97f1ab70-a0da-4ffe-b762-8b3721db48ff
-    m_ActionName: Player/ChangeSpellKeyBoard[/Keyboard/1,/Keyboard/2,/Keyboard/3]
+    m_ActionName: 'Player/ChangeSpellKeyBoard[/Keyboard/1,/Keyboard/2,/Keyboard/3]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6344507787613272955}
@@ -341,7 +341,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 6420ba1d-8920-49f8-bc0b-16bf87df7d43
-    m_ActionName: Player/ChangeSpellMouseScroll[/Mouse/scroll/down,/Mouse/scroll/up]
+    m_ActionName: 'Player/ChangeSpellMouseScroll[/Mouse/scroll/down,/Mouse/scroll/up]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2780197439549934678}
@@ -357,7 +357,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: cdd0ed00-f3f5-4f92-b60c-7a8a5db3783b
-    m_ActionName: Player/Jump[/Keyboard/space]
+    m_ActionName: 'Player/Jump[/Keyboard/space]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2780197439549934678}
@@ -373,11 +373,11 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 1cced997-b16e-4352-a91c-b522eeba3229
-    m_ActionName: Player/ChargeMana[/Keyboard/shift]
+    m_ActionName: 'Player/ChargeMana[/Keyboard/shift]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 7f138805-4659-4696-a481-b4c96ce30ad8
-    m_ActionName: Player/CancelSpell_Dash[/Keyboard/ctrl]
+    m_ActionName: 'Player/CancelSpell_Dash[/Keyboard/ctrl]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -435,8 +435,8 @@ MonoBehaviour:
   CanDie: 1
   IsDebug: 1
   isSpawned: 0
+  WandSpawnLocation: {fileID: 0}
   MyClientID: 0
-  MySpawn: {fileID: 0}
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
   Grounded: 0
@@ -527,6 +527,7 @@ MonoBehaviour:
   CastPosition: {fileID: 7548225651625600980}
   Cam: {fileID: 7643569436653525090}
   spellCooldownTimers: []
+  Hand: {fileID: 7548225651625600980}
 --- !u!114 &3676867354554846606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1036,6 +1037,10 @@ PrefabInstance:
       propertyPath: m_FillAmount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 626164641518429559, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 1295372782093790043, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: player
       value: 
@@ -1075,6 +1080,14 @@ PrefabInstance:
     - target: {fileID: 2810406721598976419, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_Name
       value: PlayerUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2919509431911913578, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 3992323265275134874, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 4108365577726133459, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1123,6 +1136,10 @@ PrefabInstance:
     - target: {fileID: 5687222028238596217, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5906923378023280253, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 6325690055920739719, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1179,6 +1196,10 @@ PrefabInstance:
     - target: {fileID: 7985396490152012888, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
       propertyPath: m_FillAmount
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9157804850613896621, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

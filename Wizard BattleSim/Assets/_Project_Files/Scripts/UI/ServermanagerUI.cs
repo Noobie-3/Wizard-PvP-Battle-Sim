@@ -36,11 +36,10 @@ public class ServermanagerUI : NetworkBehaviour
         PLayerNumText.text = "Connected Player Count : " + PLayerNum.Value.ToString();
 
 
-        if (!IsServer)
+/*        if (IsServer)
         {
-            return;
-        }
+            PLayerNum.Value = NetworkManager.Singleton.ConnectedClients.Count;
+        }*/
 
-        PLayerNum.Value = NetworkManager.Singleton.ConnectedClients.Count;
     }
 }

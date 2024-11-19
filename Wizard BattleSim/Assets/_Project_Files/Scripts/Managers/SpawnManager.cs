@@ -6,10 +6,14 @@ public class SpawnManager : NetworkBehaviour
 {
     public PlayerSpawnLocation[] spawnPoints;
     private Dictionary<ulong, NetworkObject> playerPrefabs = new Dictionary<ulong, NetworkObject>();
-    private Dictionary<ulong, PlayerSpawnLocation> playerSpawnPoints = new Dictionary<ulong, PlayerSpawnLocation>(); // To track assigned spawn points
+    private Dictionary<ulong, NetworkObject> wandPrefabs = new Dictionary<ulong, NetworkObject>(); // Store wand prefabs by WandID
+    private Dictionary<ulong, PlayerSpawnLocation> playerSpawnPoints = new Dictionary<ulong, PlayerSpawnLocation>();
+   public  WandDatabase WD;
+    public  CharacterDatabase CD;
+
     public static SpawnManager instance;
 
-    private bool gameStarted = false; // Prevents multiple starts
+    private bool gameStarted = false;
 
     private void Awake()
     {
@@ -17,14 +21,7 @@ public class SpawnManager : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // Method to register each player's prefab
-    public void RegisterPlayerPrefab(ulong clientId, NetworkObject prefab)
-    {
-        if (!playerPrefabs.ContainsKey(clientId))
-        {
-            playerPrefabs[clientId] = prefab;
-        }
-    }
+
 
     // Called to start the game and load the scene
     [ServerRpc]
@@ -46,20 +43,17 @@ public class SpawnManager : NetworkBehaviour
             Debug.Log("Scene loaded on the server, spawning players.");
 
             // Spawn each registered player
-            foreach (var playerEntry in playerPrefabs)
-            {
-                ulong playerId = playerEntry.Key;
-                NetworkObject playerPrefab = playerEntry.Value;
-
-                Debug.Log($"Spawning player {playerId}");
-                SpawnPlayer(playerId, playerPrefab);
+            foreach (var playerEntry in NetworkManager.ConnectedClients)
+            { 
+                Debug.Log($"Spawning player {playerEntry}");
+                SpawnPlayer(playerEntry.Key);
             }
 
         }
     }
 
-    // Method to spawn a player at their assigned or available spawn point
-    public void SpawnPlayer(ulong clientId, NetworkObject playerPrefab)
+    // Spawns player with their selected wand
+    public void SpawnPlayer(ulong clientId)
     {
         // Check if player is already spawned
         if (NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject != null)
@@ -68,10 +62,9 @@ public class SpawnManager : NetworkBehaviour
             return;
         }
 
-        // Check if the player already has an assigned spawn point
+        // Get or assign a spawn point
         if (!playerSpawnPoints.TryGetValue(clientId, out PlayerSpawnLocation assignedSpawnPoint))
         {
-            // Assign a new spawn point if one is not already assigned
             assignedSpawnPoint = GetAvailableSpawnPoint();
             if (assignedSpawnPoint == null)
             {
@@ -80,14 +73,25 @@ public class SpawnManager : NetworkBehaviour
             }
 
             playerSpawnPoints[clientId] = assignedSpawnPoint;
-            assignedSpawnPoint.SetAvailability(false); // Mark spawn point as unavailable
+            assignedSpawnPoint.SetAvailability(false);
         }
 
-        // Instantiate and spawn the player at the assigned spawn point
-        NetworkObject playerInstance = Instantiate(playerPrefab, assignedSpawnPoint.transform.position, Quaternion.identity);
-        playerInstance.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
-        Debug.Log($"spawned player {clientId} at {assignedSpawnPoint.transform.position} players actual position is {playerInstance.transform.position}");
+        var PlayerState = PlayerStateManager.Singleton.LookupState(clientId);
+        // Instantiate and spawn the player
+        print(PlayerState.CharacterId + " Character ID");
+        NetworkObject playerInstance = Instantiate(CD.GetCharacterById(PlayerState.CharacterId).GameplayPrefab, assignedSpawnPoint.transform.position, Quaternion.identity);
+        playerInstance.SpawnWithOwnership(clientId);
 
+        Debug.Log($"Spawned player {clientId} at {assignedSpawnPoint.transform.position}");
+
+
+            Transform handTransform = playerInstance.GetComponent<SpellCaster>().Hand;
+            NetworkObject wandInstance = Instantiate(WD.Wands[PlayerState.WandID].WandPrefab, handTransform.position, handTransform.rotation);
+            wandInstance.SpawnWithOwnership(clientId); // Ensure wand is also a networked object
+            wandInstance.transform.SetParent(handTransform); // Attach wand to player's hand
+            
+            Debug.Log($"Spawned wand {WD.Wands[PlayerState.WandID].DisplayName} for player {clientId} at hand position {handTransform.position}");
+        
     }
 
     public void RespawnPlayer(ulong clientId)
@@ -107,23 +111,22 @@ public class SpawnManager : NetworkBehaviour
         }
         else
         {
-            print("Could not find the Player Object for client id "+ clientId);
+            print("Could not find the Player Object for client id " + clientId);
         }
+
 
         // Instantiate and spawn a new player instance at the assigned spawn point
-        if (playerPrefabs.TryGetValue(clientId, out NetworkObject playerPrefab))
-        {
-            NetworkObject playerInstance = Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity);
-            playerInstance.SpawnWithOwnership(clientId);
-            Debug.Log($"Respawned player {clientId} at {spawnPoint.transform.position} players actual position is {playerInstance.transform.position}" );
-        }
-        else
-        {
-            Debug.LogError($"No prefab registered for client {clientId}. Cannot respawn.");
-        }
+        var PlayerState = PlayerStateManager.Singleton.LookupState(clientId);
+        NetworkObject playerInstance = Instantiate(CD.characters[PlayerState.CharacterId].GameplayPrefab, spawnPoint.transform.position,
+            Quaternion.identity); playerInstance.SpawnWithOwnership(clientId);
+        Debug.Log($"Respawned player {clientId} at {spawnPoint.transform.position} players actual position is {playerInstance.transform.position}");
+
+        Transform handTransform = playerInstance.GetComponent<SpellCaster>().Hand;
+        NetworkObject wandInstance = Instantiate(WD.Wands[PlayerState.WandID].WandPrefab, handTransform.position, handTransform.rotation);
+        wandInstance.transform.SetParent(handTransform); // Attach wand to player's hand
+        wandInstance.SpawnWithOwnership(clientId); // Ensure wand is also a networked object
+        Debug.Log($"Spawned wand {WD.Wands[clientId].DisplayName} for player {clientId} at hand position {handTransform.position}");
     }
-
-
     // Helper method to get an available spawn point
     private PlayerSpawnLocation GetAvailableSpawnPoint()
     {
@@ -136,4 +139,6 @@ public class SpawnManager : NetworkBehaviour
         }
         return null; // Return null if no spawn point is available
     }
+
+
 }

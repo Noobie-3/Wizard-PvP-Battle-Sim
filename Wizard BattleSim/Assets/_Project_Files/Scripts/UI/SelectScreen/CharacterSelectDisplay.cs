@@ -8,7 +8,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private CharacterDatabase characterDatabase;
-    [SerializeField] private Transform charactersHolder;
+    [SerializeField] public Transform charactersHolder;
     [SerializeField] private CharacterSelectButton selectButtonPrefab;
     [SerializeField] private PlayerCard[] playerCards;
     [SerializeField] private GameObject characterInfoPanel;
@@ -32,8 +32,8 @@ public class CharacterSelectDisplay : NetworkBehaviour
     {
         if (IsClient)
         {
-            StartButton.gameObject.SetActive(false);
-            Character[] allCharacters = characterDatabase.GetAllCharacters();
+/*            StartButton.gameObject.SetActive(false);
+*/            Character[] allCharacters = characterDatabase.GetAllCharacters();
 
             foreach (var character in allCharacters)
             {
@@ -58,7 +58,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
         }
         if(IsHost)
         {
-            StartButton.gameObject.SetActive(true);
+            //StartButton.gameObject.SetActive(true);
         }
     }
 
@@ -147,7 +147,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
             players[i] = new CharacterSelectState(
                 players[i].ClientId,
-                characterId,
+                characterId, 0,
                 players[i].IsLockedIn
             );
         }
@@ -172,6 +172,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
             players[i] = new CharacterSelectState(
                 players[i].ClientId,
                 players[i].CharacterId,
+                players[i].WandID,
                 true
             );
         }
@@ -196,7 +197,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
             }
         }
 
-        foreach (var button in characterButtons)
+/*        foreach (var button in characterButtons)
         {
             if (button.IsDisabled) { continue; }
 
@@ -206,7 +207,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
             }
         }
 
-        foreach (var player in players)
+*//*        foreach (var player in players)
         {
             if (player.ClientId != NetworkManager.Singleton.LocalClientId) { continue; }
 
@@ -226,6 +227,8 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
             break;
         }
+*/
+
     }
 
     private bool IsCharacterTaken(int characterId, bool checkAll)
@@ -249,24 +252,20 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
     //Start Game Button
     public void StartGame()
-    {
+    {if (!IsServer) return;
         if(players.Count < 2)
         {
             print("Not enough players to start game");
             return;
         }
 
+        print("Made the Player selectrions");
+        print(players.Count + " Player count state");
         foreach(var player in players)
         {
-            if(!player.IsLockedIn)
-            {
-
-                print("Some Players are not locked in");
-
-                break;
-            }
+            print("added player state" + player.ClientId);
+            PlayerStateManager.Singleton.AddState(player);
         }
-
         serverManager.StartGame();
     }
 
