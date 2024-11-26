@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerUI : NetworkBehaviour
+public class PlayerUI : MonoBehaviour
 {
     public PlayerController player;
     public SpellCaster SpellCaster;
@@ -17,6 +17,7 @@ public class PlayerUI : NetworkBehaviour
     public Image manaBar;
     public TextMeshProUGUI manaText;
     public Image[] SpellSlotsImages;
+    [SerializeField] public GameObject[] SelectedSpellIcons;
 
 
     // Start is called before the first frame update
@@ -33,7 +34,9 @@ public class PlayerUI : NetworkBehaviour
 
 
     public void UpdateUI()
-    { 
+    {
+
+        UpdateSelection();
         for (int i = 0; i < SpellCaster.MaxSpells; i++)
         {
             if(SpellSlotsImages[i].sprite != SpellCaster.SpellBook.SpellBook[SpellCaster.CurrentSpells[i]].SpellIcon)
@@ -60,6 +63,15 @@ public class PlayerUI : NetworkBehaviour
         //Change Spell icons for selection
 
 
+    }
+
+    public void UpdateSelection()
+    {
+        foreach (var icon in SelectedSpellIcons)
+        {
+            icon.SetActive(false);
+        }
+        SelectedSpellIcons[SpellCaster.SelectedSpell].SetActive(true);
     }
 
 

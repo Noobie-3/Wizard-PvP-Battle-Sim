@@ -15,5 +15,5 @@ MonoBehaviour:
   id: 0
   displayName: BasicWand
   icon: {fileID: 21300000, guid: 066c0b04be98cd348abb79add91d42bf, type: 3}
-  WandPrefab: {fileID: -5254974054220124429, guid: 8377035d86c93284d929f2fc6c6d8b8e, type: 3}
+  WandPrefab: {fileID: 8486036734068275787, guid: d5eb00e96efbdd243b1e9a5b4058d396, type: 3}
   moveSpeed: 50

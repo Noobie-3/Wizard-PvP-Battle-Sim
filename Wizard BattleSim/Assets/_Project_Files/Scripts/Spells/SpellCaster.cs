@@ -11,11 +11,13 @@ using UnityEngine.Rendering.UI;
 using System.Globalization;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
+using Unity.Services.Lobbies;
 
 [RequireComponent(typeof(PlayerController))]
 public class SpellCaster : NetworkBehaviour
 {
     [SerializeField] public SpellBook_AllSpellsList SpellBook;
+    [SerializeField] public SpellBook_AllSpellsList SpellBook_Spammable;
     [SerializeField] public GameObject CastTimeUi;
     [SerializeField] private TextMeshProUGUI CastSpellChargeText;
     [SerializeField] private float CastTimeProgress;
@@ -23,13 +25,13 @@ public class SpellCaster : NetworkBehaviour
     [SerializeField] public Coroutine CastTimeProgressEnum;
     [SerializeField] public Coroutine ChargeSpellIEnum;
     [SerializeField] private PlayerController Player;
-    [SerializeField] public int[] CurrentSpells = {0,1,2};
-    [SerializeField] float[] CurrentSpellsTimers = {0,0,0};
-    [SerializeField] public  int SelectedSpell;
+    [SerializeField] public int[] CurrentSpells = { 0, 1, 2 };
+    [SerializeField] float[] CurrentSpellsTimers = { 0, 0, 0 };
+    [SerializeField] public int SelectedSpell;
     [SerializeField] public int MaxSpells;
     [SerializeField] public bool IsChangingSpell;
     [SerializeField] public bool IsCasting;
-    [SerializeField] public  Transform CastPosition;
+    [SerializeField] public Transform CastPosition;
     [SerializeField] public Camera Cam;
     public List<float> spellCooldownTimers = new List<float>();
     public Transform Hand;
@@ -46,13 +48,16 @@ public class SpellCaster : NetworkBehaviour
         //cycle through spells with mouse wheel
         var Scroll = context.ReadValue<float>();
         print("Scroll input " + Scroll);
+        {
+
+        }
         if (Scroll < 0)
         {
             SelectedSpell--;
             print(SelectedSpell + "what  Spell is selected ");
             if (SelectedSpell < 0)
             {
-                SelectedSpell =  MaxSpells - 1;
+                SelectedSpell = MaxSpells - 1;
             }
         }
         else if (Scroll > 0)
@@ -64,7 +69,9 @@ public class SpellCaster : NetworkBehaviour
                 SelectedSpell = 0;
             }
         }
-          print("Final Spell Selction affte scroll" + SelectedSpell);
+
+        Player.PlayerUi.UpdateUI();
+        print("Final Spell Selction affte scroll" + SelectedSpell);
 
     }
 
@@ -72,18 +79,18 @@ public class SpellCaster : NetworkBehaviour
 
     public void StartSpellCast()
     {
-        if(!IsOwner) return;
+        if (!IsOwner) return;
         IsCasting = true;
     }
-    public  void CastSpell()
-    { 
-        if (!IsOwner) return;        
+    public void CastSpell()
+    {
+        if (!IsOwner) return;
         print("Casting spell");
         if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
         {
             Vector3 ShotDir;
             RaycastHit hit;
-            if(Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, Mathf.Infinity))
+            if (Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, Mathf.Infinity))
             {
                 ShotDir = hit.point;
             }
@@ -99,12 +106,12 @@ public class SpellCaster : NetworkBehaviour
     {
         CastTimeUi.SetActive(true);
         if (IsCasting)
-        { 
+        {
             CastTimeProgress += Time.deltaTime;
             var CastTimeProgressDecimal = CastTimeProgress / SpellBook.SpellBook[SelectedSpell].Spell_CastTime;
             CastTimeProgressUI.fillAmount = CastTimeProgressDecimal;
             CastSpellChargeText.text = (CastTimeProgressDecimal * 100).ToString() + "%";
-            if(CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
+            if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
             {
 
                 CastSpell();
@@ -115,6 +122,24 @@ public class SpellCaster : NetworkBehaviour
         }
 
     }
+    public void QuickCast()
+    {if(!IsOwner) return;
+        Vector3 ShotDir;
+        RaycastHit hit;
+        if (Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, Mathf.Infinity))
+        {
+            ShotDir = hit.point;
+        }
+        else
+        {
+            ShotDir = Cam.transform.position + Cam.transform.forward * 1000;
+        }
+        Debug.DrawLine(Cam.transform.position, ShotDir, Color.green, 2f); // Shows the full ray path
+
+
+        CastSpellServerRpc(Player.CharacterChosen.SpamSpell, Hand.position, OwnerClientId, ShotDir, true);
+    }
+
 
     //cancels Cast (name inspired by a dude named tristan)
     public void TristanCast()
@@ -128,11 +153,22 @@ public class SpellCaster : NetworkBehaviour
 
 
     [ServerRpc()]
-    private void CastSpellServerRpc(int SpellToCast, Vector3 positon, ulong CasterId, Vector3 camDir)
+    private void CastSpellServerRpc(int SpellToCast, Vector3 positon, ulong CasterId, Vector3 camDir, bool Quicky = false)
     {
-        print("Casting spell on server\n" + "Spell id" + SpellBook.SpellBook[SpellToCast].Spell_Name);
-        Player.Mana.Value -= SpellBook.SpellBook[SelectedSpell].ManaCost;
-        GameObject CastedSpell =  Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
+        GameObject CastedSpell;
+        if (Quicky == true )
+        {
+            Player.Mana.Value -= SpellBook_Spammable.SpellBook[SpellToCast].ManaCost;
+            CastedSpell = Instantiate(SpellBook_Spammable.SpellBook[SpellToCast].Spell_Prefab, positon, default);
+        }
+        else
+        {
+            print("Casting spell on server\n" + "Spell id" + SpellBook.SpellBook[SpellToCast].Spell_Name);
+            Player.Mana.Value -= SpellBook.SpellBook[SelectedSpell].ManaCost;
+            CastedSpell = Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
+
+        }
+
         CastedSpell.GetComponent<NetworkObject>().Spawn();
         CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
         CastedSpell.GetComponent<ISpell_Interface>().FireSpell();

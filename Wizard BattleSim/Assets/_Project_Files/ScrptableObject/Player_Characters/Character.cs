@@ -13,6 +13,7 @@ public class Character : ScriptableObject
 
     //GamePlay Stats
     [SerializeField] private float moveSpeed = 50;
+    [SerializeField] int spamSpell;
 
 
 
@@ -24,4 +25,5 @@ public class Character : ScriptableObject
     public GameObject IntroPrefab => introPrefab;
     public NetworkObject GameplayPrefab => gameplayPrefab;
     public float MoveSpeed => moveSpeed;
+    public int SpamSpell => spamSpell;
 }

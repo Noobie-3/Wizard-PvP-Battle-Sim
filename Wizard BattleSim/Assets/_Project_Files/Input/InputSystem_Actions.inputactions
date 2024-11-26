@@ -27,7 +27,7 @@
                     "name": "Cast",
                     "type": "Button",
                     "id": "4fdc28da-71e6-4304-8e0d-28696f2c1509",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -72,7 +72,16 @@
                     "name": "CancelSpell_Dash",
                     "type": "Button",
                     "id": "7f138805-4659-4696-a481-b4c96ce30ad8",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "QuickCast",
+                    "type": "Button",
+                    "id": "976051e0-0967-43f4-9953-b4ec5f2092b3",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -296,6 +305,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "CancelSpell_Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e8d80817-bb58-4965-8d62-b009e005eae0",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "QuickCast",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

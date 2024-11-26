@@ -8,7 +8,7 @@ public class Wand : ScriptableObject
     [SerializeField] private int id = -1;
     [SerializeField] private string displayName = "New Wand";
     [SerializeField] private Sprite icon;
-    [SerializeField] public NetworkObject WandPrefab;
+    [SerializeField] public GameObject WandPrefab;
 
     //GamePlay Stats
     [SerializeField] private float moveSpeed = 50;
@@ -20,6 +20,6 @@ public class Wand : ScriptableObject
     public int Id => id;
     public string DisplayName => displayName;
     public Sprite Icon => icon;
-    public NetworkObject Prefab => WandPrefab;
+    public GameObject Prefab => WandPrefab;
     public float MoveSpeed => moveSpeed;
 }

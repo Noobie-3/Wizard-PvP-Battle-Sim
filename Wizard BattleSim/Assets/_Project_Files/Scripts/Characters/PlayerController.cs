@@ -96,7 +96,7 @@ public class PlayerController : NetworkBehaviour
     private float rotationX = 0f;
     private float rotationY = 0f;
     [SerializeField] private NetworkVariable<Vector3> CurrentRotation;
-    [SerializeField] private PlayerUI PlayerUi;
+    [SerializeField] public PlayerUI PlayerUi;
     [SerializeField] private Animator Anim;
     [SerializeField] private GameObject DevMenu;
 
