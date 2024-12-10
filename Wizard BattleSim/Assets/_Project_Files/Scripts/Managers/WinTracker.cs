@@ -13,8 +13,10 @@ public class WinTracker : MonoBehaviour
     public Dictionary<ulong, int> PLayerWins = new Dictionary<ulong, int>();
     public static WinTracker Singleton;
     public int WinCount;
-    public Image WinImage;
+    public GameObject WinImage;
+    public GameObject LoseImage;
     public Image[] PlayerImages;
+    public CharacterDatabase characterDatabase;
     //Singleton Pattern
     private void Start()
     {
@@ -27,8 +29,15 @@ public class WinTracker : MonoBehaviour
 
     }
 
-    public  void AddWin(ulong ClientID, Character characterWhoWon)
+    public  void AddWin(ulong ClientID)
     {
+        if(WinCount >= PlayerImages.Length)
+        {
+            print("Win count is greater than player images length");
+            return;
+
+        }
+        var PlayerState = PlayerStateManager.Singleton.LookupState(ClientID);
         if(PLayerWins.ContainsKey(ClientID))
         {
             PLayerWins[ClientID] = PLayerWins[ClientID] + 1;
@@ -37,9 +46,9 @@ public class WinTracker : MonoBehaviour
         {
             PLayerWins.Add(ClientID, 1);
         }
-        if(PlayerImages[WinCount] != null)
+        if(PlayerImages[WinCount] != null )
         {
-            PlayerImages[WinCount].sprite = characterWhoWon.Icon;
+            PlayerImages[WinCount].sprite = characterDatabase.GetCharacterById(PlayerState.CharacterId).Icon;
         }
 
         if(WinImage != null)
@@ -47,6 +56,13 @@ public class WinTracker : MonoBehaviour
             WinImage.gameObject.SetActive(true);
         }
         WinCount++;
+        foreach(var player in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            SpawnManager.instance.RespawnPlayer(player.ClientId);
+
+            //Show the win screen for each player 
+
+        }
     }
 
     public bool CheckWin(ulong ClientId)
@@ -55,6 +71,29 @@ public class WinTracker : MonoBehaviour
 
         if (PLayerWins[ClientId] >= winsNeeded) result = true;
         else result = false;
+
+
+        foreach(var player in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (result)
+            {
+                // you can add placings later 
+                if(player.ClientId == ClientId)
+                {
+                    if(WinImage != null)
+                    {
+                        Instantiate(WinImage, PlayerImages[0].transform.parent);
+                    }
+                }
+                else
+                {
+                    if (LoseImage != null)
+                    {
+                        Instantiate(LoseImage, PlayerImages[0].transform.parent);
+                    }
+                }
+            }
+        }
 
         return result;
     }
@@ -66,8 +105,13 @@ public class WinTracker : MonoBehaviour
             if (player.PlayerObject != null) 
             {Destroy(player.PlayerObject);
             }                     
+
             //load end scene after enough wins
-            SceneManager.LoadScene(gameController.GC.EndScreenSceneName);
+            if(gameController.GC.EndScreenSceneName != "")
+            {
+                SceneManager.LoadScene(gameController.GC.EndScreenSceneName);
+
+            }
         }
         //logic to end the game and go to the win screen
     }

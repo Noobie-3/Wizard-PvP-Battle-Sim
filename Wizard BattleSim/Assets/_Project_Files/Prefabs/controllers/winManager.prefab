@@ -196,11 +196,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   winsNeeded: 2
-  WinImage: {fileID: 0}
+  WinCount: 0
+  WinImage: {fileID: 777049067057829747, guid: 39719989e0e65fe4c86e697fe9bacd5b, type: 3}
+  LoseImage: {fileID: 777049067057829747, guid: 8acab6ceccbbf154cb086565df0702b0, type: 3}
   PlayerImages:
   - {fileID: 6041005072747954801}
   - {fileID: 8805837774120563729}
   - {fileID: 7751418847656163566}
+  characterDatabase: {fileID: 0}
 --- !u!1 &6033149774739569356
 GameObject:
   m_ObjectHideFlags: 0

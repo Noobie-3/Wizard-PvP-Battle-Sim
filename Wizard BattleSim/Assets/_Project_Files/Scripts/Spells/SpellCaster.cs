@@ -172,6 +172,7 @@ public class SpellCaster : NetworkBehaviour
         CastedSpell.GetComponent<NetworkObject>().Spawn();
         CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
         CastedSpell.GetComponent<ISpell_Interface>().FireSpell();
+        
     }
     public void SelectSpellWithKeyBoard(int spellIndex)
     {

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f4e0bfb4c082f72469533623b5fdf9b5
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 125684
+  packageName: Hologram Effect Shader
+  packageVersion: 1.1
+  assetPath: Assets/PeterLu_HologramShader/Material/Hologram 2.mat
+  uploadId: 389516

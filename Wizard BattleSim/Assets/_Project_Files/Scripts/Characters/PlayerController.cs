@@ -419,7 +419,8 @@ public class PlayerController : NetworkBehaviour
             {
                 if (gameController.GC.Players[i].OwnerClientId == Hitter)
                 {
-                    WinTracker.Singleton.AddWin(Hitter, gameController.GC.Players[i].CharacterChosen);
+                    WinTracker.Singleton.AddWin(Hitter);
+
                     if (WinTracker.Singleton.CheckWin(Hitter))
                     {
                         WinTracker.Singleton.EndGame();

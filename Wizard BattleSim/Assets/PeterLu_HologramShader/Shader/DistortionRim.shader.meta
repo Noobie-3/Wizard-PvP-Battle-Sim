@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f75b527f26f6e73429b65dd509b259d8
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 125684
+  packageName: Hologram Effect Shader
+  packageVersion: 1.1
+  assetPath: Assets/PeterLu_HologramShader/Shader/DistortionRim.shader
+  uploadId: 389516

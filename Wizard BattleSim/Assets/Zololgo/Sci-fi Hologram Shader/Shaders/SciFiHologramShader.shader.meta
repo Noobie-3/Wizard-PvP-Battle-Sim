@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 002f6eab9ba9b994d8eec7af12c232ac
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66455
+  packageName: Sci-Fi Hologram Shader
+  packageVersion: 1.1.1
+  assetPath: Assets/Zololgo/Sci-fi Hologram Shader/Shaders/SciFiHologramShader.shader
+  uploadId: 227119

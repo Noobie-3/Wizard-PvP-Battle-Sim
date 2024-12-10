@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using Unity.Netcode;
 
@@ -7,14 +8,19 @@ public struct CharacterSelectState : INetworkSerializable, IEquatable<CharacterS
     public int CharacterId;
     public int WandID;
     public bool IsLockedIn;
+    public int Spell0; 
+    public int Spell1;
+    public int Spell2;
 
-
-    public CharacterSelectState(ulong clientId, int characterId = -1, int wandID = 0, bool isLockedIn = false)
+    public CharacterSelectState(ulong clientId, int characterId = -1, int wandID = -1, int spell0 = 0, int spell1 = 1, int spell2 = 2, bool isLockedIn = false)
     {
         ClientId = clientId;
         CharacterId = characterId;
         WandID = wandID;
         IsLockedIn = isLockedIn;
+        Spell0 = spell0;
+        Spell1 = spell1;
+        Spell2 = spell2;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -23,13 +29,19 @@ public struct CharacterSelectState : INetworkSerializable, IEquatable<CharacterS
         serializer.SerializeValue(ref CharacterId);
         serializer.SerializeValue(ref WandID);
         serializer.SerializeValue(ref IsLockedIn);
+        serializer.SerializeValue(ref Spell0);
+        serializer.SerializeValue(ref Spell1);
+        serializer.SerializeValue(ref Spell2);
     }
 
     public bool Equals(CharacterSelectState other)
     {
         return ClientId == other.ClientId &&
-            CharacterId == other.CharacterId &&
-            WandID == other.WandID &&
-            IsLockedIn == other.IsLockedIn;
+               CharacterId == other.CharacterId &&
+               WandID == other.WandID &&
+               IsLockedIn == other.IsLockedIn &&
+               Spell0 == other.Spell0 &&
+               Spell1 == other.Spell1 &&
+               Spell2 == other.Spell2;
     }
 }

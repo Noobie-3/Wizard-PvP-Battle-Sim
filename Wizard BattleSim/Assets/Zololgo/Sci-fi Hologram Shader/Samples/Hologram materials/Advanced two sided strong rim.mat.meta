@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: b3e2882bc33c09f4b90aca240fdc1500
+timeCreated: 1486422193
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66455
+  packageName: Sci-Fi Hologram Shader
+  packageVersion: 1.1.1
+  assetPath: Assets/Zololgo/Sci-fi Hologram Shader/Samples/Hologram materials/Advanced
+    two sided strong rim.mat
+  uploadId: 227119

@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10b06c7c69874ad4390b6d9b4d73ce98, type: 3}
   m_Name: Froggie
   m_EditorClassIdentifier: 
-  id: 1
+  id: 0
   displayName: Froggie
   icon: {fileID: 21300000, guid: 4f033ad2b6e2aa847bfbf658cfe79d89, type: 3}
   introPrefab: {fileID: 1611285889992429591, guid: 50e1a7ce6908d9f4594058a50135daf5, type: 3}
   gameplayPrefab: {fileID: 7686046711235604627, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
   moveSpeed: 50
+  spamSpell: 0

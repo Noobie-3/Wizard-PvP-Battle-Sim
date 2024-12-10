@@ -19,6 +19,7 @@ public class gameController : NetworkBehaviour
     public bool DebugMode;
     public string CharacterSelectSceneName;
     public string EndScreenSceneName;
+    public GameObject PlaySoundPrefab;
     private void Awake() {
 
         if(GC == null) {
@@ -75,44 +76,12 @@ public class gameController : NetworkBehaviour
     }
 
 
-/*    public void SpawnPlayers(ulong ClientId)
+    public void PlaySoundAtLocation(Transform Position, AudioClip Sound)
     {
-        var spawnLocations = FindObjectsOfType<PlayerSpawnLocation>();
-        var AllPlayerControllers = FindObjectsOfType<PlayerController>();
-
-
-        foreach (var PC in AllPlayerControllers)
-        {
-
-            if (PC.NetworkObject.OwnerClientId != ClientId)
-            {
-                continue;
-            }
-
-
-            for (int i = 0; i < spawnLocations.Length; ++i)
-            {
-                if (spawnLocations[i] == null)
-                {
-                    return;
-                }
-                if (spawnLocations[i].CanSpawnPlayer && PC.isSpawned == false)
-                {
-                    spawnLocations[i].SetCanSpawnClientRpc(false);
-                    PC.MySpawn = spawnLocations[i];
-                    PC.isSpawned = true;
-                    if (PC.rb == null) return;
-                    PC.rb.MovePosition(spawnLocations[i].transform.position);
-                    print("the player " + PC.name + " has been spawned at " + spawnLocations[i].transform.position);
-                    print(PC.transform.position);
-                }
-
-
-            }
-        }
-
+        var SoundObject = Instantiate(PlaySoundPrefab, Position.position, Quaternion.identity);
+        
+        SoundObject.GetComponent<PlaySoundAtLocation>().sound = Sound;
     }
-*/
 }
 
 

@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 226ca2732641fca4a8b444359dfa2676
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66455
+  packageName: Sci-Fi Hologram Shader
+  packageVersion: 1.1.1
+  assetPath: Assets/Zololgo/Sci-fi Hologram Shader/Samples/Scene materials/device
+    - Horizontal scanlines with flicker.mat
+  uploadId: 227119

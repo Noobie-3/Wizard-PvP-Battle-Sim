@@ -10,7 +10,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     [SerializeField] private CharacterDatabase characterDatabase;
     [SerializeField] public Transform charactersHolder;
     [SerializeField] private CharacterSelectButton selectButtonPrefab;
-    [SerializeField] private PlayerCard[] playerCards;
+    [SerializeField] public PlayerCard[] playerCards;
     [SerializeField] private GameObject characterInfoPanel;
     [SerializeField] private TMP_Text characterNameText;
     [SerializeField] private Transform introSpawnPoint;
@@ -22,6 +22,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     private GameObject introInstance;
     private List<CharacterSelectButton> characterButtons = new List<CharacterSelectButton>();
     public NetworkList<CharacterSelectState> players;
+
 
     private void Awake()
     {
@@ -147,7 +148,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
 
             players[i] = new CharacterSelectState(
                 players[i].ClientId,
-                characterId, 0,
+                characterId, 0,0,1,2,
                 players[i].IsLockedIn
             );
         }
@@ -172,7 +173,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
             players[i] = new CharacterSelectState(
                 players[i].ClientId,
                 players[i].CharacterId,
-                players[i].WandID,
+                players[i].WandID,0,1,2,
                 true
             );
         }

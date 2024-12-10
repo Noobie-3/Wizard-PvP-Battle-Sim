@@ -169,7 +169,6 @@ private void StartGameServerRpc()
             {
                 Debug.Log("Key: " + item.Key + " Value: " + item.Value);
             }
-            print(characterSelectDisplay.players.Count + " Player Count in Select Display");
         }
 
     }

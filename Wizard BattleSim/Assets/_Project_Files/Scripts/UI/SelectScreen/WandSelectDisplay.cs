@@ -9,13 +9,15 @@ public class WandSelectDisplay : NetworkBehaviour
     [SerializeField] private Transform wandsHolder;
     [SerializeField] private WandSelectButton wandButtonPrefab;
     [SerializeField] private CharacterSelectDisplay characterSelectDisplay;
-
+    [SerializeField] private GameObject SelectionInfo_icons;
     private List<WandSelectButton> wandButtons = new List<WandSelectButton>();
 
     private void Start()
     {
         InitializeWandSelection();
     }
+
+
 
     private void InitializeWandSelection()
     {
@@ -26,6 +28,18 @@ public class WandSelectDisplay : NetworkBehaviour
             wandButtonInstance.SetWand(this, wand);
             wandButtons.Add(wandButtonInstance);
         }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        characterSelectDisplay.players.OnListChanged += HandlePlayersStateChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        
+        characterSelectDisplay.players.OnListChanged -= HandlePlayersStateChanged;
+        
     }
 
     public void SelectWand(Wand wand)
@@ -46,11 +60,33 @@ public class WandSelectDisplay : NetworkBehaviour
                 characterSelectDisplay.players[i].ClientId,
                 characterSelectDisplay.players[i].CharacterId,
                 wandId,
-                characterSelectDisplay.players[i].IsLockedIn
-            );
+                default,
+                default,
+                default,
+
+                characterSelectDisplay.players[i].IsLockedIn);
+
+
+
 
             Debug.Log($"Client {clientId} selected wand {wandId}");
             break;
         }
+    }
+
+    private void HandlePlayersStateChanged(NetworkListEvent<CharacterSelectState> changeEvent)
+    {
+        for (int i = 0; i < characterSelectDisplay.playerCards.Length; i++)
+        {
+            if (characterSelectDisplay.players.Count > i)
+            {
+                characterSelectDisplay.playerCards[i].UpdateDisplay(characterSelectDisplay.players[i]);
+            }
+            else
+            {
+                characterSelectDisplay.playerCards[i].DisableDisplay();
+            }
+        }
+
     }
 }

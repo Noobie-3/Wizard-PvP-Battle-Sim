@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7c0e0e56aed3a0b499e84cb7f11b97fa
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 125684
+  packageName: Hologram Effect Shader
+  packageVersion: 1.1
+  assetPath: Assets/PeterLu_HologramShader/Material/BasicRim.mat
+  uploadId: 389516

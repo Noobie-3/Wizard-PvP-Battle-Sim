@@ -5,8 +5,10 @@ using UnityEngine.UI;
 public class PlayerCard : MonoBehaviour
 {
     [SerializeField] private CharacterDatabase characterDatabase;
+    [SerializeField] private WandDatabase WandDatabase;
     [SerializeField] private GameObject visuals;
     [SerializeField] private Image characterIconImage;
+    [SerializeField] private Image WandIconImage;
     [SerializeField] private TMP_Text playerNameText;
     [SerializeField] private TMP_Text characterNameText;
 
@@ -27,6 +29,22 @@ public class PlayerCard : MonoBehaviour
         else
         {
             characterIconImage.enabled = false;
+        }
+
+        if(state.WandID != -1)
+        {
+            var wand = WandDatabase.GetWandById(state.WandID);
+            if(wand == null)
+            {
+                Debug.LogError($"Wand with ID {state.WandID} not found in database");
+                return;
+            }
+            WandIconImage.sprite = wand.Icon;
+            WandIconImage.enabled = true;
+        }
+        else
+        {
+            WandIconImage.enabled = false;
         }
 
         playerNameText.text = state.IsLockedIn ? $"Player {state.ClientId}" : $"Player {state.ClientId} (Picking...)";

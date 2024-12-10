@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6f3c113bd3777a445801670f456a13e7
+timeCreated: 1481573198
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66455
+  packageName: Sci-Fi Hologram Shader
+  packageVersion: 1.1.1
+  assetPath: Assets/Zololgo/Sci-fi Hologram Shader/Samples/Hologram materials/Two
+    way scanline.mat
+  uploadId: 227119

@@ -18,12 +18,14 @@ public class Spell : ScriptableObject {
     public float MultiHitCooldown = 0.5f; // Multi Hit Cooldown
     public Sprite SpellIcon;
     public Character CasterChar;
+    public AudioClip FireSound;
+    public AudioClip ImpactSound;
+    public GameObject ImpactEffect;
 
     public enum SpellType { // The Types Of Spells
-        Spawnable_Spell,
-        Castable_Spell,
-        ExsplosionSpell,
-        TrapSpell
+        Light, 
+        Mid, 
+        Heavy
     };
     public SpellType Spell_Type;
 

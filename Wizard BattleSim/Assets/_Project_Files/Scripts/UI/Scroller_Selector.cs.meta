@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 9854384eb4f6a354bb5437a2c6c662b4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - wandDatabase: {fileID: 11400000, guid: 38db1fdf6bec93947ae782c601a7661a, type: 2}
+  - characterDatabase: {fileID: 11400000, guid: a4aeff3221624274fa582a60d2dd68ad, type: 2}
+  - SpellDatabase: {fileID: 11400000, guid: b1d00285386ba37429ae6313800792d7, type: 2}
+  - Confirmed_Icon: {instanceID: 0}
+  - Selected_icon: {instanceID: 0}
+  - CurrentIcon: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -23,4 +23,7 @@ MonoBehaviour:
   MultiHitCooldown: 0.5
   SpellIcon: {fileID: 21300000, guid: 8d81411e01d03c141add78cda428ae09, type: 3}
   CasterChar: {fileID: 0}
-  Spell_Type: 1
+  FireSound: {fileID: 0}
+  ImpactSound: {fileID: 0}
+  ImpactEffect: {fileID: 9129159807273035532, guid: 5c545fe0e7d380b45ae0fd34c54f7b45, type: 3}
+  Spell_Type: 0

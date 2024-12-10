@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10b06c7c69874ad4390b6d9b4d73ce98, type: 3}
   m_Name: Snek
   m_EditorClassIdentifier: 
-  id: 2
+  id: 1
   displayName: Snek
   icon: {fileID: 21300000, guid: 4f341e083520f3940b29a8b157627195, type: 3}
   introPrefab: {fileID: 3366691347016609856, guid: c2ddac8a53f4a614db898b9ddc64f39c, type: 3}
   gameplayPrefab: {fileID: 7686046711235604627, guid: 4713f93f33c754348b9567ebfa1a42f0, type: 3}
   moveSpeed: 50
+  spamSpell: 0

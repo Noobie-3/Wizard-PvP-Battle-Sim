@@ -34,6 +34,8 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 
     public void FireSpell()
     {
+        //PlaySOund FOr firing
+        gameController.GC.PlaySoundAtLocation(transform, spell.FireSound);
 
         transform.LookAt(Direction);
         Rb.AddForce(transform.forward * spell.Spell_Speed, ForceMode.Impulse);
@@ -76,6 +78,10 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     {
         // Trigger VFX/SFX here before destroying the object
         // Example: Instantiate an explosion effect, or play a sound effect
+        if (spell.ImpactEffect != null)
+        {
+            Instantiate(spell.ImpactEffect, transform.position, Quaternion.identity);
+        }
         DestroyObjectServerRpc(.1f);
 
         Debug.Log("Spell triggered effect and is being destroyed.");
