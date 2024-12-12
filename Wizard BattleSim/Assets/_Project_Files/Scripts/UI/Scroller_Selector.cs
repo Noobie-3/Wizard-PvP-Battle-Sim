@@ -106,6 +106,7 @@ public class Scroller_Selector : NetworkBehaviour
             CurrentWindow--;
             Destroy(InUseConfirmed_icons[CurrentWindow]);
             windows[CurrentWindow].ConfirmButton.interactable = true;
+            CurrentIconIndex = 0;
 
         }
 
@@ -161,7 +162,7 @@ public class Scroller_Selector : NetworkBehaviour
         {
             return;
         }
-        if (CurrentIconIndex == 0)
+        if (CurrentIconIndex <= 0)
         {
             switch (selectionType)
             {
@@ -214,17 +215,20 @@ public class Scroller_Selector : NetworkBehaviour
 
     public void ConfirmSelection()
     {
-
+        if(!IsClient)
+        {
+            return;
+        }
         windows[CurrentWindow].LockedIn = true;
         print("Confirming selection");
-        ConfirmSelectionServerRpc();
+        ConfirmSelectionServerRpc(selectionType, CurrentIconIndex, SpellIndex);
         // Move to the next category
         MoveToNextCat();
 
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ConfirmSelectionServerRpc(ServerRpcParams serverRpcParams = default)
+    public void ConfirmSelectionServerRpc(SelectionType selectionType,  int id, int SpellIndex, ServerRpcParams serverRpcParams = default)
     {
         print("Confirming selection Rpc");
 
@@ -237,22 +241,22 @@ public class Scroller_Selector : NetworkBehaviour
         {
             case SelectionType.Wand:
                 PlayerStateManager.Singleton.AddState(
-                    new CharacterSelectState(serverRpcParams.Receive.SenderClientId, wandID: CurrentIconIndex));
+                    new CharacterSelectState(serverRpcParams.Receive.SenderClientId, wandID: id));
                 break;
             case SelectionType.Spell:
                 if (SpellIndex == 0)
                     PlayerStateManager.Singleton.AddState(
-                        new CharacterSelectState(serverRpcParams.Receive.SenderClientId, spell0: CurrentIconIndex));
+                        new CharacterSelectState(serverRpcParams.Receive.SenderClientId, spell0: id));
                 else if (SpellIndex == 1)
                     PlayerStateManager.Singleton.AddState(
-                        new CharacterSelectState(serverRpcParams.Receive.SenderClientId, spell1: CurrentIconIndex));
+                        new CharacterSelectState(serverRpcParams.Receive.SenderClientId, spell1: id));
                 else
                     PlayerStateManager.Singleton.AddState(
-                        new CharacterSelectState(serverRpcParams.Receive.SenderClientId, spell2: CurrentIconIndex));
+                        new CharacterSelectState(serverRpcParams.Receive.SenderClientId, spell2: id));
                 break;
             case SelectionType.Character:
                 PlayerStateManager.Singleton.AddState(
-                    new CharacterSelectState(serverRpcParams.Receive.SenderClientId, characterId: CurrentIconIndex));
+                    new CharacterSelectState(serverRpcParams.Receive.SenderClientId, characterId: id));
                 break;
         }
     }
