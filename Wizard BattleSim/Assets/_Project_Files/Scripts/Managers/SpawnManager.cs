@@ -85,10 +85,10 @@ public class SpawnManager : NetworkBehaviour
 
 
             Transform handTransform = playerInstance.GetComponent<SpellCaster>().Hand;
-            GameObject wandInstance = Instantiate(WD.Wands[PlayerState.WandID].WandPrefab, handTransform.position, handTransform.rotation);
+            GameObject wandInstance = Instantiate(WD.GetWandById(PlayerState.WandID).WandPrefab, handTransform.position, handTransform.rotation);
             wandInstance.transform.SetParent(handTransform); // Attach wand to player's hand
             
-            Debug.Log($"Spawned wand {WD.Wands[PlayerState.WandID].DisplayName} for player {clientId} at hand position {handTransform.position}");
+            Debug.Log($"Spawned wand {WD.GetWandById(PlayerState.WandID).DisplayName} for player {clientId} at hand position {handTransform.position}");
         
     }
 

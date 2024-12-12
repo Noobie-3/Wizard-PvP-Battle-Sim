@@ -63,35 +63,37 @@ public class Scroller_Selector : NetworkBehaviour
                 Destroy(InUseConfirmed_icons[CurrentWindow]);
                 CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].SelectorIconHolder.transform);
             }
-
-            foreach(var window in windows)
-            {
-                if(window.LockedIn)
-                {
-                    continue;
-                }
-                else
-                {
-                    ReadyToStart = false;
-                    return;
-                }
-            }
-            if(ReadyToStart)
-            {
-                Start_button.SetActive(true);
-                
-            }
         }
         else
         {
 
             Debug.LogWarning("No more categories to move to.");
         }
+        foreach (var window in windows)
+        {
+            if (window.LockedIn)
+            {
+                ReadyToStart = true;
+                continue;
+            }
+            else
+            {
+                ReadyToStart = false;
+                return;
+            }
+        }
+        if (IsHost && ReadyToStart)
+        {
+            Start_button.SetActive(true);
+        }
     }
 
     public void MoveToPreviousCat()
     {
-
+        if(!IsClient)
+        {
+            return;
+        }
         //Move to previous category by enabling the previous window and disabling any windows after it
         if(CurrentWindow != 0)
         {
@@ -117,6 +119,10 @@ public class Scroller_Selector : NetworkBehaviour
 
     public void ScrollUp()
     {
+        if(!IsClient)
+        {
+            return;
+        }
         CurrentIconIndex++;
 
         switch (selectionType)
@@ -151,41 +157,70 @@ public class Scroller_Selector : NetworkBehaviour
 
     public void ScrollDown()
     {
-        CurrentIconIndex--;
-        switch (selectionType)
+        if(!IsClient)
         {
-            case SelectionType.Wand:
-                //scroll through the wand window
-                if (CurrentIconIndex == wandDatabase.GetAllWands().Length)
-                {
-                    CurrentIconIndex = wandDatabase.GetAllWands().Length -1;
-                }
-                break;
-            case SelectionType.Spell:
-                if (CurrentIconIndex == SpellDatabase.SpellBook.Count)
-                {
-                    CurrentIconIndex = SpellDatabase.SpellBook.Count -1;
-                }
-                //scroll through the spell window
-                break;
-            case SelectionType.Character:
-                if (CurrentIconIndex == characterDatabase.GetAllCharacters().Length)
-                {
-                    CurrentIconIndex = characterDatabase.GetAllCharacters().Length -1;
-                }
-                //scroll through the character window
-                break;
+            return;
         }
-        selectionType = windows[CurrentWindow].type;
-        windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
+        if (CurrentIconIndex == 0)
+        {
+            switch (selectionType)
+            {
+                case SelectionType.Wand:
+                    CurrentIconIndex = wandDatabase.GetAllWands().Length;
+                    break;
+                case SelectionType.Spell:
+                    CurrentIconIndex = SpellDatabase.SpellBook.Count;
+                    break;
+                case SelectionType.Character:
+                    CurrentIconIndex = characterDatabase.GetAllCharacters().Length;
+                    break;
+            }
+        }
+        else
+        {
 
-        //scroll through the current window by setting the current windows stats to the previous one in the list
+
+            CurrentIconIndex--;
+            switch (selectionType)
+            {
+                case SelectionType.Wand:
+                    //scroll through the wand window
+                    if (CurrentIconIndex == wandDatabase.GetAllWands().Length)
+                    {
+                        CurrentIconIndex = wandDatabase.GetAllWands().Length - 1;
+                    }
+                    break;
+                case SelectionType.Spell:
+                    if (CurrentIconIndex == SpellDatabase.SpellBook.Count)
+                    {
+                        CurrentIconIndex = SpellDatabase.SpellBook.Count - 1;
+                    }
+                    //scroll through the spell window
+                    break;
+                case SelectionType.Character:
+                    if (CurrentIconIndex == characterDatabase.GetAllCharacters().Length)
+                    {
+                        CurrentIconIndex = characterDatabase.GetAllCharacters().Length - 1;
+                    }
+                    //scroll through the character window
+                    break;
+            }
+            selectionType = windows[CurrentWindow].type;
+            windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
+
+            //scroll through the current window by setting the current windows stats to the previous one in the list
+        }
     }
 
     public void ConfirmSelection()
     {
+
+        windows[CurrentWindow].LockedIn = true;
         print("Confirming selection");
         ConfirmSelectionServerRpc();
+        // Move to the next category
+        MoveToNextCat();
+
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -198,11 +233,6 @@ public class Scroller_Selector : NetworkBehaviour
             Debug.LogError($"Invalid windows array or CurrentWindow out of bounds. CurrentWindow: {CurrentWindow}, windows.Length: {windows?.Length}");
             return;
         }
-
-
-
-
-
         switch (selectionType)
         {
             case SelectionType.Wand:
@@ -225,11 +255,6 @@ public class Scroller_Selector : NetworkBehaviour
                     new CharacterSelectState(serverRpcParams.Receive.SenderClientId, characterId: CurrentIconIndex));
                 break;
         }
-        // Move to the next category
-        MoveToNextCat();
-
-
-
     }
 
 

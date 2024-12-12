@@ -12,13 +12,18 @@ public class CharacterDatabase : ScriptableObject
     {
         foreach (var character in characters)
         {
-            if (character.Id == id)
+            if(id == -1)
+            { 
+            return characters[0]; 
+            }
+            else if (character.Id == id)
             {
                 return character;
             }
+
         }
 
-        return null;
+        return characters[0];
     }
 
     public bool IsValidCharacterId(int id)

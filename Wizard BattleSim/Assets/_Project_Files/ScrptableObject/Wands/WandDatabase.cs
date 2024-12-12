@@ -12,8 +12,14 @@ public class WandDatabase : ScriptableObject
 
     public Wand GetWandById(int id)
     {
+
         foreach (var Wand in Wands)
         {
+            if(Wand.Id == 0 && id == -1)
+            {
+                return Wand;
+            }
+
             if (Wand.Id == id)
             {
                 return Wand;
