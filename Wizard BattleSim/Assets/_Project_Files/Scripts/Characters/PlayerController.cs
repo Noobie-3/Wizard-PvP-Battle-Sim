@@ -227,6 +227,11 @@ public class PlayerController : NetworkBehaviour
     {
         MoveInput = context.ReadValue<Vector2>();
         IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
+        if(Anim != null)
+        {
+            Anim.SetFloat("X", MoveInput.x);
+            Anim.SetFloat("Y", MoveInput.y);
+        }
     }
     public void GetMouseInput(InputAction.CallbackContext context)
     {

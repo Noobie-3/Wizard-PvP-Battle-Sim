@@ -219,6 +219,7 @@ public class Scroller_Selector : NetworkBehaviour
         {
             return;
         }
+        windows[CurrentWindow].ConfirmButton.interactable = false;
         windows[CurrentWindow].LockedIn = true;
         print("Confirming selection");
         ConfirmSelectionServerRpc(selectionType, CurrentIconIndex, SpellIndex);

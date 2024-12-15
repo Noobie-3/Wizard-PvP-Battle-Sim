@@ -116,8 +116,10 @@ public class PlayerStateManager : NetworkBehaviour
 
         else
         {
+            index = 0;
             // Add new state if no match is found
-            AllStatePlayers.Add(CSS);
+            AllStatePlayers.Insert(index,CSS);
+
             Debug.Log($"State for ClientId {AllStatePlayers[index].ClientId} updated with new values.  Characterid: {AllStatePlayers[index].CharacterId}  WandId is: {AllStatePlayers[index].WandID}  Spell0: {AllStatePlayers[index].Spell0}  Spell1: {AllStatePlayers[index].Spell1}  Spell2: {AllStatePlayers[index].Spell2}");
         }
     }

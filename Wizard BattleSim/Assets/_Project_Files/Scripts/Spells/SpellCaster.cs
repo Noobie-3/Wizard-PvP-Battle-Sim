@@ -41,6 +41,16 @@ public class SpellCaster : NetworkBehaviour
         HandleCoolDowns();
         isCastingSpell();
     }
+
+     public void SetSpell(ulong id)
+    {
+        var State = PlayerStateManager.Singleton.LookupState(id);
+
+        CurrentSpells[0] = State.Spell0;
+        CurrentSpells[1] = State.Spell1;
+        CurrentSpells[2] = State.Spell2;
+
+    }
     // Spell selection logic
     public void ScrollSpellSelection(InputAction.CallbackContext context)
     {

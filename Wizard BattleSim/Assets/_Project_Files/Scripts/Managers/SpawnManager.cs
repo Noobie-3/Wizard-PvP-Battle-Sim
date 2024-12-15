@@ -79,6 +79,7 @@ public class SpawnManager : NetworkBehaviour
         // Instantiate and spawn the player
         print(PlayerState.CharacterId + " Character ID");
         NetworkObject playerInstance = Instantiate(CD.GetCharacterById(PlayerState.CharacterId).GameplayPrefab, assignedSpawnPoint.transform.position, Quaternion.identity);
+        playerInstance.GetComponent<SpellCaster>().SetSpell(clientId);
         playerInstance.SpawnWithOwnership(clientId);
 
         Debug.Log($"Spawned player {clientId} at {assignedSpawnPoint.transform.position}");
