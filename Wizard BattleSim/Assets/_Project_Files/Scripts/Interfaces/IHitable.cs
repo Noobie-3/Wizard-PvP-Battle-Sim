@@ -10,7 +10,7 @@ public interface IHitable
     //it takes in the object that hit it, the spell that hit it, and the object that cast the spell
     bool GotHit(GameObject ThingThatHitMe, Spell spell, ulong Casterid);
 
-     enum ObjectType
+     public enum ObjectType
     {
 
         nullify,

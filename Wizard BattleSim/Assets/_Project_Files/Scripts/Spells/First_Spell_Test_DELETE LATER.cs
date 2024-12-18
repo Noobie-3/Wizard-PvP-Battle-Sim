@@ -14,7 +14,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     public bool Printdata = false;
     public bool hasShotSpell = false;
     public Vector3 Direction;
-
+    public Vector3 offset;
     private void Start()
     {
         if (IsOwner)
@@ -47,11 +47,13 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 
 
 
+
     // Server RPC to destroy the object after a set amount of time
     [ServerRpc(RequireOwnership = false)]
     private void DestroyObjectServerRpc(float time)
     {
         print("SpellDied");
+        TriggerEffect();
         Destroy(gameObject, time);
     }
 
@@ -59,18 +61,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     {
         if (!IsServer) return;  // The server should handle hits
 
-        IHitable ihitable = other.transform.root.GetComponent<IHitable>();
-        if (ihitable == null)
-        {
-            Debug.LogWarning("No IHitable found on " + other.gameObject.name);
-            return;
-        }
-
-        Debug.Log($"Spell {gameObject.name} hit {other.gameObject.name} with spell {spell}. Caster ID: {CasterId}");
-
-        var HitData = ihitable.GotHit(gameObject, spell, CasterId);// Notify the hit object
-        if (HitData == false) return;
-        TriggerEffect();  // Trigger spell effects
+       // TriggerEffect();  // Trigger spell effects
     }
 
     // Method to trigger any spell effects (like damage or visual effects)
@@ -86,6 +77,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 
         Debug.Log("Spell triggered effect and is being destroyed.");
     }
+
 
     public IEnumerator PrintData()
     {
@@ -108,5 +100,23 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     {
 /*        transform.Translate(Direction * spell.Spell_Speed * Time.deltaTime);
 */
+    }
+
+
+    public void DoDamage(Collider other)
+    {
+
+        IHitable ihitable = other.transform.root.GetComponent<IHitable>();
+        if (ihitable == null)
+        {
+            Debug.LogWarning("No IHitable found on " + other.gameObject.name);
+            return;
+        }
+
+        Debug.Log($"Spell {gameObject.name} hit {other.gameObject.name} with spell {spell}. Caster ID: {CasterId}");
+
+        var HitData = ihitable.GotHit(gameObject, spell, CasterId);// Notify the hit object
+        if (HitData == false) return;
+
     }
 }

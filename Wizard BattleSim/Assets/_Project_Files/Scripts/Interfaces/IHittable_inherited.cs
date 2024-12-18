@@ -8,15 +8,15 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
 {
 
     [SerializeField]
-    private enum ObjectType
+    public enum ObjectType
     {
         player,
         nullify,
         Breakable
 
     }
-    [SerializeField] ObjectType Type;
-    [SerializeField] private PlayerController PC;
+    [SerializeField] public ObjectType Type;
+    [SerializeField] public PlayerController PC;
 
 
 

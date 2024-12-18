@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
+  m_Name: ArrowRain
+  m_EditorClassIdentifier: 
+  Spell_Speed: 50
+  Spell_Damage: 15
+  Spell_Prefab: {fileID: 9134858270483239568, guid: f8a98f69acf929c40898ce30c2c46979, type: 3}
+  Air_SpellToSpawn_Prefab: {fileID: 0}
+  Grounded_SpellToSpawn_Prefab: {fileID: 1352207200325702395, guid: f59565eba1dcc67408eb1c473a217923, type: 3}
+  CooldownDuration: 3
+  LifeTime: 5
+  ManaCost: 20
+  Spell_Name: Black Arrow Rain
+  Spell_CastTime: 2
+  MultiHitCooldown: 0
+  SpellIcon: {fileID: 21300000, guid: 31d9c17431a2b734faea340ee9fa51d3, type: 3}
+  CasterChar: {fileID: 0}
+  FireSound: {fileID: 0}
+  ImpactSound: {fileID: 0}
+  ImpactEffect: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+  Spell_Type: 0

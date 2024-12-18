@@ -10,6 +10,8 @@ public class Spell : ScriptableObject {
     public float Spell_Speed; // Spell Travel Speed
     public float Spell_Damage; // Spell's Damage
     public GameObject Spell_Prefab;
+    public GameObject Air_SpellToSpawn_Prefab;
+    public GameObject Grounded_SpellToSpawn_Prefab;
     public float CooldownDuration = 1; // Cooldown duration in seconds
     public float LifeTime;
     public float ManaCost;

@@ -118,7 +118,6 @@ public class PlayerController : NetworkBehaviour
         {
             print("My location is " + transform.position + name);
             MyClientID = OwnerClientId;
-            DontDestroyOnLoad(gameObject);
             camComponent.enabled = false;
             camComponent.enabled = true;
             audioListener.enabled = true;
@@ -225,6 +224,7 @@ public class PlayerController : NetworkBehaviour
     // Input handlers
     public void GetMoveInput(InputAction.CallbackContext context)
     {
+        if(!IsOwner) return;
         MoveInput = context.ReadValue<Vector2>();
         IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
         if(Anim != null)
@@ -441,9 +441,27 @@ public class PlayerController : NetworkBehaviour
         Destroy(gameObject);
 
     }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        print("Collider with a partical" + other.name);
+        ISpell_Interface spell_Interface = other.GetComponent<ISpell_Interface>();
+        if (spell_Interface == null)
+        {
+            print("No spell interface found on " + other.name);
+            return;
+        }
+        if (spell_Interface.CasterId == this.OwnerClientId)
+        {
+            print("Caster is the same as the player");
+            return;
+        }
+        TakeDamage(spell_Interface.spell, spell_Interface.CasterId);
+        print("Should have taken damage from " + other.name);
+    }
+
     public void TakeDamage(Spell spell, ulong whoHitMeName)
     {
-        if(!IsServer) return;
         print(name + "PLayer took dmaage from" + spell + " Cast by  " + CharacterChosen.DisplayName);
         TakeDamageServerRpc(spell.Spell_Damage);
         PlayerUi.UpdateUI();
@@ -461,6 +479,7 @@ public class PlayerController : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(float Damage)
     {
+        if(!IsServer) return;
         Health.Value -= Damage;
         PlayerUi.UpdateUI();
 
