@@ -140,22 +140,14 @@ private void StartGameServerRpc()
 
         foreach (var playerEntry in PlayerStateManager.Singleton.AllStatePlayers)
         {
-            print("made it to the foreach lo[ for player entries");
+            print("made it to the foreach loop for player entries");
 
             print("Called Spawn Player  in Server Manager");
-            SpawnPlayer(playerEntry.ClientId); // Pass in clientId and prefab for wands and player
+            SpawnManager.instance.SpawnPlayer(playerEntry.ClientId);
         }
         NetworkManager.Singleton.SceneManager.OnLoadComplete -= StartGameHelper;
     }
 
-    private void SpawnPlayer(ulong clientId)
-    {
-        
-
-        // Register and spawn the player on the server
-        SpawnManager.instance.SpawnPlayer(clientId);
-        print("Spawned PLayers in  server manager");
-    }
 
     public IEnumerator PrintData()
     {

@@ -101,13 +101,12 @@ public class Scroller_Selector : NetworkBehaviour
             {
                 Destroy(CurrentIcon);
             }
-
+            CurrentIconIndex = 0;
             InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform);
             CurrentWindow--;
             Destroy(InUseConfirmed_icons[CurrentWindow]);
             windows[CurrentWindow].ConfirmButton.interactable = true;
-            CurrentIconIndex = 0;
-
+            windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
         }
 
 
@@ -167,13 +166,13 @@ public class Scroller_Selector : NetworkBehaviour
             switch (selectionType)
             {
                 case SelectionType.Wand:
-                    CurrentIconIndex = wandDatabase.GetAllWands().Length;
+                    CurrentIconIndex = wandDatabase.GetAllWands().Length -1;
                     break;
                 case SelectionType.Spell:
-                    CurrentIconIndex = SpellDatabase.SpellBook.Count;
+                    CurrentIconIndex = SpellDatabase.SpellBook.Count - 1;
                     break;
                 case SelectionType.Character:
-                    CurrentIconIndex = characterDatabase.GetAllCharacters().Length;
+                    CurrentIconIndex = characterDatabase.GetAllCharacters().Length - 1;
                     break;
             }
         }

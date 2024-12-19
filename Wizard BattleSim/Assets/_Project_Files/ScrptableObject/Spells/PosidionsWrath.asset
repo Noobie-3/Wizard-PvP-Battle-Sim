@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
+  m_Name: PosidionsWrath
+  m_EditorClassIdentifier: 
+  Spell_Speed: 80
+  Spell_Damage: 25
+  Spell_Prefab: {fileID: 4352458349310551559, guid: 5f1f03ecbe1c78746ab02c53aa53b81e, type: 3}
+  Air_SpellToSpawn_Prefab: {fileID: 0}
+  Grounded_SpellToSpawn_Prefab: {fileID: 2311169645915646850, guid: 586643af911dc0b4d9a84adc0a535df6, type: 3}
+  CooldownDuration: 6
+  LifeTime: 5
+  ManaCost: 25
+  Spell_Name: Posidions Wrath
+  Spell_CastTime: 4
+  MultiHitCooldown: 5
+  SpellIcon: {fileID: 0}
+  CasterChar: {fileID: 0}
+  FireSound: {fileID: 0}
+  ImpactSound: {fileID: 0}
+  ImpactEffect: {fileID: 0}
+  Spell_Type: 1

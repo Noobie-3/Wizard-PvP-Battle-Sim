@@ -5,12 +5,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class ReviveSpell : NetworkBehaviour , ISpell_Interface
+
 {
     public ulong CasterId { get; set; }
     public Vector3 Direction { get; set; }
     public Vector3 RevivePoint;
     public Spell Spell;
     Spell ISpell_Interface.spell => Spell;
+    public float hitagainTime { get; set; }
     public float CurrentLifeTime;
     public PlayerController playerController;
     public bool CanRevive = false;

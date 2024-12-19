@@ -10,7 +10,7 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
    [SerializeField] private float RadiusOfEffect;
     [SerializeField] private GameObject Meteor_Prefab;
     [SerializeField] public Spell spell;
-
+    public float hitagainTime { get; set; }
     public float CurrentLifeTime;
     [SerializeField] private float MeteorHeight;
     [SerializeField] Coroutine SpawnCoroutine;

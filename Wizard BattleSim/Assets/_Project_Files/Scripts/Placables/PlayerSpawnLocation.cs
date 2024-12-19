@@ -6,11 +6,11 @@ using UnityEngine;
 public class PlayerSpawnLocation : NetworkBehaviour
 {
 
-    public bool IsAvailable = true;
+    public NetworkVariable<bool> IsAvailable;
 
     public void SetAvailability(bool availability)
     {
-        IsAvailable = availability;
+        IsAvailable.Value = availability;
     }
 }
 

@@ -436,9 +436,8 @@ public class PlayerController : NetworkBehaviour
             }
             print("Win added");
         }
-        SpawnManager.instance.RespawnPlayer(Sender);
 
-        Destroy(gameObject);
+        Destroy(transform.root.gameObject);
 
     }
 
@@ -456,7 +455,13 @@ public class PlayerController : NetworkBehaviour
             print("Caster is the same as the player");
             return;
         }
+        if(spell_Interface.hitagainTime > 0)
+        {
+            print("Hit again time is not 0");
+            return;
+        }
         TakeDamage(spell_Interface.spell, spell_Interface.CasterId);
+        spell_Interface.hitagainTime = spell_Interface.spell.MultiHitCooldown;
         print("Should have taken damage from " + other.name);
     }
 

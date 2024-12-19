@@ -5,6 +5,7 @@ public class barrier_Spell : NetworkBehaviour , ISpell_Interface
 {
     public Spell spell;  // Your spell data object
     public ulong CasterId { get; set; }
+    public float hitagainTime { get; set; }
 
     Spell ISpell_Interface.spell => spell;
 

@@ -6,19 +6,20 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 
-public class Blackarrowrain : NetworkBehaviour, ISpell_Interface
+public class PoseidonWrath: NetworkBehaviour, ISpell_Interface
 {
     
     [SerializeField] public Spell spell;
 
     public float CurrentLifeTime;
-    [SerializeField] private float MeteorHeight;
     [SerializeField] Coroutine SpawnCoroutine;
     public Vector3 PosToSpawn;
     public ulong CasterId { get; set; }
     public Transform GroundCheckPos;
 
     Spell ISpell_Interface.spell => spell;
+
+    public float hitagainTime { get; set; }
 
     public Rigidbody rb;
 
@@ -33,17 +34,20 @@ public class Blackarrowrain : NetworkBehaviour, ISpell_Interface
     void Update()
     {
         CurrentLifeTime += Time.deltaTime;
-
+        if(hitagainTime > 0 )
+        {
+            hitagainTime -= Time.deltaTime;
+        }
     }
 
-    public void SpawnArrows()
+    public void SpawnWrath()
     {
         if (!IsOwner)  return;
-        SpawnArrowsServerRpc();
+        SpawnWrathServerRpc();
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void SpawnArrowsServerRpc()
+    void SpawnWrathServerRpc()
     {
         var Arrows = Instantiate(spell.Grounded_SpellToSpawn_Prefab,PosToSpawn, Quaternion.identity);
         Arrows.GetComponent<Blackarrowrain>().CasterId = CasterId;
@@ -87,7 +91,7 @@ public class Blackarrowrain : NetworkBehaviour, ISpell_Interface
             PosToSpawn = Rayhit.point;
         }
 
-        SpawnArrows();
+        SpawnWrath();
 
     }
 

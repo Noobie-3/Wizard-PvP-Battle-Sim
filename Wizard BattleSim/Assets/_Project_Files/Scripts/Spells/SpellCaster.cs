@@ -212,11 +212,11 @@ public class SpellCaster : NetworkBehaviour
 
     void HandleCoolDowns()
     {
-        foreach (var spell in CurrentSpells)
+        for (int i = 0; i< CurrentSpells.Length; i++)
         {
-            if (CurrentSpellsTimers[spell] > 0)
+            if (CurrentSpellsTimers[i] > 0)
             {
-                CurrentSpellsTimers[spell] -= Time.deltaTime;
+                CurrentSpellsTimers[i] -= Time.deltaTime;
             }
         }
     }

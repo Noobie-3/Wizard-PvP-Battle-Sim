@@ -8,7 +8,7 @@ public interface ISpell_Interface
     Spell spell { get;}
     ulong CasterId { get; set; }
     // bool CanCastSpell();
-
+    float hitagainTime { get; set; }
 
     void FireSpell();
 

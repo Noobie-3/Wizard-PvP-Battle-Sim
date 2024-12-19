@@ -8,7 +8,7 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
     public Spell spell;  // Your spell data object
     public Rigidbody Rb;
     public ulong CasterId { get; set; }
-
+    public float hitagainTime { get; set; }
     Spell ISpell_Interface.spell => spell;
 
     public bool Printdata = false;
