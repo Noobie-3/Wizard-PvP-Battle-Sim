@@ -13,6 +13,8 @@ public class Scroller_InfoButton : MonoBehaviour
     public SpellBook_AllSpellsList spellDatabase;
     public Scroller_Selector scrollerSelector;
     public Button ConfirmButton;
+    public Button UpButton;
+    public Button DownButton;
     public Animation anim;
     public bool PlayAnim = true;
     public Scroller_Selector.SelectionType type;
@@ -102,6 +104,18 @@ public class Scroller_InfoButton : MonoBehaviour
         }
 
         print("SetInfoPanel called with type " + type);
+    }
+
+    public void DisableButtons()
+    {
+        UpButton.gameObject.SetActive(false);
+        DownButton.gameObject.SetActive(false);
+    }
+
+    public void EnableButtons()
+    {
+        UpButton.gameObject.SetActive(true);
+        DownButton.gameObject.SetActive(true);
     }
 
 }

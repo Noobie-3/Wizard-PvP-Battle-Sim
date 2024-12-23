@@ -15,11 +15,17 @@ MonoBehaviour:
   Spell_Speed: 60
   Spell_Damage: 2
   Spell_Prefab: {fileID: 5631925080883307570, guid: 029f0439c868a6e46bb0b9e1dca7b5de, type: 3}
+  Air_SpellToSpawn_Prefab: {fileID: 0}
+  Grounded_SpellToSpawn_Prefab: {fileID: 0}
   CooldownDuration: 7
   LifeTime: 8
   ManaCost: 20
   Spell_Name: meteor shower
   Spell_CastTime: 2
   MultiHitCooldown: 0.1
-  SpellIcon: {fileID: 21300000, guid: c61e9a5d230316d48b56325d4b074df3, type: 3}
+  SpellIcon: {fileID: 21300000, guid: 8d3621ea059dd594a905981bbf3c9708, type: 3}
+  CasterChar: {fileID: 0}
+  FireSound: {fileID: 8300000, guid: f4068d7b4fc868e4baa42b1703d05d38, type: 3}
+  ImpactSound: {fileID: 0}
+  ImpactEffect: {fileID: 0}
   Spell_Type: 0

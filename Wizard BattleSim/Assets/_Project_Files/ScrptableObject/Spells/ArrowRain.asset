@@ -23,7 +23,7 @@ MonoBehaviour:
   Spell_Name: Black Arrow Rain
   Spell_CastTime: 2
   MultiHitCooldown: 0
-  SpellIcon: {fileID: 21300000, guid: 31d9c17431a2b734faea340ee9fa51d3, type: 3}
+  SpellIcon: {fileID: 21300000, guid: 9f0cd6ae69143054b93f0ac9cea84c98, type: 3}
   CasterChar: {fileID: 0}
   FireSound: {fileID: 0}
   ImpactSound: {fileID: 0}

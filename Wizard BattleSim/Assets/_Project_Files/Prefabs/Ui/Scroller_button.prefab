@@ -57,6 +57,8 @@ MonoBehaviour:
   spellDatabase: {fileID: 11400000, guid: b1d00285386ba37429ae6313800792d7, type: 2}
   scrollerSelector: {fileID: 0}
   ConfirmButton: {fileID: 3426260969779439337}
+  UpButton: {fileID: 8284871516712800602}
+  DownButton: {fileID: 4521930880147067982}
   anim: {fileID: 7560437477848374562}
   PlayAnim: 1
   type: 1
@@ -292,7 +294,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4837959852814852672}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 

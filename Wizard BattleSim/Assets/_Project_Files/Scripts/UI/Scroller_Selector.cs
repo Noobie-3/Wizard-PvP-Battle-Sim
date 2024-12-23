@@ -45,12 +45,15 @@ public class Scroller_Selector : NetworkBehaviour
             CurrentIconIndex = 0;
             windows[CurrentWindow].ConfirmButton.interactable = false;
             InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform);
-
+            windows[CurrentWindow].DisableButtons();
+            windows[CurrentWindow].LockedIn = true;
+            windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
             CurrentWindow++;
             windows[CurrentWindow].gameObject.SetActive(true);
             selectionType = windows[CurrentWindow].type;
             windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
-
+            windows[CurrentWindow].EnableButtons();
+            
 
 
             if (CurrentIcon != null)
@@ -66,7 +69,12 @@ public class Scroller_Selector : NetworkBehaviour
         }
         else
         {
-
+            if(CurrentIcon)
+            {
+                Destroy(CurrentIcon);
+                windows[CurrentWindow].DisableButtons();
+                InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform);
+            }
             Debug.LogWarning("No more categories to move to.");
         }
         foreach (var window in windows)
@@ -90,12 +98,24 @@ public class Scroller_Selector : NetworkBehaviour
 
     public void MoveToPreviousCat()
     {
-        if(!IsClient)
+        if (!IsClient)
         {
             return;
         }
         //Move to previous category by enabling the previous window and disabling any windows after it
-        if(CurrentWindow != 0)
+
+        Start_button.SetActive(false);
+        if (CurrentWindow == windows.Length - 1 && windows[CurrentWindow].LockedIn)
+        {
+            print("reopeing final cat");
+            windows[CurrentWindow].EnableButtons();
+            Destroy(InUseConfirmed_icons[CurrentWindow]);
+            Destroy(CurrentIcon);
+            windows[CurrentWindow].ConfirmButton.interactable = true;
+            windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
+            windows[CurrentWindow].LockedIn = false;
+        }
+        else if (CurrentWindow != 0)
         {
             if (CurrentIcon != null)
             {
@@ -103,7 +123,9 @@ public class Scroller_Selector : NetworkBehaviour
             }
             CurrentIconIndex = 0;
             InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform);
+            windows[CurrentWindow].DisableButtons();
             CurrentWindow--;
+            windows[CurrentWindow].EnableButtons();
             Destroy(InUseConfirmed_icons[CurrentWindow]);
             windows[CurrentWindow].ConfirmButton.interactable = true;
             windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
@@ -112,7 +134,7 @@ public class Scroller_Selector : NetworkBehaviour
 
         if(current_Icon_Indicator != null)
         {
-            CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].transform);
+            CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].SelectorIconHolder.transform);
         }
 
     }

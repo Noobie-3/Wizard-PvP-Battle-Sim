@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   displayName: Snek
-  icon: {fileID: 21300000, guid: 05aafa83f50ed3e468f82c20f508e6a5, type: 3}
+  icon: {fileID: 21300000, guid: 1d07e0564c011e642934f51be13b3f6d, type: 3}
   introPrefab: {fileID: 3366691347016609856, guid: c2ddac8a53f4a614db898b9ddc64f39c, type: 3}
   gameplayPrefab: {fileID: 7686046711235604627, guid: 4713f93f33c754348b9567ebfa1a42f0, type: 3}
   moveSpeed: 50

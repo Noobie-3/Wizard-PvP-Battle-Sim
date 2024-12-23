@@ -68,6 +68,7 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
 
     public void Initialize(ulong casterId, Vector3 direction)
     {
+        gameController.GC.PlaySoundAtLocation(transform, spell.FireSound);
         CasterId = casterId;
         var NewDir = direction.normalized;
 

@@ -76,11 +76,12 @@ public class gameController : NetworkBehaviour
     }
 
 
-    public void PlaySoundAtLocation(Transform Position, AudioClip Sound)
+    public GameObject PlaySoundAtLocation(Transform Position, AudioClip Sound)
     {
         var SoundObject = Instantiate(PlaySoundPrefab, Position.position, Quaternion.identity);
         
         SoundObject.GetComponent<PlaySoundAtLocation>().sound = Sound;
+        return SoundObject;
     }
 }
 

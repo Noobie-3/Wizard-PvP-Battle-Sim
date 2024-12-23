@@ -5,6 +5,7 @@ public class PlaySoundAtLocation : MonoBehaviour
 {
     public AudioClip sound;
     public  AudioSource audioSource;
+    public bool DoDestory = true;
     void Start()
     {
          audioSource = GetComponent<AudioSource>();

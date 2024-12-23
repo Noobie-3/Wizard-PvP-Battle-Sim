@@ -17,16 +17,20 @@ public class PlayerUI : MonoBehaviour
     public Image manaBar;
     public TextMeshProUGUI manaText;
     public Image[] SpellSlotsImages;
-    [SerializeField] public GameObject[] SelectedSpellIcons;
-
+    public GameObject CurrentIcon;
+    public GameObject CurrentIconEffect;
+    public int CurrentIconIndex;
 
     // Start is called before the first frame update
     void Start()
     {
+        CurrentIcon = Instantiate(CurrentIconEffect, SpellSlotsImages[SpellCaster.SelectedSpell].transform);
         if(player == null)
         {
             player = GetComponentInParent<PlayerController>();
         }
+
+        
 
     }
 
@@ -67,11 +71,13 @@ public class PlayerUI : MonoBehaviour
 
     public void UpdateSelection()
     {
-        foreach (var icon in SelectedSpellIcons)
+        if (CurrentIconIndex == SpellCaster.SelectedSpell) return;
+        if(CurrentIcon)
         {
-            icon.SetActive(false);
+            Destroy(CurrentIcon);
         }
-        SelectedSpellIcons[SpellCaster.SelectedSpell].SetActive(true);
+        CurrentIcon = Instantiate(CurrentIconEffect, SpellSlotsImages[SpellCaster.SelectedSpell].transform);
+        CurrentIconIndex = SpellCaster.SelectedSpell;
     }
 
 
