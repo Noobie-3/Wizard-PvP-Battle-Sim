@@ -42,14 +42,34 @@ public class SpellCaster : NetworkBehaviour
         isCastingSpell();
     }
 
-     public void SetSpell(ulong id)
+    public override void OnNetworkSpawn()
     {
-        var State = PlayerStateManager.Singleton.LookupState(id);
+        if(!IsOwner) return;
 
+        print("Set the Spell for the player with the player id of " + OwnerClientId);
+        SetSpell(OwnerClientId);
+    }
+
+    public void SetSpell(ulong id)
+    {
+
+        var State = PlayerStateManager.Singleton.LookupState(id);
+        print("the spells that are being set are id: " + id + "spell0" + State.Spell0 + "Spell1" + State.Spell1 + "Spell2" + State.Spell2);
         CurrentSpells[0] = State.Spell0;
         CurrentSpells[1] = State.Spell1;
         CurrentSpells[2] = State.Spell2;
+        SetSpellServerRpc(id);
 
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SetSpellServerRpc(ulong id)
+    {
+        var State = PlayerStateManager.Singleton.LookupState(id);
+        print("the spells that are being set are id: " + id + "spell0" + State.Spell0 + "Spell1" + State.Spell1 + "Spell2" + State.Spell2);
+        CurrentSpells[0] = State.Spell0;
+        CurrentSpells[1] = State.Spell1;
+        CurrentSpells[2] = State.Spell2;
     }
     // Spell selection logic
     public void ScrollSpellSelection(InputAction.CallbackContext context)

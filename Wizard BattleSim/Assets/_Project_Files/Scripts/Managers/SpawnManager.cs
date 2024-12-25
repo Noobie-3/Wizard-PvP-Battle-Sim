@@ -81,7 +81,7 @@ public class SpawnManager : NetworkBehaviour
         print(PlayerState.CharacterId + " Character ID");
 
         NetworkObject playerInstance = Instantiate(CD.GetCharacterById(PlayerState.CharacterId).GameplayPrefab, assignedSpawnPoint.transform.position, Quaternion.identity);
-        playerInstance.GetComponent<SpellCaster>().SetSpell(clientId);
+        //playerInstance.GetComponent<SpellCaster>().SetSpell(clientId);
         Debug.Log($"Spawned player {clientId} at {assignedSpawnPoint.transform.position}");
         Transform handTransform = playerInstance.GetComponent<SpellCaster>().Hand;
         GameObject wandInstance = Instantiate(WD.GetWandById(PlayerState.WandID).WandPrefab, handTransform.position, handTransform.rotation);

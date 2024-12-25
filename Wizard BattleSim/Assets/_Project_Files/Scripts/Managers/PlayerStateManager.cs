@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class PlayerStateManager : NetworkBehaviour
 {
-    [SerializeField] public List<CharacterSelectState> AllStatePlayers = new List<CharacterSelectState>();
+    [SerializeField] public NetworkList<CharacterSelectState> AllStatePlayers = new NetworkList<CharacterSelectState>();
     public static PlayerStateManager Singleton; 
     private void Start()
     {
@@ -21,14 +21,14 @@ public class PlayerStateManager : NetworkBehaviour
             Destroy(this.gameObject);
         }
 
-
+        NetworkManager.OnClientConnectedCallback += OnPlayerSpawn;
+        NetworkManager.OnClientDisconnectCallback -= OnPlayerDespawn;
     }
 
     public override void OnNetworkSpawn()
     {
         DontDestroyOnLoad(Singleton.gameObject);
-        NetworkManager.OnClientConnectedCallback += OnPlayerSpawn;
-        NetworkManager.OnClientDisconnectCallback -= OnPlayerDespawn;
+
 
 
         foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
@@ -42,6 +42,7 @@ public class PlayerStateManager : NetworkBehaviour
     {
         var TempState = new CharacterSelectState(ClientID);
         AddState(TempState);
+        print("Player Spawned and added origianal state");
     }
 
     public void OnPlayerDespawn(ulong ClientID) 
@@ -140,7 +141,7 @@ public class PlayerStateManager : NetworkBehaviour
                 continue;
             }
         }
-        return AllStatePlayers.FirstOrDefault();
+        return AllStatePlayers[0];
         
     }
 }

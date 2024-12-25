@@ -5,12 +5,26 @@ public class MusicManager : MonoBehaviour
 {
     public GameObject MusicPlayer;
     public AudioClip MusicClip;
-    
-    public void PlaySong()
+
+
+    public void Start()
     {
-        MusicPlayer = gameController.GC.PlaySoundAtLocation(transform, MusicClip);
-        MusicPlayer.GetComponent<PlaySoundAtLocation>().DoDestory = false;
-        MusicPlayer.GetComponent<AudioSource>().spatialBlend = 0;
+        DontDestroyOnLoad(gameObject);
+        PlaySong(MusicClip);
+    }
+    public void PlaySong(AudioClip music)
+    {
+        if(MusicPlayer == null)
+        {
+            MusicPlayer = gameController.GC.PlaySoundAtLocation(transform, music);
+            MusicPlayer.GetComponent<PlaySoundAtLocation>().DoDestory = false;
+            MusicPlayer.GetComponent<AudioSource>().spatialBlend = 0;
+            DontDestroyOnLoad(MusicPlayer);
+        }
+        else
+        {
+            MusicPlayer.GetComponent<AudioSource>().clip = music;
+        }
 
     }
 }
