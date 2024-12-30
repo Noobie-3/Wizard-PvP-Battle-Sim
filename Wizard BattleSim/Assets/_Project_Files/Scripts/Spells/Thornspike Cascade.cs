@@ -7,7 +7,6 @@ public class ThornspikeCascade : NetworkBehaviour, ISpell_Interface {
 
     public ulong CasterId { get; set; }
     public float hitagainTime { get; set; }
-
     Spell ISpell_Interface.spell => throw new System.NotImplementedException();
 
     public Vector3 Direction;
@@ -23,9 +22,10 @@ public class ThornspikeCascade : NetworkBehaviour, ISpell_Interface {
         Direction = direction;
         transform.LookAt(Direction);
         transform.rotation = new quaternion(0, transform.rotation.y, transform.rotation.z, transform.rotation.w);
-        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + Offset);
+        transform.position += transform.forward * Offset;
     }
 
     public void TriggerEffect() {
+
     }
 }

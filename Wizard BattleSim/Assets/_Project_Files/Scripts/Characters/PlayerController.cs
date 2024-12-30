@@ -104,7 +104,7 @@ public class PlayerController : NetworkBehaviour
     // Wall check and wall running logic
     private Vector3 currentWallNormal = Vector3.zero;
     
-
+    //Is called When the player is spawned on the network
     public override void OnNetworkSpawn()
     {
 

@@ -44,10 +44,6 @@ public class First_Spell_Test_DELETELATER : NetworkBehaviour, ISpell_Interface
 
     }
 
-
-
-
-
     // Server RPC to destroy the object after a set amount of time
     [ServerRpc(RequireOwnership = false)]
     private void DestroyObjectServerRpc(float time)

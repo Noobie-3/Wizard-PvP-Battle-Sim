@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6951159558107928964
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3337307047852279038}
-  m_Layer: 0
-  m_Name: GroundChecker
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3337307047852279038
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6951159558107928964}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.6500001}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 998570382096462200}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8462910624716464699
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39,6 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4990230533089781953, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2945754832693162446, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
+      propertyPath: rb
+      value: 
+      objectReference: {fileID: 5750375011000694020}
+    - target: {fileID: -2945754832693162446, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
+      propertyPath: spell
+      value: 
+      objectReference: {fileID: 11400000, guid: 994854444c171b940b9f08e3372a914c, type: 2}
+    - target: {fileID: -2945754832693162446, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
+      propertyPath: GroundCheckPos
+      value: 
+      objectReference: {fileID: 4780428562342542590}
     - target: {fileID: 5266191828390773820, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
       propertyPath: m_Name
       value: PosidionsWrath_Projectile
@@ -85,23 +70,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8694742407894225731, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 3337307047852279038}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5266191828390773820, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
       insertIndex: 1
       addedObject: {fileID: -7769769136069944029}
     - targetCorrespondingSourceObject: {fileID: 5266191828390773820, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1760862162093487148}
+      addedObject: {fileID: 3432648948515146574}
   m_SourcePrefab: {fileID: 100100000, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
---- !u!4 &998570382096462200 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8694742407894225731, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
-  m_PrefabInstance: {fileID: 8462910624716464699}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4352458349310551559 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5266191828390773820, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
@@ -128,23 +105,32 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &1760862162093487148
-MonoBehaviour:
+--- !u!135 &3432648948515146574
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4352458349310551559}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6abb22affcc97e4982763248c3c24c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spell: {fileID: 11400000, guid: 994854444c171b940b9f08e3372a914c, type: 2}
-  CurrentLifeTime: 0
-  PosToSpawn: {x: 0, y: 0, z: 0}
-  GroundCheckPos: {fileID: 3337307047852279038}
-  rb: {fileID: 5750375011000694020}
+  serializedVersion: 3
+  m_Radius: 0.35
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &4780428562342542590 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3973637414753427141, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}
+  m_PrefabInstance: {fileID: 8462910624716464699}
+  m_PrefabAsset: {fileID: 0}
 --- !u!54 &5750375011000694020 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: -4990230533089781953, guid: db8dcee9f1a6ba64fb0617db7b11c1bc, type: 3}

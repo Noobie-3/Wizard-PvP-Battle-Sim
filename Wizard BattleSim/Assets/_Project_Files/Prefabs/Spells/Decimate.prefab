@@ -12,6 +12,46 @@ PrefabInstance:
       propertyPath: m_UseGravity
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 747205316658515022, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e1ff59c511d55ad42a38c13104974646, type: 2}
+    - target: {fileID: 1453331697292553041, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: ae40e94faa99f644ba279298f021d5d2, type: 2}
+    - target: {fileID: 1453331697292553041, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453331697292553041, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453331697292553041, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2152741498977904649, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 9913e7d6f1137ce4c955db571dce0524, type: 2}
+    - target: {fileID: 3600123300731258766, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a7556aeb9272d3640a741ca30b4ea8d7, type: 2}
+    - target: {fileID: 3600123300731258766, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3600123300731258766, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3600123300731258766, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4207123789759091246, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -94,7 +134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8551368139755141672, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
       propertyPath: m_Name
-      value: Arrow Rain Projectile
+      value: Decimate
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -137,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2613229163
+  GlobalObjectIdHash: 2538276825
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -179,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52b37970068249046af2489715631359, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spell: {fileID: 11400000, guid: c97c3f764d9e3624eaced979fe0a812d, type: 2}
+  spell: {fileID: 11400000, guid: 13d9a0bb612ec524db2058bd40801ec0, type: 2}
   CurrentLifeTime: 0
   PosToSpawn: {x: 0, y: 0, z: 0}
   GroundCheckPos: {fileID: 3491191387780631615}

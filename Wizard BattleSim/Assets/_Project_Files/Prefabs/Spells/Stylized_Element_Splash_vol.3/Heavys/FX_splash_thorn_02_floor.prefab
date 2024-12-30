@@ -8611,9 +8611,9 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 4
-    type: 0
+    type: 1
     collisionMode: 0
     colliderForce: 0
     multiplyColliderForceByParticleSize: 0
@@ -9901,7 +9901,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e57b26b2167961449f1421525a0751f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spell: {fileID: 11400000, guid: 64dd29f7b00e49546a448539caf68b51, type: 2}
   Direction: {x: 0, y: 0, z: 0}
+  Offset: 5
 --- !u!1 &1769051784381598837
 GameObject:
   m_ObjectHideFlags: 0
