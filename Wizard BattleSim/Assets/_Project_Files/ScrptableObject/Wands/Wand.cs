@@ -9,7 +9,7 @@ public class Wand : ScriptableObject
     [SerializeField] private string displayName = "New Wand";
     [SerializeField] private Sprite icon;
     [SerializeField] public GameObject WandPrefab;
-
+    [SerializeField] public GameObject ShowCasePrefab;
     //GamePlay Stats
     [SerializeField] private float moveSpeed = 50;
 

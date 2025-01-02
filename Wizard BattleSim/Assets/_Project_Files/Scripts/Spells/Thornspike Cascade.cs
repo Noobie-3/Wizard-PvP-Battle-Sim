@@ -7,7 +7,7 @@ public class ThornspikeCascade : NetworkBehaviour, ISpell_Interface {
 
     public ulong CasterId { get; set; }
     public float hitagainTime { get; set; }
-    Spell ISpell_Interface.spell => throw new System.NotImplementedException();
+    Spell ISpell_Interface.spell => spell;
 
     public Vector3 Direction;
     public float Offset = 5;

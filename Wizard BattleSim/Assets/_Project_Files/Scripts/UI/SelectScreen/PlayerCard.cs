@@ -8,9 +8,7 @@ public class PlayerCard : MonoBehaviour
     [SerializeField] private WandDatabase WandDatabase;
     [SerializeField] private GameObject visuals;
     [SerializeField] private Image characterIconImage;
-    [SerializeField] private Image WandIconImage;
     [SerializeField] private TMP_Text playerNameText;
-    [SerializeField] private TMP_Text characterNameText;
 
     public void UpdateDisplay(CharacterSelectState state)
     {
@@ -24,7 +22,6 @@ public class PlayerCard : MonoBehaviour
             }
             characterIconImage.sprite = character.Icon;
             characterIconImage.enabled = true;
-            characterNameText.text = character.DisplayName;
         }
         else
         {
@@ -39,13 +36,8 @@ public class PlayerCard : MonoBehaviour
                 Debug.LogError($"Wand with ID {state.WandID} not found in database");
                 return;
             }
-            WandIconImage.sprite = wand.Icon;
-            WandIconImage.enabled = true;
         }
-        else
-        {
-            WandIconImage.enabled = false;
-        }
+        
 
         playerNameText.text = state.IsLockedIn ? $"Player {state.ClientId}" : $"Player {state.ClientId} (Picking...)";
 

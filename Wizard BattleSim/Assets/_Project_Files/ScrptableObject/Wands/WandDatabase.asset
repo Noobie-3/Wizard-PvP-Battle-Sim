@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Wands:
   - {fileID: 11400000, guid: 85d71c033039bca4da86730e4e10a9fd, type: 2}
+  - {fileID: 11400000, guid: de22c6e339a1d6645978fe802be934ba, type: 2}
+  - {fileID: 11400000, guid: abb83ad868a56374f823cfe4cc464fd0, type: 2}

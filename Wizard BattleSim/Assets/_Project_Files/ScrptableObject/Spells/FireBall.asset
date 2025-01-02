@@ -16,7 +16,7 @@ MonoBehaviour:
   Spell_Damage: 20
   Spell_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
-  Grounded_SpellToSpawn_Prefab: {fileID: 0}
+  Grounded_SpellToSpawn_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
   CooldownDuration: 3
   LifeTime: 15
   ManaCost: 15

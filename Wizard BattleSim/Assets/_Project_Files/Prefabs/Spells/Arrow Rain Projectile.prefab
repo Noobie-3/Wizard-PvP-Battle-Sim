@@ -105,9 +105,6 @@ PrefabInstance:
       addedObject: {fileID: 8582504827452799247}
     - targetCorrespondingSourceObject: {fileID: 8551368139755141672, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6215417838589613935}
-    - targetCorrespondingSourceObject: {fileID: 8551368139755141672, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 8837742897450564490}
   m_SourcePrefab: {fileID: 100100000, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
 --- !u!54 &1504415728947550960 stripped
@@ -146,27 +143,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!135 &6215417838589613935
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9134858270483239568}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.35
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8837742897450564490
 MonoBehaviour:
   m_ObjectHideFlags: 0

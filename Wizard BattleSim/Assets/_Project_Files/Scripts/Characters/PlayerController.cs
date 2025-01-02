@@ -13,7 +13,6 @@ using Unity.Netcode.Components;
 using System.Threading;
 using UnityEngine.Video;
 
-[RequireComponent(typeof(Rigidbody), typeof(SpellCaster))]
 public class PlayerController : NetworkBehaviour
 {
 
@@ -266,6 +265,7 @@ public class PlayerController : NetworkBehaviour
         {
             JumpUsed = false;
         }
+        Anim.SetBool("Grounded", Grounded);
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
     }
     private void WallCheck()

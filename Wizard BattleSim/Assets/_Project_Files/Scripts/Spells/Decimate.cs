@@ -63,6 +63,11 @@ public class Decimate : NetworkBehaviour, ISpell_Interface
 
         transform.SetParent(other.transform);
 
+        if (iHit.Type == IHittable_inherited.ObjectType.player)
+        {
+            StartCoroutine(DecimateMultiHit(iHit.PC));
+        }
+
 
     }
 
@@ -82,5 +87,7 @@ public class Decimate : NetworkBehaviour, ISpell_Interface
         }
         Destroy(gameObject);
     }
+
+    
     
 }

@@ -14,7 +14,9 @@ public class Scroller_Selector : NetworkBehaviour
         Character,
         Spell
     }
-
+    public GameObject ObjectSpawned;// The object that is spawned such as a character, wand, or spell
+    public Transform ObjectSpawn; // Spawn point for characters, Wands, and spells
+    public float ObjectRespawnTime; // Time to wait before respawning the object
     public SelectionType selectionType; // Current type of selection (wand, character, or spell)
     public Scroller_InfoButton[] windows; // Array of window objects for categories
     public GameObject Confirmed_Icon; // Icon to display when selection is confirmed
@@ -28,6 +30,7 @@ public class Scroller_Selector : NetworkBehaviour
     public bool ReadyToStart; // Flag indicating if all selections are locked in
     public GameObject Start_button; // Button to start the game
     public AudioClip ClickSound; // Sound to play on button clicks
+    public LookAtObjectCOnstant lookAtObjectCOnstant; // Script to make the camera look at a target
 
     public void Start()
     {
@@ -44,6 +47,19 @@ public class Scroller_Selector : NetworkBehaviour
         {
             CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].transform);
         }
+        ReplaceSpawnedPrefab();
+    }
+
+    private void FixedUpdate()
+    {
+
+            ObjectRespawnTime -= Time.deltaTime;
+            if (ObjectRespawnTime <= 0)
+            {
+                if (selectionType == SelectionType.Character) return;
+                ReplaceSpawnedPrefab();
+            }
+        
     }
 
     public void MoveToNextCat()
@@ -75,6 +91,10 @@ public class Scroller_Selector : NetworkBehaviour
                 Destroy(InUseConfirmed_icons[CurrentWindow]); // Remove the confirmed icon if any
                 CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].SelectorIconHolder.transform);
             }
+
+            ReplaceSpawnedPrefab();
+
+
         }
         else
         {
@@ -130,8 +150,9 @@ public class Scroller_Selector : NetworkBehaviour
             windows[CurrentWindow].ConfirmButton.interactable = true; // Enable confirm button
             windows[CurrentWindow].SetInfoPanel(CurrentIconIndex); // Update the info panel
             windows[CurrentWindow].LockedIn = false; // Unlock the current window
+
         }
-        else if (CurrentWindow != 0)
+        else if (CurrentWindow > 0)
         {
             // Handle moving to a previous window
             if (CurrentIcon != null)
@@ -147,7 +168,8 @@ public class Scroller_Selector : NetworkBehaviour
             windows[CurrentWindow].ConfirmButton.interactable = true; // Enable confirm button in the previous window
             windows[CurrentWindow].SetInfoPanel(CurrentIconIndex); // Update the info panel
         }
-
+        selectionType = windows[CurrentWindow].type; // Update the selection type
+        ReplaceSpawnedPrefab();
         // Instantiate the icon indicator for the new window
         if (current_Icon_Indicator != null)
         {
@@ -189,6 +211,7 @@ public class Scroller_Selector : NetworkBehaviour
         // Update the info panel with the new selection
         selectionType = windows[CurrentWindow].type;
         windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
+        ReplaceSpawnedPrefab();
     }
 
     public void ScrollDown()
@@ -222,6 +245,7 @@ public class Scroller_Selector : NetworkBehaviour
         // Update the info panel with the new selection
         selectionType = windows[CurrentWindow].type;
         windows[CurrentWindow].SetInfoPanel(CurrentIconIndex);
+        ReplaceSpawnedPrefab();
     }
 
     public void ConfirmSelection()
@@ -289,5 +313,30 @@ public class Scroller_Selector : NetworkBehaviour
 
         // Create a new icon indicator for the current window
         CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].SelectorIconHolder.transform);
+    }
+
+    public void ReplaceSpawnedPrefab()
+    {
+        ObjectRespawnTime = 5;
+        if (ObjectSpawned != null)
+        {
+            Destroy(ObjectSpawned);
+        }
+
+
+        switch (selectionType)
+        {
+            case SelectionType.Wand:
+                ObjectSpawned = Instantiate(wandDatabase.GetWandById(CurrentIconIndex).ShowCasePrefab, ObjectSpawn);
+                break;
+            case SelectionType.Spell:
+                ObjectSpawned = Instantiate(SpellDatabase.SpellBook[CurrentIconIndex].Grounded_SpellToSpawn_Prefab, ObjectSpawn);
+                break;
+            case SelectionType.Character:
+                ObjectSpawned = Instantiate(characterDatabase.GetCharacterById(CurrentIconIndex).IntroPrefab, ObjectSpawn);
+                break;
+        }
+        lookAtObjectCOnstant.Target = ObjectSpawned.transform;
+
     }
 }
