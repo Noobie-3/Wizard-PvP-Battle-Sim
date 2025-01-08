@@ -18,7 +18,7 @@ MonoBehaviour:
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 7957833072274404953, guid: 3355f6bfa6db8b24281b827de929694c, type: 3}
   CooldownDuration: 7
-  LifeTime: 8
+  LifeTime: 3.9
   ManaCost: 20
   Spell_Name: meteor shower
   Spell_CastTime: 2

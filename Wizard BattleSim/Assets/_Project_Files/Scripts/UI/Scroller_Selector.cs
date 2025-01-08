@@ -57,6 +57,7 @@ public class Scroller_Selector : NetworkBehaviour
             if (ObjectRespawnTime <= 0)
             {
                 if (selectionType == SelectionType.Character) return;
+                if(selectionType == SelectionType.Wand) return;
                 ReplaceSpawnedPrefab();
             }
         
@@ -254,6 +255,8 @@ public class Scroller_Selector : NetworkBehaviour
         {
             return;
         }
+
+
 
         // Confirm the current selection and lock the current window
         windows[CurrentWindow].ConfirmButton.interactable = false;

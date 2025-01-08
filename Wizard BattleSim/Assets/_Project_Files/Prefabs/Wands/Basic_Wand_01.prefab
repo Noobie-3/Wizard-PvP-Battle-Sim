@@ -64,6 +64,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Basic_Wand_01
       objectReference: {fileID: 0}
+    - target: {fileID: 6528667014525853392, guid: cb8236cde7f21bc47bc0cc0649ee8256, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d9964c28019305e49978df2cfb032629, type: 2}
+    - target: {fileID: 6528667014525853392, guid: cb8236cde7f21bc47bc0cc0649ee8256, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d9964c28019305e49978df2cfb032629, type: 2}
+    - target: {fileID: 6528667014525853392, guid: cb8236cde7f21bc47bc0cc0649ee8256, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d9964c28019305e49978df2cfb032629, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -8700617353114198275, guid: cb8236cde7f21bc47bc0cc0649ee8256, type: 3}

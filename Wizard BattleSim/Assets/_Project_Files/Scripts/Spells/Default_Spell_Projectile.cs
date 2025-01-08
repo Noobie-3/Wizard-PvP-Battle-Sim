@@ -28,6 +28,10 @@ public class Default_Spell_Projectile : NetworkBehaviour, ISpell_Interface
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        if(IsServer)
+        {
+            Destroy(gameObject, 30f);
+        }
     }
 
     // Update is called once per frame
@@ -89,6 +93,7 @@ public class Default_Spell_Projectile : NetworkBehaviour, ISpell_Interface
         }
 
         SpawnSpell();
+        Destroy(gameObject);
 
     }
 

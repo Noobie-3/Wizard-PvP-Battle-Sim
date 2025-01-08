@@ -35,10 +35,14 @@ public class SpawnManager : NetworkBehaviour
 
     }
 
-    // Callback when the scene loads, only runs on the server
-    private void SpawnPlayersOnSceneLoad(ulong clientId, string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadMode)
+    public void GIveOwnerShipOnPlayerSpawnServerRpc()
     {
-        if (sceneName == "Scene_01" && IsServer)
+
+    }
+    // Callback when the scene loads, only runs on the server
+    private void SpawnPlayersOnSceneLoad(SceneEvent sceneEvent, ulong ClientID)
+    {
+  //Change this  to spawn the player when they finish spawning instead of when host spawns      if (sceneEvent. == "Scene_01" && IsServer)
         {
             Debug.Log("Scene loaded on the server, spawning players.");
 
@@ -46,6 +50,7 @@ public class SpawnManager : NetworkBehaviour
             foreach (var playerEntry in NetworkManager.ConnectedClients)
             { 
                 Debug.Log($"Spawning player {playerEntry}");
+                if (playerEntry.Value.ClientId != ClientID) continue;
                 SpawnPlayer(playerEntry.Key);
             }
 

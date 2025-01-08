@@ -33,6 +33,7 @@ public class ServerManager : NetworkBehaviour
         }
 
         DataPrintCoRo = StartCoroutine(PrintData());
+        
 
     }
 

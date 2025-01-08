@@ -21,6 +21,7 @@ public class Scroller_InfoButton : MonoBehaviour
     public int SpellIndex;
     public bool LockedIn;
     public GameObject SelectorIconHolder;
+    [SerializeField] public PlayerCard[] playerCards;
 
     public void OnEnable()
     {
@@ -101,6 +102,18 @@ public class Scroller_InfoButton : MonoBehaviour
                 Debug.LogError($"Unknown SelectionType: {type}");
                 InfoText.text = "Unknown Info";
                 break;
+        }
+
+        for (int i = 0; i < playerCards.Length; i++)
+        {
+            if (PlayerStateManager.Singleton.AllStatePlayers.Count > i)
+            {
+                playerCards[i].UpdateDisplay(PlayerStateManager.Singleton.AllStatePlayers[i]);
+            }
+            else
+            {
+                playerCards[i].DisableDisplay();
+            }
         }
 
         print("SetInfoPanel called with type " + type);

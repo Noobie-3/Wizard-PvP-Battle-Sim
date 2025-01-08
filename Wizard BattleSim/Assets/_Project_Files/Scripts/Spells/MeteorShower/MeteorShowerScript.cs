@@ -5,9 +5,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 
-public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
+public class MeteorShowerScript : NetworkBehaviour//, ISpell_Interface
 {
-   [SerializeField] private float RadiusOfEffect;
+
+    //LEagacy code
+/*   [SerializeField] private float RadiusOfEffect;
     [SerializeField] private GameObject Meteor_Prefab;
     [SerializeField] public Spell spell;
     public float hitagainTime { get; set; }
@@ -85,4 +87,4 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
     {
         throw new System.NotImplementedException();
     }
-}
+*/}

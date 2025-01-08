@@ -41,6 +41,12 @@ public class Blackarrowrain : NetworkBehaviour, ISpell_Interface
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+        if (!IsServer) return;
+        Destroy(gameObject, spell.LifeTime);
+    }
+
     public void SpawnArrows()
     {
         if (!IsOwner)  return;
@@ -70,10 +76,7 @@ public class Blackarrowrain : NetworkBehaviour, ISpell_Interface
 
     }
 
-    public override void OnNetworkSpawn()
-    {
 
-    }
 
     private void OnTriggerEnter(Collider other)
     {
