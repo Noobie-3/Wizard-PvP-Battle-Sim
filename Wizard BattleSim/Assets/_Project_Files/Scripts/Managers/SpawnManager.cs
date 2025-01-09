@@ -10,7 +10,7 @@ public class SpawnManager : NetworkBehaviour
     private Dictionary<ulong, PlayerSpawnLocation> playerSpawnPoints = new Dictionary<ulong, PlayerSpawnLocation>();
    public  WandDatabase WD;
     public  CharacterDatabase CD;
-
+    public NetworkObject PlayerNotifier;
     public static SpawnManager instance;
 
     private bool gameStarted = false;
@@ -21,7 +21,18 @@ public class SpawnManager : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public override void OnNetworkSpawn()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback += SpawnNotifier;
+    }
 
+    public void SpawnNotifier(ulong Clientid)
+    {
+        var Notifier = Instantiate(PlayerNotifier);
+        Notifier.GetComponent<PlayerSceneNotifier>().CLientId = Clientid;
+        Notifier.SpawnWithOwnership(Clientid);
+        
+    }
 
     // Called to start the game and load the scene
     [ServerRpc]
@@ -35,30 +46,12 @@ public class SpawnManager : NetworkBehaviour
 
     }
 
-    public void GIveOwnerShipOnPlayerSpawnServerRpc()
-    {
 
-    }
-    // Callback when the scene loads, only runs on the server
-    private void SpawnPlayersOnSceneLoad(SceneEvent sceneEvent, ulong ClientID)
-    {
-  //Change this  to spawn the player when they finish spawning instead of when host spawns      if (sceneEvent. == "Scene_01" && IsServer)
-        {
-            Debug.Log("Scene loaded on the server, spawning players.");
 
-            // Spawn each registered player
-            foreach (var playerEntry in NetworkManager.ConnectedClients)
-            { 
-                Debug.Log($"Spawning player {playerEntry}");
-                if (playerEntry.Value.ClientId != ClientID) continue;
-                SpawnPlayer(playerEntry.Key);
-            }
-
-        }
-    }
 
     // Spawns player with their selected wand
-    public void SpawnPlayer(ulong clientId)
+    [ServerRpc(RequireOwnership = false)]
+    public void SpawnPlayerServerRpc(ulong clientId)
     {
 
         // Check if player is already spawned
@@ -69,16 +62,16 @@ public class SpawnManager : NetworkBehaviour
         }
 
         // Get or assign a spawn point
-
+        spawnPoints = FindObjectsByType<PlayerSpawnLocation>(sortMode: FindObjectsSortMode.None);
+        print(spawnPoints.Length + "  this is how many spawn points there is");
         var assignedSpawnPoint = GetAvailableSpawnPoint();
-        if (assignedSpawnPoint == null)
+        if(assignedSpawnPoint == null)
         {
-            assignedSpawnPoint = spawnPoints[0];
-            print("Used the first spawn point");
+            Debug.LogError($"No available spawn points found for client {clientId}. Cannot spawn player.");
+            assignedSpawnPoint = spawnPoints[0]; // Default to first spawn point if none are available
         }
 
         playerSpawnPoints[clientId] = assignedSpawnPoint;
-        assignedSpawnPoint.SetAvailability(false);
 
 
         var PlayerState = PlayerStateManager.Singleton.LookupState(clientId);
@@ -136,12 +129,16 @@ public class SpawnManager : NetworkBehaviour
     {
         foreach (var spawnPoint in spawnPoints)
         {
-            if (spawnPoint.IsAvailable.Value)
+            if (spawnPoint.IsAvailable.Value == false)
             {
+                spawnPoint.SetAvailability(true);
                 return spawnPoint;
             }
+            else {
+                continue; }
         }
-        return null; // Return null if no spawn point is available
+
+        return null;
     }
 
 

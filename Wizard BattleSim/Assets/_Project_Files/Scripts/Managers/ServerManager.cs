@@ -89,26 +89,6 @@ public class ServerManager : NetworkBehaviour
 
 
 
-    [ServerRpc]
-    private void SpawnPlayerServerRpc(int characterID, ulong clientId)
-    {
-        //Spawn player for a client
-        // Retrieve the player prefab from the character database
-        var playerPrefabID = characterDatabase.GetCharacterById(characterID);
-        NetworkObject playerPrefab = playerPrefabID.GameplayPrefab;
-
-        // Instantiate the player prefab
-        var playerInstance = Instantiate(playerPrefab);
-
-        // Spawn the player object on the network and assign ownership to the client
-        playerInstance.SpawnAsPlayerObject(clientId);
-
-        // Ensure the player object is not destroyed when the scene changes
-        DontDestroyOnLoad(playerInstance.gameObject);
-
-        // Log the name of the spawned player object
-        print(playerInstance.gameObject.name + " Spawned");
-    }
 
     public void StartGame()
     {
@@ -143,9 +123,9 @@ private void StartGameServerRpc()
         {
             print("made it to the foreach loop for player entries");
 
-            print("Called Spawn Player  in Server Manager");
-            SpawnManager.instance.SpawnPlayer(playerEntry.ClientId);
-        }
+            print("Called Spawn Player  in Server Manager{Depercrated}");
+/*            SpawnManager.instance.SpawnPlayer(playerEntry.ClientId);
+*/        }
         NetworkManager.Singleton.SceneManager.OnLoadComplete -= StartGameHelper;
     }
 
