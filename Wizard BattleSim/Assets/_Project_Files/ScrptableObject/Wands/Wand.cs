@@ -10,8 +10,6 @@ public class Wand : ScriptableObject
     [SerializeField] private Sprite icon;
     [SerializeField] public GameObject WandPrefab;
     [SerializeField] public GameObject ShowCasePrefab;
-    //GamePlay Stats
-    [SerializeField] private float moveSpeed = 50;
 
 
 
@@ -21,5 +19,4 @@ public class Wand : ScriptableObject
     public string DisplayName => displayName;
     public Sprite Icon => icon;
     public GameObject Prefab => WandPrefab;
-    public float MoveSpeed => moveSpeed;
 }

@@ -48,6 +48,23 @@ public class SpawnManager : NetworkBehaviour
 
 
 
+    public void AssignSpawnPointsByServer()
+    {
+
+        foreach(var client in NetworkManager.Singleton.ConnectedClients)
+        {
+            // Get or assign a spawn point
+            spawnPoints = FindObjectsByType<PlayerSpawnLocation>(sortMode: FindObjectsSortMode.None);
+            print(spawnPoints.Length + "  this is how many spawn points there is");
+            var assignedSpawnPoint = GetAvailableSpawnPoint();
+            playerSpawnPoints[client.Key] = assignedSpawnPoint;
+
+        }
+
+
+    }
+
+
 
     // Spawns player with their selected wand
     [ServerRpc(RequireOwnership = false)]
@@ -61,26 +78,14 @@ public class SpawnManager : NetworkBehaviour
             return;
         }
 
-        // Get or assign a spawn point
-        spawnPoints = FindObjectsByType<PlayerSpawnLocation>(sortMode: FindObjectsSortMode.None);
-        print(spawnPoints.Length + "  this is how many spawn points there is");
-        var assignedSpawnPoint = GetAvailableSpawnPoint();
-        if(assignedSpawnPoint == null)
-        {
-            Debug.LogError($"No available spawn points found for client {clientId}. Cannot spawn player.");
-            assignedSpawnPoint = spawnPoints[0]; // Default to first spawn point if none are available
-        }
-
-        playerSpawnPoints[clientId] = assignedSpawnPoint;
-
 
         var PlayerState = PlayerStateManager.Singleton.LookupState(clientId);
         // Instantiate and spawn the player
         print(PlayerState.CharacterId + " Character ID");
 
-        NetworkObject playerInstance = Instantiate(CD.GetCharacterById(PlayerState.CharacterId).GameplayPrefab, assignedSpawnPoint.transform.position, Quaternion.identity);
+        NetworkObject playerInstance = Instantiate(CD.GetCharacterById(PlayerState.CharacterId).GameplayPrefab, playerSpawnPoints[clientId].transform.position, Quaternion.identity);
         //playerInstance.GetComponent<SpellCaster>().SetSpell(clientId);
-        Debug.Log($"Spawned player {clientId} at {assignedSpawnPoint.transform.position}");
+        Debug.Log($"Spawned player {clientId} at {playerSpawnPoints[clientId].transform.position}");
         Transform handTransform = playerInstance.GetComponent<SpellCaster>().Hand;
         GameObject wandInstance = Instantiate(WD.GetWandById(PlayerState.WandID).WandPrefab, handTransform.position, handTransform.rotation);
         wandInstance.transform.SetParent(handTransform); // Attach wand to player's hand
@@ -138,7 +143,9 @@ public class SpawnManager : NetworkBehaviour
                 continue; }
         }
 
-        return null;
+        print("Resverting to default spawn point");
+        return spawnPoints[0];
+
     }
 
 

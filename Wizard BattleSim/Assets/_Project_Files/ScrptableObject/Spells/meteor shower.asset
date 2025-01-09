@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: meteor shower
   m_EditorClassIdentifier: 
   Spell_Speed: 60
-  Spell_Damage: 2
+  Spell_Damage: 35
   Spell_Prefab: {fileID: 1544220534275134557, guid: 668054ddbc7adb14d8518054788a2e29, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 7957833072274404953, guid: 3355f6bfa6db8b24281b827de929694c, type: 3}

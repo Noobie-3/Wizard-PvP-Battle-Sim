@@ -23,7 +23,7 @@ MonoBehaviour:
   Spell_Name: Thornspike Cascade
   Spell_CastTime: 3
   MultiHitCooldown: 0.5
-  SpellIcon: {fileID: 0}
+  SpellIcon: {fileID: 21300000, guid: 80b4c3887624de84ba66e00bffa96c52, type: 3}
   CasterChar: {fileID: 0}
   FireSound: {fileID: 0}
   ImpactSound: {fileID: 0}

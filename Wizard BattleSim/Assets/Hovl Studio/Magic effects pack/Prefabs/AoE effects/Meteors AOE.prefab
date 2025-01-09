@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3980763105393747086}
   - component: {fileID: 1405645535455539924}
   - component: {fileID: 7267142591122606911}
-  - component: {fileID: 7622511444456163640}
   m_Layer: 0
   m_Name: Stones
   m_TagString: Untagged
@@ -4901,19 +4900,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &7622511444456163640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963298783783106902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d5db30ae1ae5bb4c9e8ec6f0b7acf79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spell: {fileID: 0}
 --- !u!1 &1664122970461900358
 GameObject:
   m_ObjectHideFlags: 0
@@ -19646,7 +19632,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6144081954650167613}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 3.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -29507,7 +29493,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 3.1655e-41, y: 2.524355e-29, z: 0, w: 250253.58}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ForceVisible: 0
@@ -34429,7 +34415,6 @@ GameObject:
   - component: {fileID: 8636462576248347671}
   - component: {fileID: 588635408955552822}
   - component: {fileID: 6414016483480521709}
-  - component: {fileID: -2469468575851149404}
   - component: {fileID: 8285358205491782271}
   m_Layer: 0
   m_Name: Meteors AOE
@@ -34468,7 +34453,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7957833072274404953}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 3.5
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -35457,8 +35442,8 @@ ParticleSystem:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-      cycleCount: 20
-      repeatInterval: 0.15
+      cycleCount: 30
+      repeatInterval: 0.05
       probability: 1
   SizeModule:
     enabled: 0
@@ -39364,7 +39349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3299556607
+  GlobalObjectIdHash: 3844176747
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -39373,33 +39358,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!54 &-2469468575851149404
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7957833072274404953}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &8285358205491782271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39412,5 +39370,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 762b187ae2b872a4da80a5c73d582ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Caster: 0
   spell: {fileID: 11400000, guid: 5c6577c3a14e89a4da2d4bd9277ba1d3, type: 2}

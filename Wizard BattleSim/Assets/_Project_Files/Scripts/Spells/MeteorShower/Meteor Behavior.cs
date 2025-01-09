@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class MeteorBehavior : NetworkBehaviour, ISpell_Interface
 {
     [SerializeField] public Spell spell;
@@ -32,5 +31,22 @@ public class MeteorBehavior : NetworkBehaviour, ISpell_Interface
     {
         if (!IsServer) return;
         Destroy(gameObject, spell.LifeTime);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (!IsServer) return;
+        if (collision.gameObject.TryGetComponent(out IHittable_inherited ihit))
+        {
+            if (ihit.Type == IHittable_inherited.ObjectType.player)
+            {
+                ihit.GotHit(this.gameObject, spell, CasterId);
+
+
+
+            }
+            Destroy(gameObject);
+        }
     }
 }
