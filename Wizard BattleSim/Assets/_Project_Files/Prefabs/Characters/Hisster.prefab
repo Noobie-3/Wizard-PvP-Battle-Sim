@@ -529,6 +529,7 @@ MonoBehaviour:
   SpellBook_Spammable: {fileID: 11400000, guid: 35c664fa7d0bcf3418cb33bbff251676, type: 2}
   CastTimeUi: {fileID: 477735268436977550}
   CastSpellChargeText: {fileID: 7297526403532924771}
+  SpellName: {fileID: 6526001933306560910}
   CastTimeProgress: 0
   CastTimeProgressUI: {fileID: 7764115807126176781}
   Player: {fileID: 2780197439549934678}
@@ -1397,6 +1398,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7728898823975628400, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
   m_PrefabInstance: {fileID: 7923679976765817364}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6526001933306560910 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3992323265275134874, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
+  m_PrefabInstance: {fileID: 7923679976765817364}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7297526403532924771 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 626164641518429559, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}

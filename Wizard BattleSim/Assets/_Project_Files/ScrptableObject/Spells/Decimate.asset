@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: Decimate
   m_EditorClassIdentifier: 
-  Spell_Speed: 60
+  Spell_Speed: 130
   Spell_Damage: 10
   Spell_Prefab: {fileID: 9134858270483239568, guid: 4aa3426e90bec754d861b99aa9af4ba5, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 2899165438443141732, guid: 03d4a3a4fec3371449242759f742e820, type: 3}

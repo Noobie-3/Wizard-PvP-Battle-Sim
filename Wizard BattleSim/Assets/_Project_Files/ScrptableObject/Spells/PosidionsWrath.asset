@@ -12,20 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: PosidionsWrath
   m_EditorClassIdentifier: 
-  Spell_Speed: 80
+  Spell_Name: Posidions Wrath
+  SpellIcon: {fileID: 21300000, guid: 07729bdacb7abe748869c3c01dbd9d5c, type: 3}
+  ManaCost: 25
+  CooldownDuration: 6
+  Spell_CastTime: 4
+  CasterChar: {fileID: 0}
+  Spell_Speed: 130
   Spell_Damage: 25
+  LifeTime: 5
+  MultiHitCooldown: 5
   Spell_Prefab: {fileID: 4352458349310551559, guid: 5f1f03ecbe1c78746ab02c53aa53b81e, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 2311169645915646850, guid: 586643af911dc0b4d9a84adc0a535df6, type: 3}
-  CooldownDuration: 6
-  LifeTime: 5
-  ManaCost: 25
-  Spell_Name: Posidions Wrath
-  Spell_CastTime: 4
-  MultiHitCooldown: 5
-  SpellIcon: {fileID: 0}
-  CasterChar: {fileID: 0}
-  FireSound: {fileID: 0}
-  ImpactSound: {fileID: 0}
   ImpactEffect: {fileID: 0}
+  FireSound: {fileID: 0}
+  ImpactSound: {fileID: 8300000, guid: dc61cbe82bbc0674888ac44d8a221fc8, type: 3}
+  SoundVolume: 1
+  SoundPriority: 128
+  SoundPitch: 1
   Spell_Type: 1

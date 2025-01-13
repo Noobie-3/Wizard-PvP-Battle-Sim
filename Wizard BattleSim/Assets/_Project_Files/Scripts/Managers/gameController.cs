@@ -51,22 +51,7 @@ public class gameController : NetworkBehaviour
 
     }
 
-    public float TakeDmg(float Hp, float Def, float Attack, GameObject ObjectThatGotHit)
-    {
-        //take damage from the object that got hit while taking into account the defense of the object
-        if(Def > Attack)
-        {
-            print(ObjectThatGotHit.name + " took no damage");
-            //Effect for no damage here
-            return Hp;
-        }
-        else {
-            Hp -= (Attack - Def);
-            //effect for damage here
-        }
 
-        return Hp;
-    }
 
     private void Update() {
         //if PlayerList is less than the number of players in the scene)
@@ -76,11 +61,12 @@ public class gameController : NetworkBehaviour
     }
 
 
-    public GameObject PlaySoundAtLocation(Transform Position, AudioClip Sound)
+    public GameObject PlaySoundAtLocation(Transform Position, AudioClip Sound, float Volume = .5f, int Priority = 140, int Pitch = 1)
     {
         var SoundObject = Instantiate(PlaySoundPrefab, Position.position, Quaternion.identity);
         
         SoundObject.GetComponent<PlaySoundAtLocation>().sound = Sound;
+        SoundObject.GetComponent<PlaySoundAtLocation>().SetvaluesAndPlay(Volume, Priority, Pitch);
         return SoundObject;
     }
 }

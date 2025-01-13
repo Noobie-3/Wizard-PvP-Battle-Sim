@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: ArrowRain
   m_EditorClassIdentifier: 
-  Spell_Speed: 80
+  Spell_Speed: 130
   Spell_Damage: 15
   Spell_Prefab: {fileID: 9134858270483239568, guid: f8a98f69acf929c40898ce30c2c46979, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}

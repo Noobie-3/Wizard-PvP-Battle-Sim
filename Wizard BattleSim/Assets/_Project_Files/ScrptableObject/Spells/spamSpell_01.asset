@@ -12,15 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: spamSpell_01
   m_EditorClassIdentifier: 
+  Spell_Name: spamSpell_01
+  SpellIcon: {fileID: 21300000, guid: 8d81411e01d03c141add78cda428ae09, type: 3}
+  ManaCost: 1
+  CooldownDuration: 0.5
+  Spell_CastTime: 0
+  CasterChar: {fileID: 0}
   Spell_Speed: 60
   Spell_Damage: 1
-  Spell_Prefab: {fileID: 5041855814169712352, guid: 3671891dc9742054d933bfd475891faa, type: 3}
-  CooldownDuration: 0.5
   LifeTime: 20
-  ManaCost: 1
-  Spell_Name: spmaSpell_01
-  Spell_CastTime: 0
   MultiHitCooldown: 0.5
-  SpellIcon: {fileID: 21300000, guid: 8d81411e01d03c141add78cda428ae09, type: 3}
-  CasterChar: {fileID: 0}
+  Spell_Prefab: {fileID: 5041855814169712352, guid: 3671891dc9742054d933bfd475891faa, type: 3}
+  Air_SpellToSpawn_Prefab: {fileID: 0}
+  Grounded_SpellToSpawn_Prefab: {fileID: 0}
+  ImpactEffect: {fileID: 0}
+  FireSound: {fileID: 0}
+  ImpactSound: {fileID: 0}
   Spell_Type: 1

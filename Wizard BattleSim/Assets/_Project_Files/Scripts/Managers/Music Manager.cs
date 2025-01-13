@@ -16,7 +16,7 @@ public class MusicManager : MonoBehaviour
     {
         if(MusicPlayer == null)
         {
-            MusicPlayer = gameController.GC.PlaySoundAtLocation(transform, music);
+            MusicPlayer = gameController.GC.PlaySoundAtLocation(transform, music, .025f, 160);
             MusicPlayer.GetComponent<PlaySoundAtLocation>().DoDestory = false;
             MusicPlayer.GetComponent<AudioSource>().spatialBlend = 0;
             DontDestroyOnLoad(MusicPlayer);

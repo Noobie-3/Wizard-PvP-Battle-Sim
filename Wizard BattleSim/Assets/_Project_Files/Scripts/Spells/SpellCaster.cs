@@ -20,6 +20,7 @@ public class SpellCaster : NetworkBehaviour
     [SerializeField] public SpellBook_AllSpellsList SpellBook_Spammable;
     [SerializeField] public GameObject CastTimeUi;
     [SerializeField] private TextMeshProUGUI CastSpellChargeText;
+    [SerializeField] public TextMeshProUGUI SpellName;
     [SerializeField] private float CastTimeProgress;
     [SerializeField] public UnityEngine.UI.Image CastTimeProgressUI;
     [SerializeField] public Coroutine CastTimeProgressEnum;
@@ -118,6 +119,7 @@ public class SpellCaster : NetworkBehaviour
         print("Casting spell");
         if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
         {
+            Player.moveSpeed = Player.moveSpeedDefault;
             Vector3 ShotDir;
             RaycastHit hit;
             if (Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, Mathf.Infinity))
@@ -126,7 +128,8 @@ public class SpellCaster : NetworkBehaviour
             }
             else
             {
-                ShotDir = Cam.transform.forward;
+                //default to 100 units in front of the player
+                ShotDir = Cam.transform.position + Cam.transform.forward * 100;
             }
             CastSpellServerRpc(CurrentSpells[SelectedSpell], CastPosition.position, OwnerClientId, ShotDir);
             CurrentSpellsTimers[SelectedSpell] = SpellBook.SpellBook[SelectedSpell].CooldownDuration;
@@ -137,10 +140,13 @@ public class SpellCaster : NetworkBehaviour
         CastTimeUi.SetActive(true);
         if (IsCasting)
         {
+            Player.moveSpeed = Player.moveSpeedDefault / 2;
             CastTimeProgress += Time.deltaTime;
             var CastTimeProgressDecimal = CastTimeProgress / SpellBook.SpellBook[SelectedSpell].Spell_CastTime;
             CastTimeProgressUI.fillAmount = CastTimeProgressDecimal;
             CastSpellChargeText.text = (CastTimeProgressDecimal * 100).ToString() + "%";
+            SpellName.text = ("Casting spell: " + SpellBook.SpellBook[SelectedSpell].Spell_Name);
+            
             if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
             {
 

@@ -12,20 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: FireBall
   m_EditorClassIdentifier: 
-  Spell_Speed: 30
+  Spell_Name: FireBall_Test
+  SpellIcon: {fileID: 21300000, guid: f4a8f7b48cfe3f24e99c8aecc90e6136, type: 3}
+  ManaCost: 15
+  CooldownDuration: 3
+  Spell_CastTime: 2
+  CasterChar: {fileID: 0}
+  Spell_Speed: 130
   Spell_Damage: 20
+  LifeTime: 15
+  MultiHitCooldown: 0.5
   Spell_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
-  CooldownDuration: 3
-  LifeTime: 15
-  ManaCost: 15
-  Spell_Name: FireBall_Test
-  Spell_CastTime: 2
-  MultiHitCooldown: 0.5
-  SpellIcon: {fileID: 21300000, guid: f4a8f7b48cfe3f24e99c8aecc90e6136, type: 3}
-  CasterChar: {fileID: 0}
-  FireSound: {fileID: 0}
-  ImpactSound: {fileID: 0}
   ImpactEffect: {fileID: 9129159807273035532, guid: 5c545fe0e7d380b45ae0fd34c54f7b45, type: 3}
+  FireSound: {fileID: 0}
+  ImpactSound: {fileID: 8300000, guid: 2cd7b87674a1b2440ad9d2c9f8dcaf85, type: 3}
+  SoundVolume: 1
+  SoundPriority: 128
+  SoundPitch: 1
   Spell_Type: 0

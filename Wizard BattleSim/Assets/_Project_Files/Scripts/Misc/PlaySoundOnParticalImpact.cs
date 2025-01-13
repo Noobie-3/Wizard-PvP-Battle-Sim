@@ -9,7 +9,7 @@ public class PlaySoundOnParticalImpact : MonoBehaviour
     {
         if (spell.ImpactSound != null)
         {
-            gameController.GC.PlaySoundAtLocation(transform, spell.ImpactSound);
+            gameController.GC.PlaySoundAtLocation(transform, spell.ImpactSound,spell.SoundVolume, spell.SoundPriority, spell.SoundPitch);
         }
     }
 }
