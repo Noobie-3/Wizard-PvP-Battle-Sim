@@ -93,41 +93,14 @@ public class SpawnManager : NetworkBehaviour
         Debug.Log($"Spawned wand {WD.GetWandById(PlayerState.WandID).DisplayName} for player {clientId} at hand position {handTransform.position}");
 
         playerInstance.SpawnWithOwnership(clientId);
+        NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject = playerInstance;
         print("Spawned with owndership of id  " + clientId);
 
     }
 
     public void RespawnPlayer(ulong clientId)
     {
-        // Check if the client has an assigned spawn point
-        if (!playerSpawnPoints.TryGetValue(clientId, out PlayerSpawnLocation spawnPoint) || spawnPoint == null)
-        {
-            Debug.LogError($"No spawn point assigned for client {clientId}. Cannot respawn.");
-            return;
-        }
-
-        // Check if the player's NetworkObject is valid and remove the old instance if needed
-        if (NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject != null)
-        {
-            print("Destoryed the Player Object");
-            Destroy(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject);
-        }
-        else
-        {
-            print("Could not find the Player Object for client id " + clientId);
-        }
-
-
-        // Instantiate and spawn a new player instance at the assigned spawn point
-        var PlayerState = PlayerStateManager.Singleton.LookupState(clientId);
-        NetworkObject playerInstance = Instantiate(CD.characters[PlayerState.CharacterId].GameplayPrefab, spawnPoint.transform.position,
-            Quaternion.identity); playerInstance.SpawnWithOwnership(clientId);
-        Debug.Log($"Respawned player {clientId} at {spawnPoint.transform.position} players actual position is {playerInstance.transform.position}");
-
-        Transform handTransform = playerInstance.GetComponent<SpellCaster>().Hand;
-        GameObject wandInstance = Instantiate(WD.Wands[PlayerState.WandID].WandPrefab, handTransform.position, handTransform.rotation);
-        wandInstance.transform.SetParent(handTransform); // Attach wand to player's hand
-        Debug.Log($"Spawned wand {WD.Wands[PlayerState.WandID].DisplayName} for player {clientId} at hand position {handTransform.position}");
+        SpawnPlayerServerRpc(clientId);
     }
     // Helper method to get an available spawn point
     private PlayerSpawnLocation GetAvailableSpawnPoint()

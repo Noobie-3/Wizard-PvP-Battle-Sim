@@ -17,16 +17,31 @@ public class ServermanagerUI : NetworkBehaviour
         startServerButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartServer();
+
+            startClientButton.gameObject.SetActive(false);
+            startHostButton.gameObject.SetActive(false);
+            startServerButton.gameObject.SetActive(false);
+            PLayerNumText.gameObject.SetActive(false);
         });
 
         startClientButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartClient();
+            startClientButton.gameObject.SetActive(false);
+            startHostButton.gameObject.SetActive(false);
+            startServerButton.gameObject.SetActive(false);
+            PLayerNumText.gameObject.SetActive(false);
+
         });
 
         startHostButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartHost();
+            startClientButton.gameObject.SetActive(false);
+            startHostButton.gameObject.SetActive(false);
+            startServerButton.gameObject.SetActive(false);
+            PLayerNumText.gameObject.SetActive(false);
+
         });
         
     }
