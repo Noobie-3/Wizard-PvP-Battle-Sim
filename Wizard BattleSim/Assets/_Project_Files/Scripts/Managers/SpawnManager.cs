@@ -7,7 +7,7 @@ public class SpawnManager : NetworkBehaviour
     public PlayerSpawnLocation[] spawnPoints;
     private Dictionary<ulong, NetworkObject> playerPrefabs = new Dictionary<ulong, NetworkObject>();
     private Dictionary<ulong, NetworkObject> wandPrefabs = new Dictionary<ulong, NetworkObject>(); // Store wand prefabs by WandID
-    private Dictionary<ulong, PlayerSpawnLocation> playerSpawnPoints = new Dictionary<ulong, PlayerSpawnLocation>();
+    public  Dictionary<ulong, PlayerSpawnLocation> playerSpawnPoints = new Dictionary<ulong, PlayerSpawnLocation>();
    public  WandDatabase WD;
     public  CharacterDatabase CD;
     public NetworkObject PlayerNotifier;
@@ -19,20 +19,17 @@ public class SpawnManager : NetworkBehaviour
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
+
     }
 
     public override void OnNetworkSpawn()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback += SpawnNotifier;
+        if(!IsServer) return;
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += AssignSpawnPointsByServer;
     }
 
-    public void SpawnNotifier(ulong Clientid)
-    {
-        var Notifier = Instantiate(PlayerNotifier);
-        Notifier.GetComponent<PlayerSceneNotifier>().CLientId = Clientid;
-        Notifier.SpawnWithOwnership(Clientid);
-        
-    }
+
+
 
     // Called to start the game and load the scene
     [ServerRpc]
@@ -48,19 +45,26 @@ public class SpawnManager : NetworkBehaviour
 
 
 
-    public void AssignSpawnPointsByServer()
+    public void AssignSpawnPointsByServer(SceneEvent sceneevent)
     {
-
-        foreach(var client in NetworkManager.Singleton.ConnectedClients)
+        if (sceneevent.SceneEventType == SceneEventType.LoadEventCompleted)
         {
-            // Get or assign a spawn point
-            spawnPoints = FindObjectsByType<PlayerSpawnLocation>(sortMode: FindObjectsSortMode.None);
+
             print(spawnPoints.Length + "  this is how many spawn points there is");
-            var assignedSpawnPoint = GetAvailableSpawnPoint();
-            playerSpawnPoints[client.Key] = assignedSpawnPoint;
 
+            foreach (var client in NetworkManager.Singleton.ConnectedClients)
+            {
+                // Get or assign a spawn point
+                var assignedSpawnPoint = GetAvailableSpawnPoint();
+                playerSpawnPoints[client.Key] = assignedSpawnPoint;
+                print("Client with key of " + client.Key + "has its spawn point set at " + playerSpawnPoints[client.Key].transform.position );
+                if(IsHost)
+                {
+                    SpawnPlayerServerRpc(client.Key);
+                }
+
+            }
         }
-
 
     }
 
@@ -70,20 +74,15 @@ public class SpawnManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void SpawnPlayerServerRpc(ulong clientId)
     {
+        
 
-        // Check if player is already spawned
-        if (NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject != null)
-        {
-            Debug.Log($"Player {clientId} is already spawned. Skipping duplicate spawn.");
-            return;
-        }
 
 
         var PlayerState = PlayerStateManager.Singleton.LookupState(clientId);
         // Instantiate and spawn the player
         print(PlayerState.CharacterId + " Character ID");
 
-        NetworkObject playerInstance = Instantiate(CD.GetCharacterById(PlayerState.CharacterId).GameplayPrefab, playerSpawnPoints[clientId].transform.position, Quaternion.identity);
+        GameObject playerInstance = Instantiate(CD.GetCharacterById(PlayerState.CharacterId).GameplayPrefab, playerSpawnPoints[clientId].transform.position, Quaternion.identity);
         //playerInstance.GetComponent<SpellCaster>().SetSpell(clientId);
         Debug.Log($"Spawned player {clientId} at {playerSpawnPoints[clientId].transform.position}");
         Transform handTransform = playerInstance.GetComponent<SpellCaster>().Hand;
@@ -92,15 +91,37 @@ public class SpawnManager : NetworkBehaviour
 
         Debug.Log($"Spawned wand {WD.GetWandById(PlayerState.WandID).DisplayName} for player {clientId} at hand position {handTransform.position}");
 
-        playerInstance.SpawnWithOwnership(clientId);
-        NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject = playerInstance;
+        playerInstance.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
+        NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject = playerInstance.GetComponent<NetworkObject>();
         print("Spawned with owndership of id  " + clientId);
 
+
+        //Untested change.. changed network object to gameobject    if it doenst funtion revert back
     }
 
-    public void RespawnPlayer(ulong clientId)
+    [ServerRpc (RequireOwnership = false)]
+    public void RespawnPlayerServerRpc(ulong clientId)
     {
+        // Check if the client has an assigned spawn point
+        if (!playerSpawnPoints.TryGetValue(clientId, out PlayerSpawnLocation spawnPoint) || spawnPoint == null)
+        {
+            Debug.LogError($"No spawn point assigned for client {clientId}. Cannot respawn.");
+            return;
+        }
+
+        // Check if the player's NetworkObject is valid and remove the old instance if needed
+        if (NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject != null)
+        {
+            print("Destoryed the Player Object");
+            Destroy(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.gameObject);
+        }
+        else
+        {
+            print("Could not find the Player Object for client id " + clientId);
+        }
+
         SpawnPlayerServerRpc(clientId);
+
     }
     // Helper method to get an available spawn point
     private PlayerSpawnLocation GetAvailableSpawnPoint()
@@ -121,5 +142,15 @@ public class SpawnManager : NetworkBehaviour
 
     }
 
+    public void ResetSpawnPoints()
+    {
+        if (spawnPoints.Length != 0)
+        {
+            foreach (var spawnPoint in spawnPoints)
+            {
+                spawnPoint.SetAvailability(false);
+            }
+        }
+        }
 
 }

@@ -76,7 +76,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] public Vector2 MouseInput;
     [SerializeField] public bool Grounded;
     [SerializeField] public bool IsRunning;
-
+    public bool CanRun = true;
 
 
     // Spell variables
@@ -224,6 +224,7 @@ public class PlayerController : NetworkBehaviour
     public void GetMoveInput(InputAction.CallbackContext context)
     {
         if(!IsOwner) return;
+        if(!CanRun) return;
         MoveInput = context.ReadValue<Vector2>();
         IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
         if(Anim != null)
@@ -426,18 +427,18 @@ public class PlayerController : NetworkBehaviour
                 {
                     WinTracker.Singleton.AddWin(Hitter);
 
-                    if (WinTracker.Singleton.CheckWin(Hitter))
-                    {
-                        WinTracker.Singleton.EndGame();
-                    }
-                    print("Win added");
-                }
 
+                    print("Win added");
+                    break;
+                }
             }
+
             print("Win added");
         }
+        Destroy(gameObject);
 
-        Destroy(transform.root.gameObject);
+
+
 
     }
 
@@ -467,6 +468,7 @@ public class PlayerController : NetworkBehaviour
 
     public void TakeDamage(Spell spell, ulong whoHitMeName)
     {
+        if(!IsServer) return;
         print(name + "PLayer took dmaage from" + spell + " Cast by  " + CharacterChosen.DisplayName);
         TakeDamageServerRpc(spell.Spell_Damage);
         PlayerUi.UpdateUI();
@@ -475,11 +477,12 @@ public class PlayerController : NetworkBehaviour
             print("Health is not low enough for death on " + name);
             return;
         }
-        if (CanDie)
-        {
-            DieServerRpc(whoHitMeName, this.OwnerClientId);
-            print("called Die On " + CharacterChosen.DisplayName);
-        }
+
+        DieServerRpc(whoHitMeName, this.OwnerClientId);
+        print("called Die On " + CharacterChosen.DisplayName);
+        SpawnManager.instance.RespawnPlayerServerRpc(whoHitMeName);
+        SpawnManager.instance.RespawnPlayerServerRpc(this.OwnerClientId);
+        
     }
     [ServerRpc(RequireOwnership = false)]
     public void TakeDamageServerRpc(float Damage)

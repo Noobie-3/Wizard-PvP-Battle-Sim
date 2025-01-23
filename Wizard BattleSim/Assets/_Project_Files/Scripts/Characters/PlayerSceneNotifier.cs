@@ -18,10 +18,7 @@ public class PlayerSceneNotifier : NetworkBehaviour
     {
         if(Sevent.SceneEventType == SceneEventType.LoadEventCompleted )
         {
-            if(IsServer && IsOwner)
-            {
-                SpawnManager.instance.AssignSpawnPointsByServer();
-            } 
+            if (IsHost) return;
             print("Scene Loaded by client " + CLientId);
             SpawnManager.instance.SpawnPlayerServerRpc(CLientId);
         }

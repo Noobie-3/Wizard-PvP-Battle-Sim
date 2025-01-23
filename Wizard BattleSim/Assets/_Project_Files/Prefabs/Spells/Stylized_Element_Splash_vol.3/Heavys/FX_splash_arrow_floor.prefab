@@ -39704,8 +39704,6 @@ MonoBehaviour:
   spell: {fileID: 11400000, guid: c97c3f764d9e3624eaced979fe0a812d, type: 2}
   CurrentLifeTime: 0
   MeteorHeight: 0
-  PosToSpawn: {x: 0, y: 0, z: 0}
-  rb: {fileID: 0}
 --- !u!1 &1352207200325702395
 GameObject:
   m_ObjectHideFlags: 0
@@ -44649,7 +44647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3746561950
+  GlobalObjectIdHash: 1847252625
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -44673,8 +44671,6 @@ MonoBehaviour:
   spell: {fileID: 11400000, guid: c97c3f764d9e3624eaced979fe0a812d, type: 2}
   CurrentLifeTime: 0
   MeteorHeight: 0
-  PosToSpawn: {x: 0, y: 0, z: 0}
-  rb: {fileID: 0}
 --- !u!136 &8215989417137988516
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -44690,7 +44686,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
