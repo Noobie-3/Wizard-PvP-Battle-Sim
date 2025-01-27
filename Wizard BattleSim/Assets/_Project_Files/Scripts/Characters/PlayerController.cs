@@ -20,7 +20,7 @@ public class PlayerController : NetworkBehaviour
     [Header("Movement Settings")]
     [SerializeField] public float moveSpeed = 5f;
     [SerializeField] public float moveSpeedDefault;
-    [SerializeField] Vector3 moveDirection;
+    [SerializeField] public Vector3 moveDirection;
     [SerializeField] private bool Gravity = true;
     [SerializeField] private float JumpHeight = 5f;
 
@@ -77,6 +77,8 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] public bool Grounded;
     [SerializeField] public bool IsRunning;
     public bool CanRun = true;
+    public InputActionAsset PlayerControls;
+    public InputAction MoveAction;
 
 
     // Spell variables
@@ -87,7 +89,6 @@ public class PlayerController : NetworkBehaviour
     public bool IsCasting = false;
     public float CastSpeed = 1f;
     public Coroutine CastIenum;
-    public Vector3 CastDir;
 
 
     // Private variables
@@ -96,9 +97,9 @@ public class PlayerController : NetworkBehaviour
     private float rotationY = 0f;
     [SerializeField] private NetworkVariable<Vector3> CurrentRotation;
     [SerializeField] public PlayerUI PlayerUi;
-    [SerializeField] private Animator Anim;
+    [SerializeField] public Animator Anim;
     [SerializeField] private GameObject DevMenu;
-
+    
 
     // Wall check and wall running logic
     private Vector3 currentWallNormal = Vector3.zero;
@@ -147,12 +148,20 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    public void Start()
+    {
+        MoveAction = PlayerControls.FindAction("Move");
+    }
+
     private void Update()
     {
-        if (!IsOwner) return;
 
+        if(!IsOwner) return;
+        if(!CanRun) return;
+        // Continuously read movement input
+        MoveInput = MoveAction.ReadValue<Vector2>();
         AnimateObject();
-        
+
     }
 
     private void FixedUpdate()
@@ -176,6 +185,7 @@ public class PlayerController : NetworkBehaviour
             // If charging a spell, prevent movement
             return;
         }
+
         // Apply Gravity if enabled
         if (Gravity)
         {
@@ -184,6 +194,8 @@ public class PlayerController : NetworkBehaviour
         // Calculate movement direction
         if (!IsWallRunning)
         {
+            IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
+
             moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
             moveDirection.y = 0;
             // Apply movement
@@ -223,17 +235,45 @@ public class PlayerController : NetworkBehaviour
     // Input handlers
     public void GetMoveInput(InputAction.CallbackContext context)
     {
-        if(!IsOwner) return;
-        if(!CanRun) return;
-        MoveInput = context.ReadValue<Vector2>();
-        IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
-        if(Anim != null)
+        if (!IsOwner) return;
+
+        // Check if movement is allowed
+        if (!CanRun)
         {
-            Anim.SetFloat("X", MoveInput.x);
-            Anim.SetFloat("Y", MoveInput.y);
+            MoveInput = Vector2.zero; // Reset movement input
+            if (Anim != null)
+            {
+                Anim.SetFloat("X", 0);
+                Anim.SetFloat("Y", 0);
+            }
+            return;
+        }
+
+        // Always read the input when CanRun is true
+        if (context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
+        {
+            MoveInput = context.ReadValue<Vector2>();
+
+            if (Anim != null)
+            {
+                Anim.SetFloat("X", MoveInput.x);
+                Anim.SetFloat("Y", MoveInput.y);
+            }
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            // Reset movement on input cancellation
+            MoveInput = Vector2.zero;
+
+            if (Anim != null)
+            {
+                Anim.SetFloat("X", 0);
+                Anim.SetFloat("Y", 0);
+            }
         }
     }
-    public void GetMouseInput(InputAction.CallbackContext context)
+
+public void GetMouseInput(InputAction.CallbackContext context)
     {
         MouseInput = context.ReadValue<Vector2>();
     }

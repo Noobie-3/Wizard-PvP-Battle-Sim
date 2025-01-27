@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 376406281812725913}
   serializedVersion: 2
   m_LocalRotation: {x: -0.046853427, y: -0.73844326, z: -0.05158541, w: 0.6707051}
-  m_LocalPosition: {x: 15.108886, y: 7.5120583, z: -1.0585566}
+  m_LocalPosition: {x: 15.113362, y: 7.5120583, z: -1.1050087}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -458,13 +458,23 @@ MonoBehaviour:
   MouseInput: {x: 0, y: 0}
   Grounded: 0
   IsRunning: 0
+  CanRun: 1
+  PlayerControls: {fileID: -944628639613478452, guid: 908fd5c034041be43b5b85a472da0e60, type: 3}
+  MoveAction:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 3935dda5-3687-4908-8128-1d4613b7deb4
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   currentSpells:
   - {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
   selectedSpellIndex: 0
   SpellCasterScript: {fileID: 6344507787613272955}
   IsCasting: 0
   CastSpeed: 1
-  CastDir: {x: 0, y: 0, z: 0}
   rb: {fileID: 2966315332542189909}
   CurrentRotation:
     m_InternalValue: {x: 0, y: 0, z: 0}
@@ -530,14 +540,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad8deae8091111f4eb30a56c1f4e0d3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TransitionStateInfoList:
-  - IsCrossFadeExit: 0
-    Layer: 0
-    OriginatingState: 435421484
-    DestinationState: 91030199
-    TransitionDuration: 0.25
-    TriggerNameHash: -1283053431
-    TransitionIndex: 1
+  TransitionStateInfoList: []
   m_Animator: {fileID: 4177404668282090193}
 --- !u!114 &2886770820519019853
 MonoBehaviour:
@@ -610,7 +613,7 @@ Transform:
   m_GameObject: {fileID: 4375391853159626425}
   serializedVersion: 2
   m_LocalRotation: {x: -0.046853427, y: -0.73844326, z: -0.05158541, w: 0.6707051}
-  m_LocalPosition: {x: 15.108886, y: 7.5120583, z: -1.0585566}
+  m_LocalPosition: {x: 15.113362, y: 7.5120583, z: -1.1050087}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1340,6 +1343,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2071473947361263449}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7990398071424453026}
   m_SourcePrefab: {fileID: 100100000, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
 --- !u!1 &7208382856925477363 stripped
 GameObject:
@@ -1399,6 +1405,19 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7990398071424453026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7208382856925477363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfdfa29450fc0c84294f04d9e9ef1072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SpellCaster: {fileID: 6344507787613272955}
 --- !u!4 &8017113948274729801 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}

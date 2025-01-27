@@ -36,7 +36,7 @@
                     "name": "ChangeSpellKeyBoard",
                     "type": "Button",
                     "id": "97f1ab70-a0da-4ffe-b762-8b3721db48ff",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
