@@ -37,6 +37,7 @@ public class Spell : ScriptableObject {
     [Tooltip("The duration (in seconds) before the spell disappears.")]
     public float LifeTime;
 
+
     [Tooltip("The cooldown time (in seconds) between multi-hits for the spell.")]
     public float MultiHitCooldown = 0.5f; // Multi Hit Cooldown
 

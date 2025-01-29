@@ -113,6 +113,12 @@ public class SpellCaster : NetworkBehaviour
             Debug.Log ("Spell " + SpellBook.LookUpSpell(SelectedSpell).name +" on cooldown");
                 return;
         }
+
+        if(Player.Mana.Value < SpellBook.SpellBook[SelectedSpell].ManaCost)
+        {
+            Debug.Log("Not enough mana to cast spell");
+            return;
+        }
         print("Starting CAst");
         if (!IsOwner) return;
         IsCasting = true;
@@ -123,6 +129,11 @@ public class SpellCaster : NetworkBehaviour
     public void CastSpell()
     {
         if (!IsOwner) return;
+        if (Player.Mana.Value < SpellBook.SpellBook[SelectedSpell].ManaCost)
+        {
+            Debug.Log("Not enough mana to cast spell");
+            return;
+        }
         print("Casting spell");
 
             Vector3 ShotDir;

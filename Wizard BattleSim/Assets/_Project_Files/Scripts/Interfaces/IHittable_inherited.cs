@@ -48,7 +48,6 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
                 if (OwnerClientId == CasterId) return false;
                 Debug.Log("Player got hit.");
                 PC.TakeDamage(Spell, CasterId);
-                Destroy(ThingThatHitMe);
                 return true;
 
             case ObjectType.Breakable:

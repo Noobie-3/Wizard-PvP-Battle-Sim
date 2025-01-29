@@ -58,11 +58,15 @@ public class Blackarrowrain : NetworkBehaviour, ISpell_Interface
 
 
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (!IsServer) return;
         IHittable_inherited iHit;
 
+        if(hitagainTime > 0)
+        {
+            return;
+        }
         other.TryGetComponent<IHittable_inherited>(out iHit);
         if (iHit == null) return;
         if (iHit.Type == IHittable_inherited.ObjectType.player && iHit.OwnerClientId == CasterId) return;

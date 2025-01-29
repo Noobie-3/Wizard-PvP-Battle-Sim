@@ -142,7 +142,7 @@ public class PlayerController : NetworkBehaviour
         {
 
             StartCoroutine(ManaRegen());
-            StartCoroutine(StaminaRegen());
+          //  StartCoroutine(StaminaRegen());
 
             
         }
@@ -348,11 +348,11 @@ public void GetMouseInput(InputAction.CallbackContext context)
                 }
                 else
                 {
-                    SetWallRunningServerRpc(false);
+                  //  SetWallRunningServerRpc(false);
                     Gravity = true;
                 }
 
-                if (IsWallRunning && AbleToWallRun)
+/*                if (IsWallRunning && AbleToWallRun)
                 {   // Zero out vertical velocity to prevent falling
                     rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
                     ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
@@ -362,9 +362,9 @@ public void GetMouseInput(InputAction.CallbackContext context)
                         Gravity = true;
                         AbleToWallRun = false;
                     }
-                }
+                }*/
                 // Debugging raycasts
-                Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
+                /*Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, transform.forward * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, -transform.forward * wallCheckDistance, Color.blue);
@@ -373,15 +373,15 @@ public void GetMouseInput(InputAction.CallbackContext context)
                 Debug.DrawRay(transform.position + WallCheck_Start, (transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, Vector3.down * DistanceFromFloorRequiredToWallRun, Color.blue);
-                PlayerUi.UpdateUI();
+                PlayerUi.UpdateUI();*/
             }
         }
-        else
+/*        else
         {
             SetWallRunningServerRpc(false);
             AbleToWallRun = true;
         }
-    }
+*/    }
     [ServerRpc]
     private void SetWallRunningServerRpc(bool isWallRunning)
     {
@@ -417,7 +417,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
         }
     }
 
-    private IEnumerator StaminaRegen()
+   /* private IEnumerator StaminaRegen()
     {
         while (true)
         {
@@ -432,7 +432,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
             PlayerUi.UpdateUI();
             yield return new WaitForSeconds(0.5f);
         }
-    }
+    }*/
 
     // Animation handling
     private void AnimateObject()
