@@ -18,7 +18,7 @@ MonoBehaviour:
   CooldownDuration: 0.5
   Spell_CastTime: 0
   CasterChar: {fileID: 0}
-  Spell_Speed: 60
+  Spell_Speed: 130
   Spell_Damage: 1
   LifeTime: 20
   MultiHitCooldown: 0.5
@@ -28,4 +28,7 @@ MonoBehaviour:
   ImpactEffect: {fileID: 0}
   FireSound: {fileID: 0}
   ImpactSound: {fileID: 0}
-  Spell_Type: 1
+  SoundVolume: 1
+  SoundPriority: 128
+  SoundPitch: 1
+  Spell_Type: 0

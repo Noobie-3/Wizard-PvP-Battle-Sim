@@ -40,7 +40,6 @@ public class SpellCaster : NetworkBehaviour
     {
         if (!IsOwner) return;
         HandleCoolDowns();
-        isCastingSpell();
     }
 
     public override void OnNetworkSpawn()
@@ -110,16 +109,37 @@ public class SpellCaster : NetworkBehaviour
 
     public void StartSpellCast()
     {
+        if (CurrentSpellsTimers[SelectedSpell] > 0) {
+            Debug.Log ("Spell " + SpellBook.LookUpSpell(SelectedSpell).name +" on cooldown");
+                return;
+        }
+
+        if(Player.Mana.Value < SpellBook.SpellBook[SelectedSpell].ManaCost)
+        {
+            Debug.Log("Not enough mana to cast spell");
+            return;
+        }
+        print("Starting CAst");
         if (!IsOwner) return;
         IsCasting = true;
+        Player.CanRun = false;
+        Player.MoveInput = Vector2.zero;
+        if(Player.Anim != null)
+        {
+            Player.Anim.SetBool("IsCasting", true);
+
+        }
     }
     public void CastSpell()
     {
         if (!IsOwner) return;
-        print("Casting spell");
-        if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
+        if (Player.Mana.Value < SpellBook.SpellBook[SelectedSpell].ManaCost)
         {
-            Player.moveSpeed = Player.moveSpeedDefault;
+            Debug.Log("Not enough mana to cast spell");
+            return;
+        }
+        print("Casting spell");
+
             Vector3 ShotDir;
             RaycastHit hit;
             if (Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, Mathf.Infinity))
@@ -133,31 +153,22 @@ public class SpellCaster : NetworkBehaviour
             }
             CastSpellServerRpc(CurrentSpells[SelectedSpell], CastPosition.position, OwnerClientId, ShotDir);
             CurrentSpellsTimers[SelectedSpell] = SpellBook.SpellBook[SelectedSpell].CooldownDuration;
-        }
+        EndCast();
     }
-    public void isCastingSpell()
+
+    public void EndCast()
     {
-        CastTimeUi.SetActive(true);
-        if (IsCasting)
+        if(!IsOwner) return;
+        IsCasting = false;
+        Player.CanRun = true;
+        if(Player.Grounded)
         {
-            Player.moveSpeed = Player.moveSpeedDefault / 2;
-            CastTimeProgress += Time.deltaTime;
-            var CastTimeProgressDecimal = CastTimeProgress / SpellBook.SpellBook[SelectedSpell].Spell_CastTime;
-            CastTimeProgressUI.fillAmount = CastTimeProgressDecimal;
-            CastSpellChargeText.text = (CastTimeProgressDecimal * 100).ToString() + "%";
-            SpellName.text = ("Casting spell: " + SpellBook.SpellBook[SelectedSpell].Spell_Name);
-            
-            if (CastTimeProgress >= SpellBook.SpellBook[SelectedSpell].Spell_CastTime)
-            {
-
-                CastSpell();
-                CastTimeProgress = 0;
-                IsCasting = false;
-            }
-
+            Player.rb.linearVelocity = Vector3.zero;
         }
-
+        Player.Anim.SetBool("IsCasting", false);
+        print("Ending Cast");
     }
+
     public void QuickCast()
     {if(!IsOwner) return;
         Vector3 ShotDir;
@@ -184,6 +195,8 @@ public class SpellCaster : NetworkBehaviour
         {
             StopCoroutine(ChargeSpellIEnum);
             IsCasting = false;
+            Player.CanRun = true;
+
         }
     }
 
@@ -251,36 +264,6 @@ public class SpellCaster : NetworkBehaviour
      //   spellCooldownTimers = new List<float>(new float[currentSpells.Count]);
     }
 
-    private void SpellCooldown()
-    {
-        for (int i = 0; i < spellCooldownTimers.Count; i++)
-        {
-            if (spellCooldownTimers[i] > 0)
-            {
-                spellCooldownTimers[i] -= Time.deltaTime;
-            }
-        }
-    }
 
-    /*  // Spell management
-      public void AddSpell(Spell newSpell)
-      {
-          CurrentSpells.Add(newSpell);
-          UpdateSpellCooldownTimers();
-          PlayerUi.UpdateUI();
-      }
-
-      public void RemoveSpell(Spell spellToRemove)
-      {
-          int index = CurrentSpells.IndexOf(spellToRemove);
-          if (index >= 0)
-          {
-              CurrentSpells.RemoveAt(index);
-              UpdateSpellCooldownTimers();
-              PlayerUi.UpdateUI();
-
-          }
-      }
-  */
 
 }

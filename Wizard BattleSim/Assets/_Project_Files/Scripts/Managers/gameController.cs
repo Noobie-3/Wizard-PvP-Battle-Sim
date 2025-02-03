@@ -61,12 +61,12 @@ public class gameController : NetworkBehaviour
     }
 
 
-    public GameObject PlaySoundAtLocation(Transform Position, AudioClip Sound, float Volume = .5f, int Priority = 140, int Pitch = 1)
+    public GameObject PlaySoundAtLocation(Transform Position, AudioClip Sound, float Volume = .5f, int Priority = 140, int Pitch = 1, bool DoDestroy = true)
     {
         var SoundObject = Instantiate(PlaySoundPrefab, Position.position, Quaternion.identity);
         
         SoundObject.GetComponent<PlaySoundAtLocation>().sound = Sound;
-        SoundObject.GetComponent<PlaySoundAtLocation>().SetvaluesAndPlay(Volume, Priority, Pitch);
+        SoundObject.GetComponent<PlaySoundAtLocation>().SetvaluesAndPlay(Volume, Priority, Pitch, DoDestroy);
         return SoundObject;
     }
 }

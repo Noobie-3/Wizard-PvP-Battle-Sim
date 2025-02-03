@@ -9,11 +9,12 @@ public class Character : ScriptableObject
     [SerializeField] private string displayName = "New Display Name";
     [SerializeField] private Sprite icon;
     [SerializeField] private GameObject introPrefab;
-    [SerializeField] private NetworkObject gameplayPrefab;
+    [SerializeField] private GameObject gameplayPrefab;
 
     //GamePlay Stats
     [SerializeField] private float moveSpeed = 50;
     [SerializeField] int spamSpell;
+    [SerializeField] public AudioClip CharacterMusic;
 
 
 
@@ -23,7 +24,7 @@ public class Character : ScriptableObject
     public string DisplayName => displayName;
     public Sprite Icon => icon;
     public GameObject IntroPrefab => introPrefab;
-    public NetworkObject GameplayPrefab => gameplayPrefab;
+    public GameObject GameplayPrefab => gameplayPrefab;
     public float MoveSpeed => moveSpeed;
     public int SpamSpell => spamSpell;
 }

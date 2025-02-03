@@ -12,20 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: ArrowRain
   m_EditorClassIdentifier: 
+  Spell_Name: Black Arrow Rain
+  SpellIcon: {fileID: 21300000, guid: 9f0cd6ae69143054b93f0ac9cea84c98, type: 3}
+  ManaCost: 20
+  CooldownDuration: 3
+  Spell_CastTime: 2
+  CasterChar: {fileID: 0}
   Spell_Speed: 130
-  Spell_Damage: 15
+  Spell_Damage: 25
+  LifeTime: 5
+  MultiHitCooldown: 0.2
   Spell_Prefab: {fileID: 9134858270483239568, guid: f8a98f69acf929c40898ce30c2c46979, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 1352207200325702395, guid: f59565eba1dcc67408eb1c473a217923, type: 3}
-  CooldownDuration: 3
-  LifeTime: 5
-  ManaCost: 20
-  Spell_Name: Black Arrow Rain
-  Spell_CastTime: 2
-  MultiHitCooldown: 0
-  SpellIcon: {fileID: 21300000, guid: 9f0cd6ae69143054b93f0ac9cea84c98, type: 3}
-  CasterChar: {fileID: 0}
+  ImpactEffect: {fileID: 0}
   FireSound: {fileID: 0}
   ImpactSound: {fileID: 0}
-  ImpactEffect: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
+  SoundVolume: 1
+  SoundPriority: 128
+  SoundPitch: 1
   Spell_Type: 0

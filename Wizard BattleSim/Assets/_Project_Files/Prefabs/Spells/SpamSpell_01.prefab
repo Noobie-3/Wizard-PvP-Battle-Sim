@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 3636364722086352694}
   - component: {fileID: 3122082354549297625}
   - component: {fileID: 2636343897909309892}
-  - component: {fileID: 8295979474835652825}
   - component: {fileID: -4946695001455457809}
   - component: {fileID: -504699955671094923}
+  - component: {fileID: 2278569020545556070}
   m_Layer: 0
   m_Name: SpamSpell_01
   m_TagString: Untagged
@@ -162,23 +162,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &8295979474835652825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5041855814169712352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94545a79935a11f489f55bd1419661bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spell: {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
-  Rb: {fileID: 3609423411881503315}
-  Printdata: 0
-  hasShotSpell: 0
-  Direction: {x: 0, y: 0, z: 0}
 --- !u!114 &-4946695001455457809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,6 +205,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2278569020545556070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5041855814169712352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3402b7bff7d9b64a9f22e3c59342b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spell: {fileID: 11400000, guid: 229c43ac4f23a5d4b8b803ed61fc65d8, type: 2}
+  CurrentLifeTime: 0
+  rb: {fileID: 3609423411881503315}
 --- !u!1001 &7027694763424024448
 PrefabInstance:
   m_ObjectHideFlags: 0

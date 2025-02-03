@@ -4,10 +4,11 @@ using UnityEngine;
 public class PlayerSceneNotifier : NetworkBehaviour
 {
     public ulong CLientId;
-
+    public MusicManager musicManager;
+    public AudioClip battleMusic;
     public void Start()
     {
-
+        musicManager = FindObjectOfType<MusicManager>();
     }
 
     public override void OnNetworkSpawn()
@@ -18,10 +19,8 @@ public class PlayerSceneNotifier : NetworkBehaviour
     {
         if(Sevent.SceneEventType == SceneEventType.LoadEventCompleted )
         {
-            if(IsServer && IsOwner)
-            {
-                SpawnManager.instance.AssignSpawnPointsByServer();
-            } 
+            musicManager.PlaySong(battleMusic);
+            if (IsHost) return;
             print("Scene Loaded by client " + CLientId);
             SpawnManager.instance.SpawnPlayerServerRpc(CLientId);
         }

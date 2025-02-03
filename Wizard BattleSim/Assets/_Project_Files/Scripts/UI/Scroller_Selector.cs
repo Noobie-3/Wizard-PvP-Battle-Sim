@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ public class Scroller_Selector : NetworkBehaviour
     public GameObject Start_button; // Button to start the game
     public AudioClip ClickSound; // Sound to play on button clicks
     public LookAtObjectCOnstant lookAtObjectCOnstant; // Script to make the camera look at a target
-
+    public MusicManager MusicManager; // Script to manage music playback
     public void Start()
     {
         // Initialize variables and set up the first window
@@ -94,7 +95,6 @@ public class Scroller_Selector : NetworkBehaviour
             }
 
             ReplaceSpawnedPrefab();
-
 
         }
         else
@@ -337,6 +337,8 @@ public class Scroller_Selector : NetworkBehaviour
                 break;
             case SelectionType.Character:
                 ObjectSpawned = Instantiate(characterDatabase.GetCharacterById(CurrentIconIndex).IntroPrefab, ObjectSpawn);
+                MusicManager.PlaySong(characterDatabase.GetCharacterById(CurrentIconIndex).CharacterMusic);
+
                 break;
         }
         lookAtObjectCOnstant.Target = ObjectSpawned.transform;

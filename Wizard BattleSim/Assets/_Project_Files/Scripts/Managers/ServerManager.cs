@@ -107,6 +107,7 @@ private void StartGameServerRpc()
         print(playerCharacterIds.Count + " PLayer character ids");
 
         // Load the new scene for all clients and the server
+        
         NetworkManager.Singleton.SceneManager.LoadScene("Scene_01", LoadSceneMode.Single);
         NetworkManager.Singleton.SceneManager.OnLoadComplete += StartGameHelper;
 

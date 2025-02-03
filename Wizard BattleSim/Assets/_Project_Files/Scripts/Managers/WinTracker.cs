@@ -56,13 +56,8 @@ public class WinTracker : MonoBehaviour
             WinImage.gameObject.SetActive(true);
         }
         WinCount++;
-        foreach(var player in NetworkManager.Singleton.ConnectedClientsList)
-        {
-            SpawnManager.instance.RespawnPlayer(player.ClientId);
 
-            //Show the win screen for each player 
 
-        }
     }
 
     public bool CheckWin(ulong ClientId)

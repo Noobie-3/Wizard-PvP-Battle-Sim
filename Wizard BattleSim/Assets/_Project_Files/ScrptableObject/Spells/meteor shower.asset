@@ -18,7 +18,7 @@ MonoBehaviour:
   CooldownDuration: 7
   Spell_CastTime: 2
   CasterChar: {fileID: 0}
-  Spell_Speed: 60
+  Spell_Speed: 130
   Spell_Damage: 35
   LifeTime: 3.4
   MultiHitCooldown: 0.1
