@@ -13,13 +13,14 @@ public class PlaySoundAtLocation : MonoBehaviour
          audioSource = GetComponent<AudioSource>();
     }
 
-    public void SetvaluesAndPlay(float Volume = .5f, int Priority = 140, int Pitch = 1) {
+    public void SetvaluesAndPlay(float Volume = .5f, int Priority = 140, int Pitch = 1, bool DoDestroy = false) {
 
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = sound;
         audioSource.volume = Volume;
         audioSource.priority = Priority;
         audioSource.pitch = Pitch;
+        DoDestory = DoDestroy;
         PlayAndDestroy();
     }
 
@@ -28,8 +29,10 @@ public class PlaySoundAtLocation : MonoBehaviour
         var Cliplenght = audioSource.clip.length;
         audioSource.Play();
 
-        if(DoDestory)
-        Destroy(gameObject, Cliplenght);
+        if (DoDestory)
+        {
+            Destroy(gameObject, Cliplenght);
+        }
     }
 
 }

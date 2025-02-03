@@ -63,7 +63,7 @@
                     "name": "ChargeMana",
                     "type": "Button",
                     "id": "1cced997-b16e-4352-a91c-b522eeba3229",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true

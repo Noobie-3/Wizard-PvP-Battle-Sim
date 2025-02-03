@@ -19,3 +19,4 @@ MonoBehaviour:
   gameplayPrefab: {fileID: 2657112206591253793, guid: 4713f93f33c754348b9567ebfa1a42f0, type: 3}
   moveSpeed: 50
   spamSpell: 0
+  CharacterMusic: {fileID: 8300000, guid: 83fe8eb288390f14ea3ae047383b49ff, type: 3}

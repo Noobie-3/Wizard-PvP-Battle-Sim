@@ -451,19 +451,29 @@ MonoBehaviour:
   CanDie: 1
   IsDebug: 1
   isSpawned: 0
-  WandSpawnLocation: {fileID: 0}
+  WandSpawnLocation: {fileID: 7548225651625600980}
   MyClientID: 0
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
   Grounded: 0
   IsRunning: 0
+  CanRun: 1
+  PlayerControls: {fileID: -944628639613478452, guid: 908fd5c034041be43b5b85a472da0e60, type: 3}
+  MoveAction:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 298b4970-849f-4f8c-8e1c-bcb694c901dc
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   currentSpells:
   - {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
   selectedSpellIndex: 0
   SpellCasterScript: {fileID: 6344507787613272955}
   IsCasting: 0
   CastSpeed: 1
-  CastDir: {x: 0, y: 0, z: 0}
   rb: {fileID: 2966315332542189909}
   CurrentRotation:
     m_InternalValue: {x: 0, y: 0, z: 0}
@@ -527,11 +537,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpellBook: {fileID: 11400000, guid: b1d00285386ba37429ae6313800792d7, type: 2}
   SpellBook_Spammable: {fileID: 11400000, guid: 35c664fa7d0bcf3418cb33bbff251676, type: 2}
-  CastTimeUi: {fileID: 477735268436977550}
-  CastSpellChargeText: {fileID: 7297526403532924771}
-  SpellName: {fileID: 6526001933306560910}
+  CastTimeUi: {fileID: 0}
+  CastSpellChargeText: {fileID: 0}
+  SpellName: {fileID: 0}
   CastTimeProgress: 0
-  CastTimeProgressUI: {fileID: 7764115807126176781}
+  CastTimeProgressUI: {fileID: 0}
   Player: {fileID: 2780197439549934678}
   CurrentSpells: 000000000100000002000000
   CurrentSpellsTimers:
@@ -1388,49 +1398,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
---- !u!1 &477735268436977550 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7734880988221416858, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 7923679976765817364}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &483011553772235876 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7728898823975628400, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
   m_PrefabInstance: {fileID: 7923679976765817364}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6526001933306560910 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3992323265275134874, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 7923679976765817364}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7297526403532924771 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 626164641518429559, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 7923679976765817364}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7764115807126176781 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 452962257110877721, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 7923679976765817364}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 477735268436977550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8938667088934365519 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1295372782093790043, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}

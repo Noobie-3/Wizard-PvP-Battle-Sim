@@ -14,6 +14,7 @@ public class Character : ScriptableObject
     //GamePlay Stats
     [SerializeField] private float moveSpeed = 50;
     [SerializeField] int spamSpell;
+    [SerializeField] public AudioClip CharacterMusic;
 
 
 

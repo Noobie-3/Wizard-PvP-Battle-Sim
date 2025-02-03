@@ -124,7 +124,11 @@ public class SpellCaster : NetworkBehaviour
         IsCasting = true;
         Player.CanRun = false;
         Player.MoveInput = Vector2.zero;
-        Player.Anim.SetBool("IsCasting", true);
+        if(Player.Anim != null)
+        {
+            Player.Anim.SetBool("IsCasting", true);
+
+        }
     }
     public void CastSpell()
     {
@@ -160,7 +164,6 @@ public class SpellCaster : NetworkBehaviour
         if(Player.Grounded)
         {
             Player.rb.linearVelocity = Vector3.zero;
-            Player.moveDirection = Vector3.zero;
         }
         Player.Anim.SetBool("IsCasting", false);
         print("Ending Cast");

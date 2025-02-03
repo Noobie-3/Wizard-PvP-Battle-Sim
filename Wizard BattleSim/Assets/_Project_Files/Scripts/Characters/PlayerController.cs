@@ -160,7 +160,12 @@ public class PlayerController : NetworkBehaviour
         if(!CanRun) return;
         // Continuously read movement input
         MoveInput = MoveAction.ReadValue<Vector2>();
-        AnimateObject();
+        
+        if(Anim != null)
+        {
+            AnimateObject();
+
+        }
 
     }
 
@@ -176,21 +181,29 @@ public class PlayerController : NetworkBehaviour
             MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
         }
         PlayerUi.UpdateUI();
+
+        if (Charging)
+        {
+            ManaCharge();
+        }
     }
     // Movement logic
     private void MoveObject()
     {
-        if (Charging)
-        {
-            // If charging a spell, prevent movement
-            return;
-        }
+
 
         // Apply Gravity if enabled
         if (Gravity)
         {
             rb.AddForce(Vector3.down * gameController.GC.Gravity_force, ForceMode.Acceleration);
         }
+
+        if (Charging)
+        {
+            // If charging a spell, prevent movement
+            return;
+        }
+
         // Calculate movement direction
         if (!IsWallRunning)
         {
@@ -279,8 +292,28 @@ public void GetMouseInput(InputAction.CallbackContext context)
     }
     public void GetChargeStatus(InputAction.CallbackContext context)
     {
+        if (context.phase == InputActionPhase.Canceled)
+        {
+            CanRun = true;
+            Charging = false;
+
+        }
+
         if (!Grounded) return;
-        Charging = context.ReadValueAsButton();
+        if (context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
+        {
+            Charging = true;
+            //stop movment
+            CanRun = false;
+            if (Grounded)
+            {
+                rb.linearVelocity = Vector3.zero;
+            }
+            //start charging
+        }
+
+
+
     }
     // Jump logic
     public void JumpInput(InputAction.CallbackContext context)
@@ -306,7 +339,10 @@ public void GetMouseInput(InputAction.CallbackContext context)
         {
             JumpUsed = false;
         }
-        Anim.SetBool("Grounded", Grounded);
+        if(Anim != null)
+        {
+            Anim.SetBool("Grounded", Grounded);
+        }
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
     }
     private void WallCheck()
@@ -434,6 +470,19 @@ public void GetMouseInput(InputAction.CallbackContext context)
         }
     }*/
 
+    public void ManaCharge()
+    {
+        if (Mana.Value < MaxMana)
+        {
+            Mana.Value += .2f;
+        }
+        else
+        {
+            Mana.Value = MaxMana;
+        }
+    }
+
+
     // Animation handling
     private void AnimateObject()
     {
@@ -441,7 +490,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
         if (Anim == null) return;
         // Update animation parameters
         Anim.SetBool("IsRunning", IsRunning);
-        Anim.SetBool("IsCharging", Charging);
+        //Anim.SetBool("IsCharging", Charging);
         Anim.SetBool("IsWallRunning", IsWallRunning);
     }
     public IEnumerator PrintData()
