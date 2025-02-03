@@ -64,6 +64,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire_01_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Range
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Intensity
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

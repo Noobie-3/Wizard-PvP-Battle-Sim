@@ -112,6 +112,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -234,6 +246,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -354,6 +378,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4618090014493455023, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
       propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_RenderMode
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -590,6 +626,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -712,6 +760,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -832,6 +892,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4618090014493455023, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
       propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_Intensity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 3e6151c571453744c92f2ed9895f3bbc, type: 3}
+      propertyPath: m_RenderMode
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
