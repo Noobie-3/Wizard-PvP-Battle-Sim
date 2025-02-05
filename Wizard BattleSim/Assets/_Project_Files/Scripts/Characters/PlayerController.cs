@@ -176,10 +176,11 @@ public class PlayerController : NetworkBehaviour
         MoveObject();
         GroundCheck();
         WallCheck();
-        if (MoveInput != Vector2.zero)
+        if (MoveInput.y == 1 || MoveInput.y == -1 || MoveInput.x == 1 || MoveInput.x == -1 || MouseInput != Vector2.zero)
         {
-            MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
+            RotateObjectServerRpc(moveDirection);
         }
+
         PlayerUi.UpdateUI();
 
         if (Charging)
@@ -212,7 +213,7 @@ public class PlayerController : NetworkBehaviour
             moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
             moveDirection.y = 0;
             // Apply movement
-            rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
+            rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed * 1.25f, rb.linearVelocity.y, moveDirection.z * moveSpeed * 1.25f);
             if (MoveInput == Vector2.zero && Grounded)
             {
                 // If no input and grounded, stop horizontal movement
@@ -240,10 +241,32 @@ public class PlayerController : NetworkBehaviour
     [ClientRpc]
     private void RotateObjectClientRpc(Vector3 moveDirection)
     {
-        if (MeshToRotate != null)
+        if(MoveInput.y < 0)
         {
-            MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
+
+            Vector3 direction = new Vector3(moveDirection.x, 0, moveDirection.z).normalized;
+
+            // Blend between the current rotation and camera direction smoothly
+            MeshToRotate.transform.rotation = Quaternion.LookRotation(direction);
+
         }
+        else if(MoveInput.x != 0  && MoveInput.y == 0)
+        {
+            Vector3 Direction = new Vector3(moveDirection.x, 0, moveDirection.z).normalized;
+            // Blend between the current rotation and camera direction smoothly
+            MeshToRotate.transform.rotation = Quaternion.LookRotation(Direction);
+        }
+        else
+        {
+            Vector3 Direction = new Vector3(moveDirection.x, 0, moveDirection.z).normalized;
+
+            // Blend between the current rotation and camera direction smoothly
+            MeshToRotate.transform.rotation = Quaternion.LookRotation(Direction);
+
+        }
+
+
+
     }
     // Input handlers
     public void GetMoveInput(InputAction.CallbackContext context)

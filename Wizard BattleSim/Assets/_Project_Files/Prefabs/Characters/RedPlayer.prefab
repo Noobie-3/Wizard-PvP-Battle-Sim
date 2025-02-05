@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 458084762
+  GlobalObjectIdHash: 3197713211
   InScenePlacedSourceGlobalObjectIdHash: 3197713211
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -188,7 +188,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 80d726a1-c93f-4c9b-beb4-7038db0b86c7
-    m_ActionName: Player/Look[/Mouse/delta]
+    m_ActionName: 'Player/Look[/Mouse/delta]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2780197439549934678}
@@ -204,7 +204,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 40de297c-6f4d-457e-a216-5814b5b33597
-    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+    m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6344507787613272955}
@@ -220,11 +220,11 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 4fdc28da-71e6-4304-8e0d-28696f2c1509
-    m_ActionName: Player/Cast[/Mouse/leftButton]
+    m_ActionName: 'Player/Cast[/Mouse/leftButton]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 97f1ab70-a0da-4ffe-b762-8b3721db48ff
-    m_ActionName: Player/ChangeSpellKeyBoard[/Keyboard/1,/Keyboard/2,/Keyboard/3]
+    m_ActionName: 'Player/ChangeSpellKeyBoard[/Keyboard/1,/Keyboard/2,/Keyboard/3]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6344507787613272955}
@@ -240,7 +240,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 6420ba1d-8920-49f8-bc0b-16bf87df7d43
-    m_ActionName: Player/ChangeSpellMouseScroll[/Mouse/scroll/y]
+    m_ActionName: 'Player/ChangeSpellMouseScroll[/Mouse/scroll/y]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2780197439549934678}
@@ -256,7 +256,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: cdd0ed00-f3f5-4f92-b60c-7a8a5db3783b
-    m_ActionName: Player/Jump[/Keyboard/space]
+    m_ActionName: 'Player/Jump[/Keyboard/space]'
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2780197439549934678}
@@ -272,11 +272,15 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: 1cced997-b16e-4352-a91c-b522eeba3229
-    m_ActionName: Player/ChargeMana[/Keyboard/shift]
+    m_ActionName: 'Player/ChargeMana[/Keyboard/shift]'
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 7f138805-4659-4696-a481-b4c96ce30ad8
-    m_ActionName: Player/CancelSpell_Dash[/Keyboard/ctrl]
+    m_ActionName: 'Player/CancelSpell_Dash[/Keyboard/ctrl]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 976051e0-0967-43f4-9953-b4ec5f2092b3
+    m_ActionName: 'Player/QuickCast[/Mouse/rightButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -334,19 +338,29 @@ MonoBehaviour:
   CanDie: 1
   IsDebug: 1
   isSpawned: 0
+  WandSpawnLocation: {fileID: 0}
   MyClientID: 0
-  MySpawn: {fileID: 0}
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
   Grounded: 0
   IsRunning: 0
+  CanRun: 1
+  PlayerControls: {fileID: 0}
+  MoveAction:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 98531ea1-2c41-465b-a569-579c9e2fde22
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   currentSpells:
   - {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
   selectedSpellIndex: 0
   SpellCasterScript: {fileID: 6344507787613272955}
   IsCasting: 0
   CastSpeed: 1
-  CastDir: {x: 0, y: 0, z: 0}
   rb: {fileID: 2966315332542189909}
   CurrentRotation:
     m_InternalValue: {x: 0, y: 0, z: 0}
@@ -409,10 +423,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpellBook: {fileID: 11400000, guid: b1d00285386ba37429ae6313800792d7, type: 2}
-  CastTimeUi: {fileID: 8437943369271546256}
-  CastSpellChargeText: {fileID: 1657004577717391741}
+  SpellBook_Spammable: {fileID: 0}
+  CastTimeUi: {fileID: 0}
+  CastSpellChargeText: {fileID: 0}
+  SpellName: {fileID: 0}
   CastTimeProgress: 0
-  CastTimeProgressUI: {fileID: 1731483745843147283}
+  CastTimeProgressUI: {fileID: 0}
   Player: {fileID: 2780197439549934678}
   CurrentSpells: 000000000100000002000000
   CurrentSpellsTimers:
@@ -426,6 +442,7 @@ MonoBehaviour:
   CastPosition: {fileID: 6451566787427242802}
   Cam: {fileID: 8520869707384783922}
   spellCooldownTimers: []
+  Hand: {fileID: 0}
 --- !u!114 &3147316539547042947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1135,36 +1152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed587e692858f9b40ab50373365d9651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1657004577717391741 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 626164641518429559, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 2183763747222795274}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1731483745843147283 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 452962257110877721, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 2183763747222795274}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8437943369271546256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &8434354835751918202 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7728898823975628400, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 2183763747222795274}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8437943369271546256 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7734880988221416858, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
   m_PrefabInstance: {fileID: 2183763747222795274}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6748505653134306452
@@ -1240,11 +1230,11 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: -1172867698588546884, guid: 0aecf1900e79196499eda09b56842151, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: cc12f0b624e44ef4abd1e0c0ce7b02f8, type: 2}
     - target: {fileID: -527856836801495606, guid: 0aecf1900e79196499eda09b56842151, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 73c6242de84811e4c9f5fae1cf3f680d, type: 2}
     - target: {fileID: 919132149155446097, guid: 0aecf1900e79196499eda09b56842151, type: 3}
@@ -1260,11 +1250,11 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7513065131683079571, guid: 0aecf1900e79196499eda09b56842151, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 73c6242de84811e4c9f5fae1cf3f680d, type: 2}
     - target: {fileID: 7895844864049628588, guid: 0aecf1900e79196499eda09b56842151, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 73c6242de84811e4c9f5fae1cf3f680d, type: 2}
     m_RemovedComponents: []
@@ -1311,7 +1301,7 @@ CapsuleCollider:
   m_Center: {x: 0.02226162, y: 2.3606331, z: -0.035793424}
 --- !u!95 &691549921895159077
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1325,6 +1315,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1

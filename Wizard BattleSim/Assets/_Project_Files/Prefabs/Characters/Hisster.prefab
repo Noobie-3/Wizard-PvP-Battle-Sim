@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1648132711
+  GlobalObjectIdHash: 1606857192
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -423,17 +423,17 @@ MonoBehaviour:
   DistanceFromFloorRequiredToWallRun: 5
   IsWallRunning: 0
   AbleToWallRun: 0
-  Cam: {fileID: 1268512142287369520}
-  camComponent: {fileID: 7643569436653525090}
-  Vcam: {fileID: 63737811755778350}
+  Cam: {fileID: 1268512142287369520, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
+  camComponent: {fileID: 7643569436653525090, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
+  Vcam: {fileID: 63737811755778350, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
   CameraRotation: {x: 0, y: 0, z: 0}
   CamSpeed: 15
   RotateSpeed: 1
   minXRotation: -45
   maxXRotation: 45
   CharacterChosen: {fileID: 11400000, guid: 142b3c13be66e854799391182e6c5608, type: 2}
-  MeshToRotate: {fileID: 3838789306943898401}
-  audioListener: {fileID: 8886416464124340638}
+  MeshToRotate: {fileID: 7208382856925477363, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
+  audioListener: {fileID: 8886416464124340638, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
   JumpUsed: 0
   Health:
     m_InternalValue: 100
@@ -451,7 +451,7 @@ MonoBehaviour:
   CanDie: 1
   IsDebug: 1
   isSpawned: 0
-  WandSpawnLocation: {fileID: 7548225651625600980}
+  WandSpawnLocation: {fileID: 7548225651625600980, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
   MyClientID: 0
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
@@ -463,7 +463,7 @@ MonoBehaviour:
     m_Name: Move
     m_Type: 0
     m_ExpectedControlType: 
-    m_Id: 298b4970-849f-4f8c-8e1c-bcb694c901dc
+    m_Id: 3935dda5-3687-4908-8128-1d4613b7deb4
     m_Processors: 
     m_Interactions: 
     m_SingletonActionBindings: []
@@ -471,14 +471,14 @@ MonoBehaviour:
   currentSpells:
   - {fileID: 11400000, guid: 796bd04fd5cf53942b7ff27fc46da139, type: 2}
   selectedSpellIndex: 0
-  SpellCasterScript: {fileID: 6344507787613272955}
+  SpellCasterScript: {fileID: 6344507787613272955, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
   IsCasting: 0
   CastSpeed: 1
-  rb: {fileID: 2966315332542189909}
+  rb: {fileID: 2966315332542189909, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
   CurrentRotation:
     m_InternalValue: {x: 0, y: 0, z: 0}
-  PlayerUi: {fileID: 8938667088934365519}
-  Anim: {fileID: 0}
+  PlayerUi: {fileID: 8938667088934365519, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
+  Anim: {fileID: 4177404668282090193, guid: 5e8e9f4d387472c4cac5a1bb102673f9, type: 3}
   DevMenu: {fileID: 0}
 --- !u!114 &7650289928224766538
 MonoBehaviour:
@@ -1403,14 +1403,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7728898823975628400, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
   m_PrefabInstance: {fileID: 7923679976765817364}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8938667088934365519 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1295372782093790043, guid: 907bd866998a0604ea8e3ffff4bb979d, type: 3}
-  m_PrefabInstance: {fileID: 7923679976765817364}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed587e692858f9b40ab50373365d9651, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
