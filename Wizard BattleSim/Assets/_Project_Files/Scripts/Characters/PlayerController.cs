@@ -340,12 +340,12 @@ public void GetMouseInput(InputAction.CallbackContext context)
         {
             SpellCasterScript.TristanCast();            
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
-            if (IsWallRunning)
+/*            if (IsWallRunning)
             {
                 // Upon jumping off the wall, reset wall running state
-                SetWallRunningServerRpc(false);
-                AbleToWallRun = false; // Prevent immediate wall running again
-            }
+*//*                SetWallRunningServerRpc(false);
+*//*                AbleToWallRun = false; // Prevent immediate wall running again
+            }*/
         }
     }
     // Ground check
@@ -362,17 +362,14 @@ public void GetMouseInput(InputAction.CallbackContext context)
         }
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
     }
-    private void WallCheck()
-    {
+    private void WallCheck() {
         if (!IsOwner) return;
         if (MoveInput == Vector2.zero) return;
-        if (!Grounded)
-        {
-/*            if (!AbleToWallRun) return;
+        if (!Grounded) {
+            if (!AbleToWallRun) return;
             RaycastHit hit;
             // Check if player is high enough from the ground to wall run
-            if (!Physics.Raycast(MeshToRotate.transform.position, Vector3.down, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
-            {// Perform raycasts in multiple directions to detect walls
+            if (!Physics.Raycast(MeshToRotate.transform.position, Vector3.down, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer)) {// Perform raycasts in multiple directions to detect walls
                 if (Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, MeshToRotate.transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, -transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
@@ -380,71 +377,57 @@ public void GetMouseInput(InputAction.CallbackContext context)
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (MeshToRotate.transform.right + MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-MeshToRotate.transform.right + MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer))
-                {
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer)) {
                     Vector3 wallNormal = hit.normal;
                     // Determine if the wall is suitable for wall running (not too steep)
-                    if (Vector3.Dot(wallNormal, Vector3.up) < 0.1f)
-                    {
+                    if (Vector3.Dot(wallNormal, Vector3.up) < 0.1f) {
                         currentWallNormal = wallNormal;
                         // Rotate the player to face 90 degrees along the wall
                         Vector3 wallForward = Vector3.Cross(wallNormal, Vector3.up).normalized;
                         // Determine the correct direction based on player's input
-                        if (Vector3.Dot(wallForward, Cam.forward) < 0)
-                        {
+                        if (Vector3.Dot(wallForward, Cam.forward) < 0) {
                             wallForward = -wallForward;
                         }
                         Quaternion targetRotation = Quaternion.LookRotation(wallForward, Vector3.up);
                         MeshToRotate.transform.rotation = targetRotation;
-                        SetWallRunningServerRpc(true);
-                    }
+/*                        SetWallRunningServerRpc(true);
+*/                    }
                 }
-                else
-                {
-                  //  SetWallRunningServerRpc(false);
+                else {
+                    //  SetWallRunningServerRpc(false);
                     Gravity = true;
                 }
 
-*//*                if (IsWallRunning && AbleToWallRun)
-                {   // Zero out vertical velocity to prevent falling
-                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-                    ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
-                    if (Stamina.Value <= 0)
-                    {
-                        SetWallRunningServerRpc(false);
-                        Gravity = true;
-                        AbleToWallRun = false;
-                    }
-                }
-                // Debugging raycasts
-                /*Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, transform.forward * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, -transform.forward * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, (transform.right + transform.forward).normalized * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right + transform.forward).normalized * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, (transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
-                Debug.DrawRay(transform.position + WallCheck_Start, Vector3.down * DistanceFromFloorRequiredToWallRun, Color.blue);
-                PlayerUi.UpdateUI();*/
+                /*                if (IsWallRunning && AbleToWallRun)
+                                {   // Zero out vertical velocity to prevent falling
+                                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+                                    ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
+                                    if (Stamina.Value <= 0)
+                                    {
+                                        SetWallRunningServerRpc(false);
+                                        Gravity = true;
+                                        AbleToWallRun = false;
+                                    }
+                                }
+                                // Debugging raycasts
+                                /*Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
+                                Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
+                                Debug.DrawRay(transform.position + WallCheck_Start, transform.forward * wallCheckDistance, Color.blue);
+                                Debug.DrawRay(transform.position + WallCheck_Start, -transform.forward * wallCheckDistance, Color.blue);
+                                Debug.DrawRay(transform.position + WallCheck_Start, (transform.right + transform.forward).normalized * wallCheckDistance, Color.blue);
+                                Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right + transform.forward).normalized * wallCheckDistance, Color.blue);
+                                Debug.DrawRay(transform.position + WallCheck_Start, (transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
+                                Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
+                                Debug.DrawRay(transform.position + WallCheck_Start, Vector3.down * DistanceFromFloorRequiredToWallRun, Color.blue);
+                                PlayerUi.UpdateUI();*/
             }
         }
-/*        else
-        {
-            SetWallRunningServerRpc(false);
-            AbleToWallRun = true;
-        }
-*/    
-    [ServerRpc]
-    private void SetWallRunningServerRpc(bool isWallRunning)
-    {
-        IsWallRunning = isWallRunning;
-        if (!IsWallRunning)
-        {
-            // Reset rotation to face the direction of the camera smoothly
-            Quaternion targetRotation = Quaternion.Euler(0, Cam.eulerAngles.y, 0);
-            MeshToRotate.transform.rotation = Quaternion.Slerp(MeshToRotate.transform.rotation, targetRotation, Time.deltaTime * 10f);
-        }
+        /*        else
+                {
+                    SetWallRunningServerRpc(false);
+                    AbleToWallRun = true;
+                }
+        */
     }
     [ServerRpc]
     private void ReduceStaminaServerRpc(float amount)
