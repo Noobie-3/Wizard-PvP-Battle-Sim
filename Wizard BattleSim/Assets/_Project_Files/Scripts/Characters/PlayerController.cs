@@ -368,7 +368,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
         if (MoveInput == Vector2.zero) return;
         if (!Grounded)
         {
-            if (!AbleToWallRun) return;
+/*            if (!AbleToWallRun) return;
             RaycastHit hit;
             // Check if player is high enough from the ground to wall run
             if (!Physics.Raycast(MeshToRotate.transform.position, Vector3.down, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
@@ -405,7 +405,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
                     Gravity = true;
                 }
 
-/*                if (IsWallRunning && AbleToWallRun)
+*//*                if (IsWallRunning && AbleToWallRun)
                 {   // Zero out vertical velocity to prevent falling
                     rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
                     ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
@@ -434,7 +434,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
             SetWallRunningServerRpc(false);
             AbleToWallRun = true;
         }
-*/    }
+*/    
     [ServerRpc]
     private void SetWallRunningServerRpc(bool isWallRunning)
     {
