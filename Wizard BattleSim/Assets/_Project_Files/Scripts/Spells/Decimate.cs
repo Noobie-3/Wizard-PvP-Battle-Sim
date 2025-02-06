@@ -61,7 +61,11 @@ public class Decimate : NetworkBehaviour, ISpell_Interface
         if (iHit == null) return;
         if (iHit.Type == IHittable_inherited.ObjectType.player && iHit.OwnerClientId == CasterId) return;
 
-        transform.SetParent(other.transform);
+        if(other != null)
+        {
+            transform.SetParent(other.transform);
+
+        }
 
         if (iHit.Type == IHittable_inherited.ObjectType.player)
         {
@@ -80,7 +84,10 @@ public class Decimate : NetworkBehaviour, ISpell_Interface
         while (Hitcount < MaxHit)
         {
             Hitcount++;
-
+            if(PC == null)
+            {
+                Destroy(gameObject);
+            }
             PC.TakeDamage(spell, CasterId);
             yield return new WaitForSeconds(spell.MultiHitCooldown);
             

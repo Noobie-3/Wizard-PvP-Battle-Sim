@@ -83,6 +83,7 @@ public class SpawnManager : NetworkBehaviour
         print(PlayerState.CharacterId + " Character ID");
 
         GameObject playerInstance = Instantiate(CD.GetCharacterById(PlayerState.CharacterId).GameplayPrefab, playerSpawnPoints[clientId].transform.position, Quaternion.identity);
+        playerInstance.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
         //playerInstance.GetComponent<SpellCaster>().SetSpell(clientId);
         Debug.Log($"Spawned player {clientId} at {playerSpawnPoints[clientId].transform.position}");
         Transform handTransform = playerInstance.GetComponent<SpellCaster>().Hand;
@@ -91,7 +92,6 @@ public class SpawnManager : NetworkBehaviour
 
         Debug.Log($"Spawned wand {WD.GetWandById(PlayerState.WandID).DisplayName} for player {clientId} at hand position {handTransform.position}");
 
-        playerInstance.GetComponent<NetworkObject>().SpawnWithOwnership(clientId);
         NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject = playerInstance.GetComponent<NetworkObject>();
         print("Spawned with owndership of id  " + clientId);
 

@@ -161,6 +161,7 @@ public class SpellCaster : NetworkBehaviour
         if(!IsOwner) return;
         IsCasting = false;
         Player.CanRun = true;
+        Player.MoveInput = Player.MoveAction.ReadValue<Vector2>();
         if(Player.Grounded)
         {
             Player.rb.linearVelocity = Vector3.zero;
@@ -171,6 +172,9 @@ public class SpellCaster : NetworkBehaviour
 
     public void QuickCast()
     {if(!IsOwner) return;
+        if (Player.Mana.Value < SpellBook_Spammable.SpellBook[Player.CharacterChosen.SpamSpell].ManaCost) {
+            return; 
+        }
         Vector3 ShotDir;
         RaycastHit hit;
         if (Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, Mathf.Infinity))

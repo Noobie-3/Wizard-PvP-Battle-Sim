@@ -79,6 +79,8 @@ public class PlayerController : NetworkBehaviour
     public bool CanRun = true;
     public InputActionAsset PlayerControls;
     public InputAction MoveAction;
+    // Store the last valid cardinal rotation
+    private Quaternion lastValidRotation;
 
 
     // Spell variables
@@ -99,11 +101,11 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] public PlayerUI PlayerUi;
     [SerializeField] public Animator Anim;
     [SerializeField] private GameObject DevMenu;
-    
+
 
     // Wall check and wall running logic
     private Vector3 currentWallNormal = Vector3.zero;
-    
+
     //Is called When the player is spawned on the network
     public override void OnNetworkSpawn()
     {
@@ -114,9 +116,18 @@ public class PlayerController : NetworkBehaviour
         }
 
 
+
+
         if (IsOwner)
         {
+            print("Player spawned with ownership: " + OwnerClientId);
             print("My location is " + transform.position + name);
+            rb = GetComponent<Rigidbody>(); // Ensure Rigidbody is assigned
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+            // **Rebind Input Actions**
+            MoveAction = PlayerControls.FindAction("Move");
+            MoveAction.Enable();
+
             MyClientID = OwnerClientId;
             camComponent.enabled = false;
             camComponent.enabled = true;
@@ -142,9 +153,9 @@ public class PlayerController : NetworkBehaviour
         {
 
             StartCoroutine(ManaRegen());
-          //  StartCoroutine(StaminaRegen());
+            //  StartCoroutine(StaminaRegen());
 
-            
+
         }
     }
 
@@ -156,12 +167,10 @@ public class PlayerController : NetworkBehaviour
     private void Update()
     {
 
-        if(!IsOwner) return;
-        if(!CanRun) return;
-        // Continuously read movement input
-        MoveInput = MoveAction.ReadValue<Vector2>();
-        
-        if(Anim != null)
+        if (!IsOwner) return;
+        if (!CanRun) return;
+
+        if (Anim != null)
         {
             AnimateObject();
 
@@ -172,27 +181,26 @@ public class PlayerController : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!IsOwner) return;
-        if(gameController.GC == null) return;
+        if (gameController.GC == null) return;
+
         MoveObject();
         GroundCheck();
         WallCheck();
-        if (MoveInput.y == 1 || MoveInput.y == -1 || MoveInput.x == 1 || MoveInput.x == -1 || MouseInput != Vector2.zero)
-        {
-            RotateObjectServerRpc(moveDirection);
-        }
 
+            RotateObjectServerRpc(moveDirection);
+        
         PlayerUi.UpdateUI();
 
         if (Charging)
         {
-            ManaCharge();
+            ManaChargeServerRpc();
         }
     }
     // Movement logic
     private void MoveObject()
     {
-
-
+        if (!IsOwner) return;
+        print("running Move Object Object shoudl be moving in a direction");
         // Apply Gravity if enabled
         if (Gravity)
         {
@@ -205,33 +213,36 @@ public class PlayerController : NetworkBehaviour
             return;
         }
 
-        // Calculate movement direction
-        if (!IsWallRunning)
-        {
-            IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
 
-            moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
-            moveDirection.y = 0;
-            // Apply movement
-            rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed * 1.25f, rb.linearVelocity.y, moveDirection.z * moveSpeed * 1.25f);
-            if (MoveInput == Vector2.zero && Grounded)
-            {
-                // If no input and grounded, stop horizontal movement
-                rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
-            }
-        }
-        else
+        IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
+
+        moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
+        moveDirection.y = 0;
+        // Apply movement
+        rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed * 1.25f, rb.linearVelocity.y, moveDirection.z * moveSpeed * 1.25f);
+        print("just SetRb velocity to " + rb.linearVelocity + "Move direction is " + moveDirection + "Move speed is " + moveSpeed);
+        // If no input and grounded, stop horizontal movement
+        if (MoveInput == Vector2.zero && Grounded)
         {
-            // If wall running, adjust velocity to maintain wall run
-            Vector3 wallRunDirection = Vector3.Cross(currentWallNormal, Vector3.up).normalized;
-            // Determine if player is moving forward along the wall
-            if (Vector3.Dot(wallRunDirection, Cam.forward) < 0)
-            {
-                wallRunDirection = -wallRunDirection;
-            }
-            rb.linearVelocity = wallRunDirection * moveSpeed + Vector3.up * rb.linearVelocity.y;
+
+            print("MOve input  is zero");
+            // If no input and grounded, stop horizontal movement
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
         }
     }
+    /* else
+     {
+         // If wall running, adjust velocity to maintain wall run
+         Vector3 wallRunDirection = Vector3.Cross(currentWallNormal, Vector3.up).normalized;
+         // Determine if player is moving forward along the wall
+         if (Vector3.Dot(wallRunDirection, Cam.forward) < 0)
+         {
+             wallRunDirection = -wallRunDirection;
+         }
+         rb.linearVelocity = wallRunDirection * moveSpeed + Vector3.up * rb.linearVelocity.y;
+
+}*/
+
     //Rotation logic
     [ServerRpc]
     private void RotateObjectServerRpc(Vector3 moveDirection)
@@ -241,43 +252,23 @@ public class PlayerController : NetworkBehaviour
     [ClientRpc]
     private void RotateObjectClientRpc(Vector3 moveDirection)
     {
-        if(MoveInput.y < 0)
-        {
 
-            Vector3 direction = new Vector3(moveDirection.x, 0, moveDirection.z).normalized;
-
-            // Blend between the current rotation and camera direction smoothly
-            MeshToRotate.transform.rotation = Quaternion.LookRotation(direction);
-
-        }
-        else if(MoveInput.x != 0  && MoveInput.y == 0)
-        {
-            Vector3 Direction = new Vector3(moveDirection.x, 0, moveDirection.z).normalized;
-            // Blend between the current rotation and camera direction smoothly
-            MeshToRotate.transform.rotation = Quaternion.LookRotation(Direction);
-        }
-        else
-        {
-            Vector3 Direction = new Vector3(moveDirection.x, 0, moveDirection.z).normalized;
-
-            // Blend between the current rotation and camera direction smoothly
-            MeshToRotate.transform.rotation = Quaternion.LookRotation(Direction);
-
-        }
-
-
-
+        MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
     }
+
+
+    
     // Input handlers
     public void GetMoveInput(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
 
+        print("Can run = " + CanRun);
         // Check if movement is allowed
         if (!CanRun)
         {
-            MoveInput = Vector2.zero; // Reset movement input
-            if (Anim != null)
+/*            MoveInput = Vector2.zero; // Reset movement input
+*/            if (Anim != null)
             {
                 Anim.SetFloat("X", 0);
                 Anim.SetFloat("Y", 0);
@@ -289,6 +280,8 @@ public class PlayerController : NetworkBehaviour
         if (context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
         {
             MoveInput = context.ReadValue<Vector2>();
+            MoveObject();
+            print ("Move input is " + context.ReadValue<Vector2>());
 
             if (Anim != null)
             {
@@ -298,6 +291,7 @@ public class PlayerController : NetworkBehaviour
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
+            print(context.phase);
             // Reset movement on input cancellation
             MoveInput = Vector2.zero;
 
@@ -421,7 +415,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
                         Gravity = true;
                         AbleToWallRun = false;
                     }
-                }*/
+                }
                 // Debugging raycasts
                 /*Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
                 Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
@@ -476,24 +470,24 @@ public void GetMouseInput(InputAction.CallbackContext context)
         }
     }
 
-   /* private IEnumerator StaminaRegen()
-    {
-        while (true)
-        {
-            if (IsServer)
-            {
-                if (Stamina.Value < MaxStamina && !IsWallRunning)
-                {
-                    Stamina.Value += StaminaRegenRate;
-                    Stamina.Value= Mathf.Min(Stamina.Value, MaxStamina); // Clamp to MaxStamina
-                }
-            }
-            PlayerUi.UpdateUI();
-            yield return new WaitForSeconds(0.5f);
-        }
-    }*/
-
-    public void ManaCharge()
+    /* private IEnumerator StaminaRegen()
+     {
+         while (true)
+         {
+             if (IsServer)
+             {
+                 if (Stamina.Value < MaxStamina && !IsWallRunning)
+                 {
+                     Stamina.Value += StaminaRegenRate;
+                     Stamina.Value= Mathf.Min(Stamina.Value, MaxStamina); // Clamp to MaxStamina
+                 }
+             }
+             PlayerUi.UpdateUI();
+             yield return new WaitForSeconds(0.5f);
+         }
+     }*/
+    [ServerRpc]
+    public void ManaChargeServerRpc()
     {
         if (Mana.Value < MaxMana)
         {
@@ -547,7 +541,6 @@ public void GetMouseInput(InputAction.CallbackContext context)
 
             print("Win added");
         }
-        Destroy(gameObject);
 
 
 
