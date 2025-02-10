@@ -8933,9 +8933,9 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 192.168.161.223
+    Address: 192.168.1.230
     Port: 65535
-    ServerListenAddress: 192.168.161.223
+    ServerListenAddress: 192.168.1.230
   DebugSimulator:
     PacketDelayMS: 0
     PacketJitterMS: 0
