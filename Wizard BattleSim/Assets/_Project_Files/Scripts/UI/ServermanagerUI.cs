@@ -11,9 +11,9 @@ public class ServermanagerUI : NetworkBehaviour
     [SerializeField] private Button startClientButton;
     private NetworkVariable<int> PLayerNum = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone);
     [SerializeField] private TextMeshProUGUI PLayerNumText;
-    testRelay testRelay;
+    public testRelay testRelay;
     public string joinCode;
-    public InputField InputWindow;
+    public TMP_InputField InputWindowInput;
     public TextMeshProUGUI joinCodeErrorText;
     private void Awake()
     {// ADD THIS SCRIPT TO CANVSA OBJECT
@@ -59,7 +59,7 @@ public class ServermanagerUI : NetworkBehaviour
 
         });
 
-        InputWindow.onEndEdit.AddListener((string s) =>
+        InputWindowInput.onEndEdit.AddListener((string s) =>
         {
             joinCode = s;
         });
