@@ -187,7 +187,7 @@ public class PlayerController : NetworkBehaviour
         GroundCheck();
         WallCheck();
 
-            RotateObjectServerRpc(moveDirection);
+        RotateObjectServerRpc(moveDirection);
         
         PlayerUi.UpdateUI();
 
@@ -219,7 +219,7 @@ public class PlayerController : NetworkBehaviour
         moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
         moveDirection.y = 0;
         // Apply movement
-        rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed * 1.25f, rb.linearVelocity.y, moveDirection.z * moveSpeed * 1.25f);
+        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
         print("just SetRb velocity to " + rb.linearVelocity + "Move direction is " + moveDirection + "Move speed is " + moveSpeed);
         // If no input and grounded, stop horizontal movement
         if (MoveInput == Vector2.zero && Grounded)
@@ -321,10 +321,9 @@ public void GetMouseInput(InputAction.CallbackContext context)
             Charging = true;
             //stop movment
             CanRun = false;
-            if (Grounded)
-            {
+
                 rb.linearVelocity = Vector3.zero;
-            }
+            
             //start charging
         }
 
