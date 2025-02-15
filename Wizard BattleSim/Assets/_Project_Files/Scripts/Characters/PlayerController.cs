@@ -280,7 +280,6 @@ public class PlayerController : NetworkBehaviour
         if (context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
         {
             MoveInput = context.ReadValue<Vector2>();
-            MoveObject();
             print ("Move input is " + context.ReadValue<Vector2>());
 
             if (Anim != null)
