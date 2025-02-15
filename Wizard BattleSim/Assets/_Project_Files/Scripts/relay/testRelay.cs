@@ -11,20 +11,21 @@ public class testRelay : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     async void Start()
-    {//initialize the Unity Services
-        await UnityServices.InitializeAsync();
+    {
+        if (UnityServices.State != ServicesInitializationState.Initialized)
+        {
+            await UnityServices.InitializeAsync();
+        }
 
         AuthenticationService.Instance.SignedIn += () =>
         {
-
-           Debug.Log("Signed in" + AuthenticationService.Instance.PlayerId);
+            Debug.Log("Signed in: " + AuthenticationService.Instance.PlayerId);
         };
-
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
-
     //create a relay
+    [ConsoleCommand("Create a relay with 2 slots")]
     async public void CreateRelay()
     {
         try
