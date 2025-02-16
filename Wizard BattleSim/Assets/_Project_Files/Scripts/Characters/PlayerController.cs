@@ -219,7 +219,7 @@ public class PlayerController : NetworkBehaviour
         moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
         moveDirection.y = 0;
         // Apply movement
-        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
+        rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
         print("just SetRb velocity to " + rb.linearVelocity + "Move direction is " + moveDirection + "Move speed is " + moveSpeed);
         // If no input and grounded, stop horizontal movement
         if (MoveInput == Vector2.zero && Grounded)
