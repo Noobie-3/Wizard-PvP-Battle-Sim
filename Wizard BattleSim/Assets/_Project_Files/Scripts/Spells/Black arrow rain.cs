@@ -73,6 +73,7 @@ public class Blackarrowrain : NetworkBehaviour, ISpell_Interface
 
         iHit.GotHit(gameObject, spell, CasterId);
 
+        hitagainTime = spell.MultiHitCooldown;
 
 
     }
