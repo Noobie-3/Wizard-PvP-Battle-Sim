@@ -18,10 +18,10 @@ MonoBehaviour:
   CooldownDuration: 7
   Spell_CastTime: 2
   CasterChar: {fileID: 0}
-  Spell_Speed: 120
-  Spell_Damage: 35
-  LifeTime: 15
-  MultiHitCooldown: 0.1
+  Spell_Speed: 180
+  Spell_Damage: 5
+  LifeTime: 3.5
+  MultiHitCooldown: 0.15
   Spell_Prefab: {fileID: 1544220534275134557, guid: 668054ddbc7adb14d8518054788a2e29, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 5631925080883307570, guid: 029f0439c868a6e46bb0b9e1dca7b5de, type: 3}

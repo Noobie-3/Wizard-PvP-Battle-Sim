@@ -53,6 +53,7 @@ public class MeteorBehavior : NetworkBehaviour, ISpell_Interface
             {
                 gameController.GC.DestroyObjectOnNetwork(Impact, 5);
             }
+            Impact.GetComponent<NetworkObject>().Spawn();
             Destroy(gameObject);
 
 

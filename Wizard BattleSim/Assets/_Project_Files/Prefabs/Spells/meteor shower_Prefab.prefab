@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  RadiusOfEffect: 20
+  RadiusOfEffect: 50
   Meteor_Prefab: {fileID: 2336733250322292903, guid: 64810a45bbcc5ec488f5bd5f0efb89c1, type: 3}
   spell: {fileID: 11400000, guid: 5c6577c3a14e89a4da2d4bd9277ba1d3, type: 2}
   CurrentLifeTime: 0
