@@ -11,7 +11,8 @@ public class MeteorBehavior : NetworkBehaviour, ISpell_Interface
 
     public ulong CasterId { get; set; }
     public float hitagainTime { get; set; }
-
+    public GameObject Parent;
+    public GameObject ImpactEffect;
     public void FireSpell()
     {
 
@@ -30,23 +31,32 @@ public class MeteorBehavior : NetworkBehaviour, ISpell_Interface
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
-        Destroy(gameObject, spell.LifeTime);
+        Destroy(Parent, 25);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
 
+    private void OnTriggerEnter(Collider other)
+    {
         if (!IsServer) return;
-        if (collision.gameObject.TryGetComponent(out IHittable_inherited ihit))
+        if (other.gameObject.TryGetComponent(out IHittable_inherited ihit))
         {
+            print(ihit.name + "meteor hit this object");
             if (ihit.Type == IHittable_inherited.ObjectType.player)
             {
                 ihit.GotHit(this.gameObject, spell, CasterId);
-
-
+                
 
             }
+            var TempLocation = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            var Impact = Instantiate(ImpactEffect, TempLocation, Quaternion.identity);
+            if (Impact != null)
+            {
+                gameController.GC.DestroyObjectOnNetwork(Impact, 5);
+            }
             Destroy(gameObject);
+
+
+
         }
     }
 }

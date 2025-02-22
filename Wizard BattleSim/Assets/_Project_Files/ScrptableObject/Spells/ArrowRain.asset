@@ -19,7 +19,7 @@ MonoBehaviour:
   Spell_CastTime: 2
   CasterChar: {fileID: 0}
   Spell_Speed: 130
-  Spell_Damage: 0.1
+  Spell_Damage: 3
   LifeTime: 5
   MultiHitCooldown: 0.2
   Spell_Prefab: {fileID: 9134858270483239568, guid: f8a98f69acf929c40898ce30c2c46979, type: 3}

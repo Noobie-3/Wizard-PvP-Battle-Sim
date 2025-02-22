@@ -54,7 +54,8 @@ public class Default_Spell_Projectile : NetworkBehaviour, ISpell_Interface
     void SpawnSpellServerRpc()
     {
         var Spell = Instantiate(spell.Grounded_SpellToSpawn_Prefab, PosToSpawn, Quaternion.identity);
-        Spell.GetComponent<ISpell_Interface>().CasterId = CasterId;
+        Spell.GetComponent<ISpell_Interface>().Initialize(CasterId, Vector3.zero);
+        Spell.GetComponent<ISpell_Interface>().FireSpell();
         Spell.GetComponent<NetworkObject>().Spawn();
     }
 

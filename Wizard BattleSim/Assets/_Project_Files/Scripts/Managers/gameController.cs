@@ -69,6 +69,11 @@ public class gameController : NetworkBehaviour
         SoundObject.GetComponent<PlaySoundAtLocation>().SetvaluesAndPlay(Volume, Priority, Pitch, DoDestroy);
         return SoundObject;
     }
+
+    public void DestroyObjectOnNetwork(GameObject ObjectToDestroy, int Time = 0)
+    {
+        Destroy(ObjectToDestroy, Time);
+    }
 }
 
 

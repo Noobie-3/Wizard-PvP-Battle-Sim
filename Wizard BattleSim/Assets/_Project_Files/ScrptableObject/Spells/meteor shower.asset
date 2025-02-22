@@ -18,17 +18,17 @@ MonoBehaviour:
   CooldownDuration: 7
   Spell_CastTime: 2
   CasterChar: {fileID: 0}
-  Spell_Speed: 130
+  Spell_Speed: 120
   Spell_Damage: 35
-  LifeTime: 3.4
+  LifeTime: 15
   MultiHitCooldown: 0.1
   Spell_Prefab: {fileID: 1544220534275134557, guid: 668054ddbc7adb14d8518054788a2e29, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
-  Grounded_SpellToSpawn_Prefab: {fileID: 7957833072274404953, guid: 3355f6bfa6db8b24281b827de929694c, type: 3}
+  Grounded_SpellToSpawn_Prefab: {fileID: 5631925080883307570, guid: 029f0439c868a6e46bb0b9e1dca7b5de, type: 3}
   ImpactEffect: {fileID: 0}
   FireSound: {fileID: 8300000, guid: f4068d7b4fc868e4baa42b1703d05d38, type: 3}
   ImpactSound: {fileID: 8300000, guid: 2caebbf70eef9e047a6b08a56a983efc, type: 3}
   SoundVolume: 1
   SoundPriority: 0
   SoundPitch: 0
-  Spell_Type: 0
+  Spell_Type: 1

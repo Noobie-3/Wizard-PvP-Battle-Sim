@@ -46,8 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2777412815
+  GlobalObjectIdHash: 661470317
   InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -55,6 +57,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!54 &6892376151233665232
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -77,7 +81,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -94,9 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ada59da3b4137ca469245ceac81dc42d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   RadiusOfEffect: 20
-  Meteor_Prefab: {fileID: 3293774858083492015, guid: 3f79f72827d3fb24081a302d32879088, type: 3}
+  Meteor_Prefab: {fileID: 2336733250322292903, guid: 64810a45bbcc5ec488f5bd5f0efb89c1, type: 3}
   spell: {fileID: 11400000, guid: 5c6577c3a14e89a4da2d4bd9277ba1d3, type: 2}
   CurrentLifeTime: 0
-  MeteorHeight: 25
+  MeteorHeight: 50
   rb: {fileID: 6892376151233665232}
