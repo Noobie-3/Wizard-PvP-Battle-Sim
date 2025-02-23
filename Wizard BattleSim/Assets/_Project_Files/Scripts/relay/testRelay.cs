@@ -54,6 +54,7 @@ public class testRelay : MonoBehaviour
     
     }
 
+    [ConsoleCommand("Join a relay with a join code")]
     //join a relay
     public async void JoinRelay(string joincode)
     {

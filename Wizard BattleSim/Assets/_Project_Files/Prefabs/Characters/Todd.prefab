@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 376406281812725913}
   serializedVersion: 2
   m_LocalRotation: {x: -0.046853427, y: -0.73844326, z: -0.05158541, w: 0.6707051}
-  m_LocalPosition: {x: 15.113348, y: 7.512059, z: -1.1048615}
+  m_LocalPosition: {x: 15.113367, y: 7.5120583, z: -1.1050566}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -615,7 +615,7 @@ Transform:
   m_GameObject: {fileID: 4375391853159626425}
   serializedVersion: 2
   m_LocalRotation: {x: -0.046853427, y: -0.73844326, z: -0.05158541, w: 0.6707051}
-  m_LocalPosition: {x: 15.113348, y: 7.512059, z: -1.1048615}
+  m_LocalPosition: {x: 15.113367, y: 7.5120583, z: -1.1050566}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1348,6 +1348,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5501102563681321148}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1771645526555244464}
   m_SourcePrefab: {fileID: 100100000, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
 --- !u!1 &7208382856925477363 stripped
 GameObject:
@@ -1404,6 +1407,42 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   TransitionStateInfoList: []
   m_Animator: {fileID: 4177404668282090193}
+--- !u!114 &1771645526555244464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7208382856925477363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b09c78c5ff14cc646a7f71161930ff70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 1
+  AuthorityMode: 1
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!4 &8017113948274729801 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
