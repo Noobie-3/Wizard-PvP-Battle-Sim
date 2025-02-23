@@ -252,8 +252,10 @@ public class PlayerController : NetworkBehaviour
     [ClientRpc]
     private void RotateObjectClientRpc(Vector3 moveDirection)
     {
-
-        MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
+        if (moveDirection != Vector3.zero)
+        {
+            MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
+        }
     }
 
 

@@ -16,6 +16,7 @@ public class ServerManager : NetworkBehaviour
     public Dictionary<ulong, int> playerCharacterIds = new Dictionary<ulong, int>();
     public Coroutine DataPrintCoRo;
     public WandDatabase WandDataBase;
+    public GameObject CommandConsole;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,11 +34,29 @@ public class ServerManager : NetworkBehaviour
         }
 
         DataPrintCoRo = StartCoroutine(PrintData());
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+
+    }
+    // This method will be called every time a client connects
+    private void OnClientConnected(ulong clientId)
+    {
+            SpawnLocalObject();
         
+    }
+
+    // Spawn object locally for the player
+    private void SpawnLocalObject()
+    {
+        // Instantiate the prefab locally for the player
+        GameObject spawnedObject = Instantiate(CommandConsole);
+
+        spawnedObject.transform.position = new Vector3(0, 0, 0);  // Example position
 
     }
 
-    private void FixedUpdate()
+
+
+private void FixedUpdate()
     {
         if (characterSelectDisplay != null)
         {
