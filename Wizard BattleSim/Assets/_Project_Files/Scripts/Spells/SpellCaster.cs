@@ -130,9 +130,9 @@ public class SpellCaster : NetworkBehaviour
 
         }
     }
+    [ConsoleCommand("Cast a spell")]
     public void CastSpell()
     {
-        if (!IsOwner) return;
         if (Player.Mana.Value < SpellBook.SpellBook[SelectedSpell].ManaCost)
         {
             Debug.Log("Not enough mana to cast spell");

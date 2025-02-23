@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 376406281812725913}
   serializedVersion: 2
   m_LocalRotation: {x: -0.046853427, y: -0.73844326, z: -0.05158541, w: 0.6707051}
-  m_LocalPosition: {x: 15.137789, y: 7.5120583, z: -1.3584968}
+  m_LocalPosition: {x: 15.113317, y: 7.5120583, z: -1.104539}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -136,9 +136,8 @@ GameObject:
   - component: {fileID: 2780197439549934678}
   - component: {fileID: 6344507787613272955}
   - component: {fileID: 3676867354554846606}
-  - component: {fileID: 6531944070530792591}
-  - component: {fileID: 2886770820519019853}
   - component: {fileID: 9164443973064759050}
+  - component: {fileID: 6894370146771748764}
   m_Layer: 2
   m_Name: Hisster
   m_TagString: Player
@@ -391,8 +390,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1875982429
+  GlobalObjectIdHash: 3640650523
   InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -400,6 +401,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &2780197439549934678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -412,6 +415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d78b5014b1459041a7f051e1d888830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   moveSpeed: 50
   moveSpeedDefault: 50
   moveDirection: {x: 0, y: 0, z: 0}
@@ -493,6 +497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9068b074c0a50034ebc1801ae2ea613c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   SpellBook: {fileID: 11400000, guid: b1d00285386ba37429ae6313800792d7, type: 2}
   SpellBook_Spammable: {fileID: 11400000, guid: 35c664fa7d0bcf3418cb33bbff251676, type: 2}
   CastTimeUi: {fileID: 0}
@@ -526,9 +531,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9097abceb871d9b46bf0e82842e18af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   Type: 0
   PC: {fileID: 2780197439549934678}
---- !u!114 &6531944070530792591
+--- !u!114 &9164443973064759050
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -537,12 +543,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2657112206591253793}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad8deae8091111f4eb30a56c1f4e0d3e, type: 3}
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 879475513581487979}
---- !u!114 &2886770820519019853
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
+--- !u!114 &6894370146771748764
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -551,9 +560,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2657112206591253793}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AuthorityMode: 0
+  TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
@@ -571,20 +584,9 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &9164443973064759050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2657112206591253793}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4375391853159626425
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,7 +615,7 @@ Transform:
   m_GameObject: {fileID: 4375391853159626425}
   serializedVersion: 2
   m_LocalRotation: {x: -0.046853427, y: -0.73844326, z: -0.05158541, w: 0.6707051}
-  m_LocalPosition: {x: 15.137789, y: 7.5120583, z: -1.3584968}
+  m_LocalPosition: {x: 15.113317, y: 7.5120583, z: -1.104539}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1127,6 +1129,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.0000000067730035
       objectReference: {fileID: 0}
+    - target: {fileID: 1430743269782057410, guid: 8abaf7e4c0846eb42a9f70433999fb1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 12472c3b16f515e49965a9e2aed95bd5, type: 2}
+    - target: {fileID: 1430743269782057410, guid: 8abaf7e4c0846eb42a9f70433999fb1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 12472c3b16f515e49965a9e2aed95bd5, type: 2}
+    - target: {fileID: 1430743269782057410, guid: 8abaf7e4c0846eb42a9f70433999fb1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 12472c3b16f515e49965a9e2aed95bd5, type: 2}
+    - target: {fileID: 1430743269782057410, guid: 8abaf7e4c0846eb42a9f70433999fb1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 12472c3b16f515e49965a9e2aed95bd5, type: 2}
+    - target: {fileID: 1430743269782057410, guid: 8abaf7e4c0846eb42a9f70433999fb1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 12472c3b16f515e49965a9e2aed95bd5, type: 2}
+    - target: {fileID: 1430743269782057410, guid: 8abaf7e4c0846eb42a9f70433999fb1c, type: 3}
+      propertyPath: 'm_Materials.Array.data[5]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 12472c3b16f515e49965a9e2aed95bd5, type: 2}
     - target: {fileID: 2348715749327840563, guid: 8abaf7e4c0846eb42a9f70433999fb1c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 29.935389

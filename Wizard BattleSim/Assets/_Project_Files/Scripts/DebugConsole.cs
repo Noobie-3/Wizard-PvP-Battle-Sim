@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
@@ -25,25 +26,41 @@ public class DebugConsole : MonoBehaviour
     private Dictionary<string, MethodInfo> commands = new Dictionary<string, MethodInfo>();
     private Dictionary<string, object> commandInstances = new Dictionary<string, object>();
     private List<string> commandList = new List<string>();
-    private string currentSuggestion = "";
+    private List<string> currentSuggestions = new List<string>();
+    private int suggestionIndex = 0;
+    private string currentInput = "";
 
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         consoleUI.SetActive(false);
         RegisterCommands();
         inputField.onValueChanged.AddListener(UpdateAutoComplete);
     }
+
+
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.BackQuote)) // Toggle console with ` key
         {
             consoleUI.SetActive(!consoleUI.activeSelf);
+            if(consoleUI.activeSelf)
+            {
+                // Select the input field when the console is opened
+                EventSystem.current.SetSelectedGameObject(inputField.gameObject, null);
+                inputField.OnPointerClick(new PointerEventData(EventSystem.current));
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab)) // Auto-fill with suggestion
+        if (Input.GetKeyDown(KeyCode.Tab)) // Auto-fill with the current suggestion
         {
             AutoFillCommand();
+        }
+
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)) // Cycle through suggestions
+        {
+            CycleAutoComplete(Input.GetKeyDown(KeyCode.UpArrow) ? -1 : 1);
         }
     }
 
@@ -106,29 +123,41 @@ public class DebugConsole : MonoBehaviour
 
         inputField.text = "";
         suggestionText.text = "";
+        currentSuggestions.Clear();
+        suggestionIndex = 0;
     }
 
     void UpdateAutoComplete(string input)
     {
+        currentInput = input;
         if (string.IsNullOrWhiteSpace(input))
         {
             suggestionText.text = "";
-            currentSuggestion = "";
+            currentSuggestions.Clear();
+            suggestionIndex = 0;
             return;
         }
 
-        string match = commandList.FirstOrDefault(cmd => cmd.StartsWith(input.ToLower()));
-        currentSuggestion = match ?? "";
-        suggestionText.text = !string.IsNullOrEmpty(currentSuggestion) ? $"Suggested: {currentSuggestion}" : "";
+        currentSuggestions = commandList.Where(cmd => cmd.StartsWith(input.ToLower())).ToList();
+        suggestionIndex = 0;
+        suggestionText.text = currentSuggestions.Count > 0 ? $"Suggested: {currentSuggestions[0]}" : "";
     }
 
     void AutoFillCommand()
     {
-        if (!string.IsNullOrEmpty(currentSuggestion))
+        if (currentSuggestions.Count > 0)
         {
-            inputField.text = currentSuggestion;
+            inputField.text = currentSuggestions[suggestionIndex];
             inputField.caretPosition = inputField.text.Length;
             suggestionText.text = "";
         }
+    }
+
+    void CycleAutoComplete(int direction)
+    {
+        if (currentSuggestions.Count == 0) return;
+
+        suggestionIndex = (suggestionIndex + direction + currentSuggestions.Count) % currentSuggestions.Count;
+        suggestionText.text = $"Suggested: {currentSuggestions[suggestionIndex]}";
     }
 }
