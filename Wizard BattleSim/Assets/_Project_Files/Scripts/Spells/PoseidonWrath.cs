@@ -40,19 +40,9 @@ public class PoseidonWrath: NetworkBehaviour, ISpell_Interface
         }
     }
 
-    public void SpawnWrath()
-    {
-        if (!IsOwner)  return;
-        SpawnWrathServerRpc();
-    }
 
-    [ServerRpc(RequireOwnership = false)]
-    void SpawnWrathServerRpc()
-    {
-        var Arrows = Instantiate(spell.Grounded_SpellToSpawn_Prefab,PosToSpawn, Quaternion.identity);
-        Arrows.GetComponent<Blackarrowrain>().CasterId = CasterId;
-        Arrows.GetComponent<NetworkObject>().Spawn();
-    }
+
+
 
     public void FireSpell()
     {
@@ -83,15 +73,8 @@ public class PoseidonWrath: NetworkBehaviour, ISpell_Interface
         if (iHit == null) return;
         if (iHit.Type == IHittable_inherited.ObjectType.player && iHit.OwnerClientId == CasterId) return;
 
-        //Raycast down to spawn arrows on floor
-        RaycastHit Rayhit;
-        
-        if(Physics.Raycast(GroundCheckPos.position,Vector3.down,out Rayhit,Mathf.Infinity))
-        {
-            PosToSpawn = Rayhit.point;
-        }
+        iHit.GotHit(this.gameObject,spell,CasterId);
 
-        SpawnWrath();
 
     }
 

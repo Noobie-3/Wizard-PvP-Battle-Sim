@@ -96,7 +96,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Arrow Rain Projectile
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -6215816769120147735, guid: 14686695c77219449b38aa15a73fee6b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -134,8 +135,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2613229163
+  GlobalObjectIdHash: 1153256843
   InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 1
@@ -143,6 +146,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &8837742897450564490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52b37970068249046af2489715631359, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   spell: {fileID: 11400000, guid: c97c3f764d9e3624eaced979fe0a812d, type: 2}
   CurrentLifeTime: 0
   PosToSpawn: {x: 0, y: 0, z: 0}
