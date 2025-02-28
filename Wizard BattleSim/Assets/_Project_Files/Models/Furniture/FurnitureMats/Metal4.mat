@@ -37,7 +37,8 @@ Material:
     - _BumpScale: 5
     - _Glossiness: 0.005
     - _Metallic: 0.144
-    - _MetallicRemapMax: 0.144
+    - _MetallicRemapMax: 0
+    - _SmoothnessRemapMax: 0.21186441
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
