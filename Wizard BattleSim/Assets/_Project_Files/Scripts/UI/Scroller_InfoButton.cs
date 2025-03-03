@@ -15,7 +15,8 @@ public class Scroller_InfoButton : MonoBehaviour
     public Button ConfirmButton;
     public Button UpButton;
     public Button DownButton;
-    public Animation anim;
+    public Animation Startanim;
+    public Animator Idleanim;
     public bool PlayAnim = true;
     public Scroller_Selector.SelectionType type;
     public int SpellIndex;
@@ -23,11 +24,17 @@ public class Scroller_InfoButton : MonoBehaviour
     public GameObject SelectorIconHolder;
     [SerializeField] public PlayerCard[] playerCards;
 
+
+    private void Start()
+    {
+        PlayIdleAnim();
+    }
     public void OnEnable()
     {
+        PlayIdleAnim();
         if(PlayAnim)
         {
-            anim.Play();
+            Startanim.Play();
         }
     }
 
@@ -40,7 +47,7 @@ public class Scroller_InfoButton : MonoBehaviour
         }
 
         InfoPanel.SetActive(true);
-
+        
         switch (type)
         {
             case Scroller_Selector.SelectionType.Wand:
@@ -131,4 +138,14 @@ public class Scroller_InfoButton : MonoBehaviour
         DownButton.gameObject.SetActive(true);
     }
 
+    public void PlayIdleAnim()
+    {
+        if (Idleanim != null)
+        Idleanim.SetBool("IsSelected", true);
+    }
+    public void StopIdleAnim()
+    {
+        if (Idleanim != null)
+        Idleanim.SetBool("IsSelected", false);
+    }
 }

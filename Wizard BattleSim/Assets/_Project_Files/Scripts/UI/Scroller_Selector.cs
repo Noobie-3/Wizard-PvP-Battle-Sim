@@ -1,5 +1,6 @@
 using System;
 using Unity.Netcode;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Scroller_Selector : NetworkBehaviour
@@ -69,17 +70,18 @@ public class Scroller_Selector : NetworkBehaviour
         // Move to the next category by enabling the next window
         if (CurrentWindow + 1 < windows.Length) // Check if there is a next window
         {
+            windows[CurrentWindow].StopIdleAnim(); // Stop playing idle animation for the current window
             CurrentIconIndex = 0; // Reset the icon index
             windows[CurrentWindow].ConfirmButton.interactable = false; // Disable the confirm button
             InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform); // Add confirmed icon
             windows[CurrentWindow].DisableButtons(); // Disable buttons in the current window
             windows[CurrentWindow].LockedIn = true; // Lock the current selection
             CurrentWindow++; // Move to the next window
+            windows[CurrentWindow].PlayIdleAnim(); // Play idle animation for the new window
             windows[CurrentWindow].gameObject.SetActive(true); // Activate the next window
             selectionType = windows[CurrentWindow].type; // Update the selection type
             windows[CurrentWindow].SetInfoPanel(CurrentIconIndex); // Update the info panel for the new window
             windows[CurrentWindow].EnableButtons(); // Enable buttons in the new window
-
             // Handle the current icon's indicator
             if (CurrentIcon != null)
             {
@@ -105,6 +107,7 @@ public class Scroller_Selector : NetworkBehaviour
                 Destroy(CurrentIcon);
                 windows[CurrentWindow].DisableButtons();
                 InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform);
+                windows[CurrentWindow].StopIdleAnim();
             }
             Debug.LogWarning("No more categories to move to.");
         }
@@ -143,6 +146,7 @@ public class Scroller_Selector : NetworkBehaviour
 
         if (CurrentWindow == windows.Length - 1 && windows[CurrentWindow].LockedIn)
         {
+            windows[CurrentWindow].PlayIdleAnim(); // Play idle animation for the final category
             // Handle re-opening the final category
             print("Reopening final category");
             windows[CurrentWindow].EnableButtons(); // Enable buttons in the current window
@@ -163,7 +167,9 @@ public class Scroller_Selector : NetworkBehaviour
             CurrentIconIndex = 0; // Reset the icon index
             InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform); // Add confirmed icon
             windows[CurrentWindow].DisableButtons(); // Disable buttons in the current window
+            windows[CurrentWindow].StopIdleAnim(); // stop playing idle animation for the current window
             CurrentWindow--; // Move to the previous window
+            windows[CurrentWindow].PlayIdleAnim(); // Play idle animation for the previous window
             windows[CurrentWindow].EnableButtons(); // Enable buttons in the previous window
             Destroy(InUseConfirmed_icons[CurrentWindow]); // Remove confirmed icon from the previous window
             windows[CurrentWindow].ConfirmButton.interactable = true; // Enable confirm button in the previous window

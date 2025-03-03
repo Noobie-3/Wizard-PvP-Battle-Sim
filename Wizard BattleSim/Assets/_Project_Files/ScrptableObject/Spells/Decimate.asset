@@ -12,20 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: Decimate
   m_EditorClassIdentifier: 
+  Spell_Name: Decimate
+  SpellIcon: {fileID: 21300000, guid: dce35f2aa876fae4ca5138be440bab1f, type: 3}
+  ManaCost: 15
+  CooldownDuration: 4
+  Spell_CastTime: 2
+  CasterChar: {fileID: 0}
   Spell_Speed: 130
-  Spell_Damage: 10
+  Spell_Damage: 3
+  LifeTime: 15
+  MultiHitCooldown: 0.5
   Spell_Prefab: {fileID: 9134858270483239568, guid: 4aa3426e90bec754d861b99aa9af4ba5, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 2899165438443141732, guid: 03d4a3a4fec3371449242759f742e820, type: 3}
   Grounded_SpellToSpawn_Prefab: {fileID: 4645668245002821493, guid: a7597e1ca666bad4fbf87a99af0f89b7, type: 3}
-  CooldownDuration: 4
-  LifeTime: 15
-  ManaCost: 15
-  Spell_Name: Decimate
-  Spell_CastTime: 2
-  MultiHitCooldown: 0.5
-  SpellIcon: {fileID: 21300000, guid: dce35f2aa876fae4ca5138be440bab1f, type: 3}
-  CasterChar: {fileID: 0}
+  ImpactEffect: {fileID: 0}
   FireSound: {fileID: 0}
   ImpactSound: {fileID: 0}
-  ImpactEffect: {fileID: 0}
+  SoundVolume: 1
+  SoundPriority: 128
+  SoundPitch: 1
   Spell_Type: 1

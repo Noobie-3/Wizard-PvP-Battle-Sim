@@ -58,8 +58,13 @@ GraphicsSettings:
   m_AlbedoSwatchInfos: []
   m_RenderPipelineGlobalSettingsMap:
     UnityEngine.Rendering.HighDefinition.HDRenderPipeline: {fileID: 11400000, guid: 6e84343729cf922458189f8dcb2a1768, type: 2}
+<<<<<<< Updated upstream
   m_LightsUseLinearIntensity: 1
   m_LightsUseColorTemperature: 1
+=======
+  m_LightsUseLinearIntensity: 0
+  m_LightsUseColorTemperature: 0
+>>>>>>> Stashed changes
   m_LogWhenShaderIsCompiled: 0
   m_LightProbeOutsideHullStrategy: 0
   m_CameraRelativeLightCulling: 0
