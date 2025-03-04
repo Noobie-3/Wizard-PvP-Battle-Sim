@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 3636364722086352694}
   - component: {fileID: 3122082354549297625}
   - component: {fileID: 2636343897909309892}
-  - component: {fileID: -4946695001455457809}
   - component: {fileID: -504699955671094923}
   - component: {fileID: 2278569020545556070}
+  - component: {fileID: 6494538074835701658}
   m_Layer: 0
   m_Name: SpamSpell_01
   m_TagString: Untagged
@@ -153,8 +153,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1644020740
+  GlobalObjectIdHash: 422694308
   InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 1
@@ -162,37 +164,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &-4946695001455457809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5041855814169712352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 1
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  Interpolate: 1
-  SlerpPosition: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &-504699955671094923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,6 +178,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
 --- !u!114 &2278569020545556070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,9 +195,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3402b7bff7d9b64a9f22e3c59342b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   spell: {fileID: 11400000, guid: 229c43ac4f23a5d4b8b803ed61fc65d8, type: 2}
   CurrentLifeTime: 0
   rb: {fileID: 3609423411881503315}
+--- !u!114 &6494538074835701658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5041855814169712352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AuthorityMode: 0
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1001 &7027694763424024448
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -230,16 +245,24 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 248636482304969388, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.71196
+      value: 0.92590404
       objectReference: {fileID: 0}
     - target: {fileID: 248636482304969388, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.71196
+      value: 0.92590404
       objectReference: {fileID: 0}
     - target: {fileID: 248636482304969388, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.71196
+      value: 0.92590404
       objectReference: {fileID: 0}
+    - target: {fileID: 826358075455037349, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a30e519d5f9048840b1c7afdc1e73a57, type: 2}
+    - target: {fileID: 829856093218107022, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8814e93a8704ebd46989b112bfbc61a5, type: 2}
     - target: {fileID: 1531229789291579481, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.71196
@@ -252,6 +275,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.71196
       objectReference: {fileID: 0}
+    - target: {fileID: 2117812470779331213, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 8c92dc4649664bb4c86d2e8a7d9f6827, type: 2}
     - target: {fileID: 2558949688152809971, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -298,15 +325,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3739076889354456894, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.71196
+      value: 0.92590404
       objectReference: {fileID: 0}
     - target: {fileID: 3739076889354456894, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.71196
+      value: 0.92590404
       objectReference: {fileID: 0}
     - target: {fileID: 3739076889354456894, guid: 6a78b6f3a6178ac45a480da32657c4c4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.71196
+      value: 0.92590404
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
