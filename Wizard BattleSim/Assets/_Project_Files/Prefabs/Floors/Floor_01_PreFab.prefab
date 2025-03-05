@@ -60,8 +60,12 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 31
       objectReference: {fileID: 0}
+    - target: {fileID: 2550463727306718371, guid: 66fe36d09716af747abeb60e79d0c614, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8247994413960396516, guid: 66fe36d09716af747abeb60e79d0c614, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: cee1038c98511dc40a59f56255c9d8cf, type: 2}
     m_RemovedComponents: []
@@ -118,6 +122,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 970035991
   InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -125,6 +131,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &4569744238125499191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,5 +145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9097abceb871d9b46bf0e82842e18af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   Type: 1
   PC: {fileID: 0}
