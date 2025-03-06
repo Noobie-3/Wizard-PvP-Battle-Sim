@@ -1034,7 +1034,7 @@ MonoBehaviour:
     m_Keys:
     - cb420132601969c489f2a43cc21a5351
     m_Values:
-    - hasProbeVolume: 1
+    - hasProbeVolume: 0
       bakeScene: 1
       bounds:
         m_Center: {x: -324, y: 0, z: 40.5}
