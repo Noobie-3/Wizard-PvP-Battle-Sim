@@ -112,7 +112,11 @@ MonoBehaviour:
     m_Value: 0
   skyAmbientMode:
     m_OverrideState: 1
+<<<<<<< Updated upstream
     m_Value: 0
+=======
+    m_Value: 1
+>>>>>>> Stashed changes
   planetRadius:
     m_OverrideState: 0
     m_Value: 6378.1
@@ -206,8 +210,13 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 55261.973
   aerosolDensity:
+<<<<<<< Updated upstream
     m_OverrideState: 0
     m_Value: 0.01192826
+=======
+    m_OverrideState: 1
+    m_Value: 0.009
+>>>>>>> Stashed changes
   aerosolTint:
     m_OverrideState: 0
     m_Value: {r: 0.9, g: 0.9, b: 0.9, a: 1}
@@ -218,7 +227,11 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0.8
   ozoneDensityDimmer:
+<<<<<<< Updated upstream
     m_OverrideState: 0
+=======
+    m_OverrideState: 1
+>>>>>>> Stashed changes
     m_Value: 1
   ozoneMinimumAltitude:
     m_OverrideState: 0
@@ -228,7 +241,11 @@ MonoBehaviour:
     m_Value: 20000
   groundTint:
     m_OverrideState: 1
+<<<<<<< Updated upstream
     m_Value: {r: 0.12, g: 0.1, b: 0.09, a: 1}
+=======
+    m_Value: {r: 0.17294921, g: 0.17294921, b: 0.17294921, a: 1}
+>>>>>>> Stashed changes
   groundColorTexture:
     m_OverrideState: 0
     m_Value: {fileID: 0}
@@ -239,6 +256,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   planetRotation:
+<<<<<<< Updated upstream
     m_OverrideState: 0
     m_Value: {x: 0, y: 0, z: 0}
   spaceEmissionTexture:
@@ -247,6 +265,16 @@ MonoBehaviour:
   spaceEmissionMultiplier:
     m_OverrideState: 0
     m_Value: 1
+=======
+    m_OverrideState: 1
+    m_Value: {x: 0, y: 0, z: 0}
+  spaceEmissionTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 8900000, guid: 35fde1aaf30ae0c41b4e3eacaa87ca79, type: 2}
+  spaceEmissionMultiplier:
+    m_OverrideState: 0
+    m_Value: 584.5
+>>>>>>> Stashed changes
   spaceRotation:
     m_OverrideState: 0
     m_Value: {x: 0, y: 0, z: 0}
@@ -310,9 +338,15 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
+<<<<<<< Updated upstream
     m_Value: 4
   meteringMode:
     m_OverrideState: 0
+=======
+    m_Value: 1
+  meteringMode:
+    m_OverrideState: 1
+>>>>>>> Stashed changes
     m_Value: 2
   luminanceSource:
     m_OverrideState: 0
@@ -325,7 +359,11 @@ MonoBehaviour:
     m_Value: 0
   limitMin:
     m_OverrideState: 1
+<<<<<<< Updated upstream
     m_Value: -5
+=======
+    m_Value: -2
+>>>>>>> Stashed changes
   limitMax:
     m_OverrideState: 1
     m_Value: 14
@@ -408,11 +446,19 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   adaptationMode:
+<<<<<<< Updated upstream
     m_OverrideState: 0
     m_Value: 1
   adaptationSpeedDarkToLight:
     m_OverrideState: 0
     m_Value: 3
+=======
+    m_OverrideState: 1
+    m_Value: 1
+  adaptationSpeedDarkToLight:
+    m_OverrideState: 1
+    m_Value: 2
+>>>>>>> Stashed changes
   adaptationSpeedLightToDark:
     m_OverrideState: 0
     m_Value: 1
@@ -420,11 +466,19 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: {fileID: 0}
   histogramPercentages:
+<<<<<<< Updated upstream
     m_OverrideState: 0
     m_Value: {x: 40, y: 90}
   histogramUseCurveRemapping:
     m_OverrideState: 0
     m_Value: 0
+=======
+    m_OverrideState: 1
+    m_Value: {x: 9.325155, y: 98.58895}
+  histogramUseCurveRemapping:
+    m_OverrideState: 0
+    m_Value: 1
+>>>>>>> Stashed changes
   targetMidGray:
     m_OverrideState: 0
     m_Value: 0
