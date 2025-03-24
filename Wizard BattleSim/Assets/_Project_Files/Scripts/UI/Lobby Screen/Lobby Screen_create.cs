@@ -7,20 +7,30 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using AssetInventory;
+using TMPro;
+using UnityEngine.UI;
 public class LObbyScreen_create : MonoBehaviour
 {
 
     [SerializeField] private Lobby HostLobby;
     [SerializeField] private Lobby JoinedLobby;
+    [SerializeField] private string LobbyName;
+    [SerializeField] private TMP_InputField LobbyNameInput; 
     [SerializeField] private float Timer;
     [SerializeField] private float HeatBeatInterval = 5.0f;
     [SerializeField] private string PlayerName;
     [SerializeField] private Map_DB MapDB;
-    [SerializeField] private Map_SO SelectedMap;
+    [SerializeField] private Image MapImage;
+    [SerializeField] private TextMeshProUGUI MapNameDisplay;
+    [SerializeField] private int SelectedMap;
+    [SerializeField] private int MaxPlayers;
+    [SerializeField] private TextMeshProUGUI MaxPlayerCountText;
+    [SerializeField] private TextMeshProUGUI LobbyCodeDisplay;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     async void Start()
     {
-        PlayerName = "Noob Test " + UnityEngine.Random.Range(10, 99);
+        PlayerName = "Mage" + UnityEngine.Random.Range(10, 99);
         await UnityServices.InitializeAsync();
 
         AuthenticationService.Instance.SignedIn += () =>
@@ -36,13 +46,13 @@ public async void Create_Lobby()
     {
         try
         {
-            string LobbyName = " MyLobby";
-            int MaxPlayers = 4;
+            
 
             CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
             {
                 IsPrivate = false,
                 Player = new Player
+                
                 {
                     Data = new Dictionary<string, PlayerDataObject>
                     {
@@ -52,15 +62,27 @@ public async void Create_Lobby()
 
                 Data = new Dictionary<string, DataObject>
                 {
-                    { "Level", new DataObject(DataObject.VisibilityOptions.Public, LobbyName) }
+                    { "Level", new DataObject(DataObject.VisibilityOptions.Public, SelectedMap.ToString()) },
+
                 },
 
             };
 
+            if(MaxPlayers <= 0)
+            {
+                MaxPlayers = 2;
+            }
+            if(LobbyName == "")
+            {
+                LobbyName = "New Lobby";
+            }
             Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(LobbyName, MaxPlayers);
             HostLobby = lobby;
             JoinedLobby = lobby;
             Debug.Log("Lobby Created with " + lobby.Id + " and " + lobby.MaxPlayers + " players");
+            LobbyCodeDisplay.text = "Lobby Code: " + lobby.LobbyCode;
+            Debug.Log("Lobby Code: " + lobby.LobbyCode);
+            Debug.Log("Lobby Name: " + lobby.Name);
         }
 
         catch(LobbyServiceException e)
@@ -69,6 +91,7 @@ public async void Create_Lobby()
         }
 
     }
+
 
     private async void HandleLobbyUpdate()
     {
@@ -85,7 +108,7 @@ public async void Create_Lobby()
         }
     }
 
-    private async void kickPlayer(string PlayerId)
+    public async void kickPlayer(string PlayerId)
     {
         try
         {
@@ -97,7 +120,7 @@ public async void Create_Lobby()
         }
     }
 
-    private async void UpdateLobbyLevel(string LevelName)
+    public async void UpdateLobbyLevel(int Level)
     {
         try
         {
@@ -105,7 +128,7 @@ public async void Create_Lobby()
             {
                 Data = new Dictionary<string, DataObject>
             {
-                { "Level", new DataObject(DataObject.VisibilityOptions.Public, LevelName) }
+                { "Level", new DataObject(DataObject.VisibilityOptions.Public, Level.ToString()) }
             }
             }
             );
@@ -136,8 +159,66 @@ public async void Create_Lobby()
 
     }
 
+    public void ChangeLobbyName()
+    {
+        LobbyName = LobbyNameInput.text;
+    }
+
+    public void ChangeMapUp()
+    {
+        if(SelectedMap == MapDB.GetAllMaps().Length - 1)
+        {
+            return;
+        }   
+        SelectedMap += 1;
+        if(MapDB.GetMapById(SelectedMap) == null)
+        {
+            SelectedMap -= 1;
+            print("Map not found");
+            return;
+        }
+
+        MapImage.sprite = MapDB.GetMapById(SelectedMap).Icon;
+        MapNameDisplay.text = MapDB.GetMapById(SelectedMap).DisplayName;
+    }
+
+    public void ChangeMapDown()
+    {
+        if(SelectedMap == 0)
+        {
+            return;
+        }
+        SelectedMap -= 1;
+        if (MapDB.GetMapById(SelectedMap) == null)
+        {
+            SelectedMap += 1;
+            print("Map not found");
+            return;
+        }
+        MapImage.sprite = MapDB.GetMapById(SelectedMap).Icon;
+        MapNameDisplay.text = MapDB.GetMapById(SelectedMap).DisplayName;
+    }
+
+    public void increasePlayercount()
+    {
+        if(MaxPlayers == 10)
+        {
+            return;
+        }
+        MaxPlayers = MaxPlayers += 1;
+        MaxPlayerCountText.text = "Max Players: " + MaxPlayers;
+    }
+    public void decreasePlayercount()
+    {
+        if(MaxPlayers == 1)
+        {
+            return;
+        }
+        MaxPlayers = MaxPlayers -= 1;
+    }
     private void Update()   
     {
         HandleLobbyUpdate();
+        MaxPlayerCountText.text = "Max Players: " + MaxPlayers;
     }
 }

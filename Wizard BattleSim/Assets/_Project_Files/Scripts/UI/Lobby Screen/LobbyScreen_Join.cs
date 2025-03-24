@@ -6,6 +6,7 @@ using Unity.Services.Lobbies;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 
 public class LobbyScreen_Join : MonoBehaviour
@@ -14,68 +15,89 @@ public class LobbyScreen_Join : MonoBehaviour
     [SerializeField] private string PlayerName;
     [SerializeField] private Lobby joinedLobby;
     [SerializeField] private float Timer;
-    [SerializeField] private InputField NameField;
-    [SerializeField] private InputField LobbyCodeField;
+    [SerializeField] private TMP_InputField NameField;
+    [SerializeField] private TMP_InputField LobbyCodeField;
     [SerializeField] private string LobbyCode;
     [SerializeField] private GameObject[] LobbyObjects;
     [SerializeField] private Map_DB MapDB;
     [SerializeField] private Map_SO SelectedMap;
     [SerializeField] private Lobby[] AvaliableLobbies;
-    async void Start()
-    {
 
-            PlayerName = "Mage" + UnityEngine.Random.Range(10, 99);
-        
-
-        await UnityServices.InitializeAsync();
-
-        AuthenticationService.Instance.SignedIn += () =>
-        {
-            Debug.Log("Signed in as: " + AuthenticationService.Instance.PlayerId);
-        };
-
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-    }
 
     public async void ListLobbies()
     {
         try
         {
+            // Set lobby query options
             QueryLobbiesOptions options = new QueryLobbiesOptions
             {
-                Count = 10,
-                Filters = new List<QueryFilter> { new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, "0", QueryFilter.OpOptions.GT)
-                },
+                Count = 10, // Number of lobbies to fetch
+                Filters = new List<QueryFilter>
+            {
+                // Only show lobbies with open slots
+                new QueryFilter(QueryFilter.FieldOptions.AvailableSlots, "0", QueryFilter.OpOptions.GT)
+            },
+                // Order by creation time (newest first)
                 Order = new List<QueryOrder> { new QueryOrder(false, QueryOrder.FieldOptions.Created) }
-
             };
-            
+
+            // Fetch available lobbies
             QueryResponse queryResponse = await LobbyService.Instance.QueryLobbiesAsync(options);
             Debug.Log("Lobbies found: " + queryResponse.Results.Count);
-            for(int i = 0; i < queryResponse.Results.Count; i++)
-            {
-                Debug.Log("Lobby: " + queryResponse.Results[i].Name + " with " + queryResponse.Results[i].MaxPlayers + " players");
-                LobbyObjects[i].SetActive(true);
-                LobbyObjects[i].transform.Find("Name").GetComponent<TextMeshProUGUI>().text = queryResponse.Results[i].Name;
-                LobbyObjects[i].transform.Find("Lobby Size").GetComponent<TextMeshProUGUI>().text = queryResponse.Results[i].Players.Count + "/" + queryResponse.Results[i].MaxPlayers;
-                if(MapDB == null)
-                    return;
-                LobbyObjects[i].transform.Find("Map Image").GetComponent<Image>().sprite = MapDB.GetMapById(SelectedMap.Id).Icon;
-            }
+
+            // Ensure we don't display outdated lobbies
             AvaliableLobbies = queryResponse.Results.ToArray();
+
+            // Loop through each lobby and update the UI
+            for (int i = 0; i < queryResponse.Results.Count && i < LobbyObjects.Length; i++)
+            {
+                var lobby = queryResponse.Results[i];
+
+                // Activate the lobby slot (if inactive)
+                LobbyObjects[i].SetActive(true);
+
+                // Update lobby name and player count
+                LobbyObjects[i].transform.Find("Lobby Name").GetComponent<TextMeshProUGUI>().text = lobby.Name;
+                LobbyObjects[i].transform.Find("Lobby Size").GetComponent<TextMeshProUGUI>().text = $"{lobby.Players.Count}/{lobby.MaxPlayers}";
+
+                // Update map image (if MapDB and SelectedMap are available)
+                if (MapDB != null && SelectedMap != null)
+                {
+                    var mapImage = LobbyObjects[i].transform.Find("Map Image").GetComponent<Image>();
+                    mapImage.sprite = MapDB.GetMapById(SelectedMap.Id)?.Icon;
+                }
+
+                // Cache the index to prevent closure issues
+                int lobbyIndex = i;
+
+                // Set up the Join button for this lobby
+                Button joinButton = LobbyObjects[i].transform.GetComponent<Button>();
+                joinButton.onClick.RemoveAllListeners(); // Avoid stacking listeners
+                joinButton.onClick.AddListener(() => JoinLobbyByIndex(lobbyIndex));
+
+                Debug.Log("Lobby " + i + ": " + lobby.Name + " with " + lobby.Players.Count + " players");
+            }
+
+            // Hide any unused lobby slots
+            for (int i = queryResponse.Results.Count; i < LobbyObjects.Length; i++)
+            {
+                LobbyObjects[i].SetActive(false);
+            }
+
         }
         catch (LobbyServiceException e)
         {
-            Debug.LogError(e);
+            Debug.LogError("Error fetching lobbies: " + e);
         }
     }
 
     private async void JoinLobbyByCode()
     {
         if (LobbyCode == null)
+        { 
             print("Lobby code is null");
-            return;
+        return;
+        }
         try
         {
             JoinLobbyByCodeOptions createLobbyOptions = new JoinLobbyByCodeOptions
@@ -123,17 +145,19 @@ public class LobbyScreen_Join : MonoBehaviour
         }
     }
 
-    public  void JoinLobbyByButton()
+    public  void JoinLobbyByIndex(int index)
     {
-        try
+        if (index < 0 || index >= AvaliableLobbies.Length)
         {
-            LobbyCode= AvaliableLobbies[0].LobbyCode;
-            JoinLobbyByCode();
+            Debug.LogError("Invalid lobby index!");
+            return;
         }
-        catch (LobbyServiceException e)
-        {
-            Debug.LogError(e);
-        }
+
+        // Set the lobby code from the selected lobby
+        LobbyCode = AvaliableLobbies[index].LobbyCode;
+
+        // Call the method to join the lobby using the code
+        JoinLobbyByCode();
     }
 
     public async void QuickJoinLobby()
