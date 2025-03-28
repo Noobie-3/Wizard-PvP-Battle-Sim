@@ -24,6 +24,19 @@ public class LobbyScreen_Join : MonoBehaviour
     [SerializeField] private Lobby[] AvaliableLobbies;
 
 
+    private void Start()
+    {
+        PlayerName = "Mage" + UnityEngine.Random.Range(10, 99);
+        Timer = 0;
+        UnityServices.InitializeAsync();
+        AuthenticationService.Instance.SignedIn += () =>
+        {
+            Debug.Log("Signed in as: " + AuthenticationService.Instance.PlayerId);
+        };
+        AuthenticationService.Instance.SignInAnonymouslyAsync();
+        ListLobbies();
+        DontDestroyOnLoad(this.gameObject);
+    }
     public async void ListLobbies()
     {
         try
@@ -47,7 +60,7 @@ public class LobbyScreen_Join : MonoBehaviour
 
             // Ensure we don't display outdated lobbies
             AvaliableLobbies = queryResponse.Results.ToArray();
-
+            print(AvaliableLobbies.Length + " Lobbies found");
             // Loop through each lobby and update the UI
             for (int i = 0; i < queryResponse.Results.Count && i < LobbyObjects.Length; i++)
             {
@@ -72,6 +85,7 @@ public class LobbyScreen_Join : MonoBehaviour
 
                 // Set up the Join button for this lobby
                 Button joinButton = LobbyObjects[i].transform.GetComponent<Button>();
+
                 joinButton.onClick.RemoveAllListeners(); // Avoid stacking listeners
                 joinButton.onClick.AddListener(() => JoinLobbyByIndex(lobbyIndex));
 
@@ -93,7 +107,8 @@ public class LobbyScreen_Join : MonoBehaviour
 
     private async void JoinLobbyByCode()
     {
-        if (LobbyCode == null)
+        print("Lobby code: " + LobbyCode);
+        if (LobbyCode == "")
         { 
             print("Lobby code is null");
         return;
@@ -145,19 +160,20 @@ public class LobbyScreen_Join : MonoBehaviour
         }
     }
 
-    public  void JoinLobbyByIndex(int index)
+    public async void JoinLobbyByIndex(int index)
     {
+
+        print(index + " Index");
+
         if (index < 0 || index >= AvaliableLobbies.Length)
         {
             Debug.LogError("Invalid lobby index!");
             return;
         }
 
-        // Set the lobby code from the selected lobby
-        LobbyCode = AvaliableLobbies[index].LobbyCode;
+       joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(AvaliableLobbies[index].Id);
 
-        // Call the method to join the lobby using the code
-        JoinLobbyByCode();
+        print("JOined Lobby: " + joinedLobby.Name + " with " + joinedLobby.MaxPlayers + " players");
     }
 
     public async void QuickJoinLobby()

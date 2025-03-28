@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using AssetInventory;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class LObbyScreen_create : MonoBehaviour
 {
 
@@ -30,6 +31,7 @@ public class LObbyScreen_create : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     async void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         PlayerName = "Mage" + UnityEngine.Random.Range(10, 99);
         await UnityServices.InitializeAsync();
 
@@ -83,6 +85,9 @@ public async void Create_Lobby()
             LobbyCodeDisplay.text = "Lobby Code: " + lobby.LobbyCode;
             Debug.Log("Lobby Code: " + lobby.LobbyCode);
             Debug.Log("Lobby Name: " + lobby.Name);
+
+            //move to lobby scene
+            SceneManager.LoadScene("Character_Select");
         }
 
         catch(LobbyServiceException e)
