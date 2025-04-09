@@ -13,8 +13,10 @@ using Unity.Netcode.Components;
 using System.Threading;
 using UnityEngine.Video;
 
+[RequireComponent(typeof(PlayerStats))]
 public class PlayerController : NetworkBehaviour
 {
+
 
     // Movement variables
     [Header("Movement Settings")]
@@ -42,11 +44,6 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] public Transform Cam;
     [SerializeField] public Camera camComponent;
     [SerializeField] private CinemachineVirtualCamera Vcam;
-    public Vector3 CameraRotation;
-    [SerializeField] private float CamSpeed = 1f;
-    [SerializeField] private float RotateSpeed = 1f;
-    [SerializeField] private float minXRotation = -45f;   // Minimum X rotation (pitch)
-    [SerializeField] private float maxXRotation = 45f;    // Maximum X rotation (pitch)
 
     // Miscellaneous settings
     [Header("Miscellaneous Settings")]
@@ -54,14 +51,6 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private GameObject MeshToRotate;
     [SerializeField] private AudioListener audioListener;
     [SerializeField] private bool JumpUsed = false;
-    public NetworkVariable<float> Health = new NetworkVariable<float>(100f); // Example initial value
-    public float MaxHealth;
-    public NetworkVariable<float> Mana = new NetworkVariable<float>(100f); // Example initial value
-    public float MaxMana;
-    public NetworkVariable<float> Stamina = new NetworkVariable<float>(100f); // Example initial value
-    public float MaxStamina;
-    [SerializeField] private float StaminaRegenRate = 1f;
-    [SerializeField] private float StaminaConsumptionRate = 10f;
     public bool Charging = false;
     public float ChargeTime = 1f;
     public bool CanDie = true;
@@ -69,7 +58,7 @@ public class PlayerController : NetworkBehaviour
     public bool isSpawned;
     public Transform WandSpawnLocation;
     public ulong MyClientID;
-
+    public PlayerStats Stats; // Reference to PlayerStats
     // Input variables
     [Header("Input Settings")]
     [SerializeField] public Vector2 MoveInput;
@@ -110,26 +99,15 @@ public class PlayerController : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
 
-        if (!IsHost && DevMenu != null)
-        {
-            Destroy(DevMenu);
-        }
-
-
-
 
         if (IsOwner)
         {
             print("Player spawned with ownership: " + OwnerClientId);
-            print("My location is " + transform.position + name);
             rb = GetComponent<Rigidbody>(); // Ensure Rigidbody is assigned
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-            // **Rebind Input Actions**
             MoveAction = PlayerControls.FindAction("Move");
             MoveAction.Enable();
-
             MyClientID = OwnerClientId;
-            camComponent.enabled = false;
             camComponent.enabled = true;
             audioListener.enabled = true;
             Vcam.Priority = 1;
@@ -149,14 +127,6 @@ public class PlayerController : NetworkBehaviour
             PlayerUi.gameObject.SetActive(false);
         }
 
-        if (IsServer)
-        {
-
-            StartCoroutine(ManaRegen());
-            //  StartCoroutine(StaminaRegen());
-
-
-        }
     }
 
     public void Start()
@@ -188,12 +158,12 @@ public class PlayerController : NetworkBehaviour
         WallCheck();
 
         RotateObjectServerRpc(moveDirection);
-        
+        AdjustCameraDamping();
         PlayerUi.UpdateUI();
 
         if (Charging)
         {
-            ManaChargeServerRpc();
+            Stats.ChargeMana();
         }
     }
     // Movement logic
@@ -207,13 +177,8 @@ public class PlayerController : NetworkBehaviour
             rb.AddForce(Vector3.down * gameController.GC.Gravity_force, ForceMode.Acceleration);
         }
 
-        if (Charging)
-        {
-            // If charging a spell, prevent movement
-            return;
-        }
-
-
+        if (Charging) return;
+        
         IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
 
         moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
@@ -259,7 +224,7 @@ public class PlayerController : NetworkBehaviour
     }
 
 
-    
+
     // Input handlers
     public void GetMoveInput(InputAction.CallbackContext context)
     {
@@ -269,8 +234,9 @@ public class PlayerController : NetworkBehaviour
         // Check if movement is allowed
         if (!CanRun)
         {
-/*            MoveInput = Vector2.zero; // Reset movement input
-*/            if (Anim != null)
+            /*            MoveInput = Vector2.zero; // Reset movement input
+            */
+            if (Anim != null)
             {
                 Anim.SetFloat("X", 0);
                 Anim.SetFloat("Y", 0);
@@ -282,7 +248,7 @@ public class PlayerController : NetworkBehaviour
         if (context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
         {
             MoveInput = context.ReadValue<Vector2>();
-            print ("Move input is " + context.ReadValue<Vector2>());
+            print("Move input is " + context.ReadValue<Vector2>());
 
             if (Anim != null)
             {
@@ -304,7 +270,7 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-public void GetMouseInput(InputAction.CallbackContext context)
+    public void GetMouseInput(InputAction.CallbackContext context)
     {
         MouseInput = context.ReadValue<Vector2>();
     }
@@ -324,8 +290,8 @@ public void GetMouseInput(InputAction.CallbackContext context)
             //stop movment
             CanRun = false;
 
-                rb.linearVelocity = Vector3.zero;
-            
+            rb.linearVelocity = Vector3.zero;
+
             //start charging
         }
 
@@ -334,18 +300,18 @@ public void GetMouseInput(InputAction.CallbackContext context)
     }
     // Jump logic
     public void JumpInput(InputAction.CallbackContext context)
-    {        
+    {
         //SpellCasterScript.ResetChargeSpell();
         if (context.performed && (Grounded || IsWallRunning))
         {
-            SpellCasterScript.TristanCast();            
+            SpellCasterScript.TristanCast();
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
-/*            if (IsWallRunning)
-            {
-                // Upon jumping off the wall, reset wall running state
-*//*                SetWallRunningServerRpc(false);
-*//*                AbleToWallRun = false; // Prevent immediate wall running again
-            }*/
+            /*            if (IsWallRunning)
+                        {
+                            // Upon jumping off the wall, reset wall running state
+            *//*                SetWallRunningServerRpc(false);
+            *//*                AbleToWallRun = false; // Prevent immediate wall running again
+                        }*/
         }
     }
     // Ground check
@@ -356,20 +322,23 @@ public void GetMouseInput(InputAction.CallbackContext context)
         {
             JumpUsed = false;
         }
-        if(Anim != null)
+        if (Anim != null)
         {
             Anim.SetBool("Grounded", Grounded);
         }
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
     }
-    private void WallCheck() {
+    private void WallCheck()
+    {
         if (!IsOwner) return;
         if (MoveInput == Vector2.zero) return;
-        if (!Grounded) {
+        if (!Grounded)
+        {
             if (!AbleToWallRun) return;
             RaycastHit hit;
             // Check if player is high enough from the ground to wall run
-            if (!Physics.Raycast(MeshToRotate.transform.position, Vector3.down, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer)) {// Perform raycasts in multiple directions to detect walls
+            if (!Physics.Raycast(MeshToRotate.transform.position, Vector3.down, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
+            {// Perform raycasts in multiple directions to detect walls
                 if (Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, MeshToRotate.transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, -transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
@@ -377,23 +346,28 @@ public void GetMouseInput(InputAction.CallbackContext context)
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (MeshToRotate.transform.right + MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-MeshToRotate.transform.right + MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
                     Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer)) {
+                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer))
+                {
                     Vector3 wallNormal = hit.normal;
                     // Determine if the wall is suitable for wall running (not too steep)
-                    if (Vector3.Dot(wallNormal, Vector3.up) < 0.1f) {
+                    if (Vector3.Dot(wallNormal, Vector3.up) < 0.1f)
+                    {
                         currentWallNormal = wallNormal;
                         // Rotate the player to face 90 degrees along the wall
                         Vector3 wallForward = Vector3.Cross(wallNormal, Vector3.up).normalized;
                         // Determine the correct direction based on player's input
-                        if (Vector3.Dot(wallForward, Cam.forward) < 0) {
+                        if (Vector3.Dot(wallForward, Cam.forward) < 0)
+                        {
                             wallForward = -wallForward;
                         }
                         Quaternion targetRotation = Quaternion.LookRotation(wallForward, Vector3.up);
                         MeshToRotate.transform.rotation = targetRotation;
-/*                        SetWallRunningServerRpc(true);
-*/                    }
+                        /*                        SetWallRunningServerRpc(true);
+                        */
+                    }
                 }
-                else {
+                else
+                {
                     //  SetWallRunningServerRpc(false);
                     Gravity = true;
                 }
@@ -429,58 +403,8 @@ public void GetMouseInput(InputAction.CallbackContext context)
                 }
         */
     }
-    [ServerRpc]
-    private void ReduceStaminaServerRpc(float amount)
-    {
-        Stamina.Value -= amount;
-    }
-    // Regeneration make it one function later
-    private IEnumerator ManaRegen()
-    {
-        while (true)
-        {
-            if (IsServer)
-            {
-                if (Mana.Value < MaxMana)
-                {
-                    Mana.Value  += 1f;
-                    Mana.Value = Mathf.Min(Mana.Value, MaxMana); // Clamp to MaxMana
-                }
-            }
-            yield return new WaitForSeconds(1f);
-            if(!IsOwner) yield return new WaitForSeconds(0f);
-            PlayerUi.UpdateUI();
-        }
-    }
 
-    /* private IEnumerator StaminaRegen()
-     {
-         while (true)
-         {
-             if (IsServer)
-             {
-                 if (Stamina.Value < MaxStamina && !IsWallRunning)
-                 {
-                     Stamina.Value += StaminaRegenRate;
-                     Stamina.Value= Mathf.Min(Stamina.Value, MaxStamina); // Clamp to MaxStamina
-                 }
-             }
-             PlayerUi.UpdateUI();
-             yield return new WaitForSeconds(0.5f);
-         }
-     }*/
-    [ServerRpc]
-    public void ManaChargeServerRpc()
-    {
-        if (Mana.Value < MaxMana)
-        {
-            Mana.Value += .2f;
-        }
-        else
-        {
-            Mana.Value = MaxMana;
-        }
-    }
+
 
 
     // Animation handling
@@ -498,7 +422,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
         if (!IsOwner) yield return null;
         while (IsDebug)
         {
-           yield  return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(5f);
         }
     }
 
@@ -506,7 +430,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
     public void DieServerRpc(ulong Hitter, ulong Sender)
     {
         print("Sender is " + Sender + "Hitter is " + Hitter);
-        if(!IsServer) return;
+        if (!IsServer) return;
         if (WinTracker.Singleton != null)
         {
 
@@ -529,6 +453,14 @@ public void GetMouseInput(InputAction.CallbackContext context)
 
 
     }
+private void AdjustCameraDamping()
+{
+    if (Cam == null || rb == null) return;
+        if (MoveInput.x >= 0) return;
+    // Get the player's velocity in camera space
+    // If player is moving toward the camera (negative Z)
+        Vcam.CancelDamping();
+}
 
     private void OnParticleCollision(GameObject other)
     {
@@ -544,7 +476,7 @@ public void GetMouseInput(InputAction.CallbackContext context)
             print("Caster is the same as the player");
             return;
         }
-        if(spell_Interface.hitagainTime > 0)
+        if (spell_Interface.hitagainTime > 0)
         {
             print("Hit again time is not 0");
             return;
@@ -554,30 +486,11 @@ public void GetMouseInput(InputAction.CallbackContext context)
         print("Should have taken damage from " + other.name);
     }
 
-    public void TakeDamage(Spell spell, ulong whoHitMeName)
+    public void TakeDamage(Spell spell, ulong whoHitMe)
     {
-        if(!IsServer) return;
+        if (!IsServer) return;
         print(name + "PLayer took dmaage from" + spell + " Cast by  " + CharacterChosen.DisplayName);
-        TakeDamageServerRpc(spell.Spell_Damage);
+        Stats.TakeDamage(spell.Spell_Damage, whoHitMe);
         PlayerUi.UpdateUI();
-        if (Health.Value > 0)
-        {
-            print("Health is not low enough for death on " + name);
-            return;
-        }
-
-        DieServerRpc(whoHitMeName, this.OwnerClientId);
-        print("called Die On " + CharacterChosen.DisplayName);
-        SpawnManager.instance.RespawnPlayerServerRpc(whoHitMeName);
-        SpawnManager.instance.RespawnPlayerServerRpc(this.OwnerClientId);
-        
-    }
-    [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(float Damage)
-    {
-        if(!IsServer) return;
-        Health.Value -= Damage;
-        PlayerUi.UpdateUI();
-
     }
 }

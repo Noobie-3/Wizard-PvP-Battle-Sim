@@ -1,4 +1,6 @@
+using System.Runtime.CompilerServices;
 using TMPro;
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,9 +11,16 @@ public class PlayerCard : MonoBehaviour
     [SerializeField] private GameObject visuals;
     [SerializeField] private Image characterIconImage;
     [SerializeField] private TMP_Text playerNameText;
+    private float timer = 0;
 
     public void UpdateDisplay(CharacterSelectState state)
     {
+        if(timer  < 0.5f)
+        {
+            timer += Time.deltaTime;
+            return;
+        }
+
         if (state.CharacterId != -1)
         {
             var character = characterDatabase.GetCharacterById(state.CharacterId);

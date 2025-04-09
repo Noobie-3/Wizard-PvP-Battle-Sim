@@ -22,7 +22,10 @@ public class testRelay : MonoBehaviour
             Debug.Log("Signed in: " + AuthenticationService.Instance.PlayerId);
         };
 
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
     }
     //create a relay
     [ConsoleCommand("Create a relay with 2 slots")]

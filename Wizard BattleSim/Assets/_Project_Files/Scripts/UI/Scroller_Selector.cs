@@ -1,5 +1,6 @@
 using System;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -62,6 +63,8 @@ public class Scroller_Selector : NetworkBehaviour
                 if(selectionType == SelectionType.Wand) return;
                 ReplaceSpawnedPrefab();
             }
+
+
         
     }
 
@@ -168,12 +171,14 @@ public class Scroller_Selector : NetworkBehaviour
             InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform); // Add confirmed icon
             windows[CurrentWindow].DisableButtons(); // Disable buttons in the current window
             windows[CurrentWindow].StopIdleAnim(); // stop playing idle animation for the current window
+            windows[CurrentWindow].gameObject.SetActive(false); // Activate the previous window
             CurrentWindow--; // Move to the previous window
             windows[CurrentWindow].PlayIdleAnim(); // Play idle animation for the previous window
             windows[CurrentWindow].EnableButtons(); // Enable buttons in the previous window
             Destroy(InUseConfirmed_icons[CurrentWindow]); // Remove confirmed icon from the previous window
             windows[CurrentWindow].ConfirmButton.interactable = true; // Enable confirm button in the previous window
             windows[CurrentWindow].SetInfoPanel(CurrentIconIndex); // Update the info panel
+            windows[CurrentWindow].LockedIn = false; // Unlock the previous window
         }
         selectionType = windows[CurrentWindow].type; // Update the selection type
         ReplaceSpawnedPrefab();
@@ -269,6 +274,9 @@ public class Scroller_Selector : NetworkBehaviour
         windows[CurrentWindow].LockedIn = true;
         print("Confirming selection");
 
+        //check if its the last window if so then lock in
+
+
         // Notify the server of the confirmed selection
         ConfirmSelectionServerRpc(selectionType, CurrentIconIndex, SpellIndex);
 
@@ -308,21 +316,14 @@ public class Scroller_Selector : NetworkBehaviour
                 PlayerStateManager.Singleton.AddState(new CharacterSelectState(serverRpcParams.Receive.SenderClientId, id, State.WandID, State.Spell0, State.Spell1, State.Spell2, State.IsLockedIn));
                 break;
         }
+
+        if (CurrentWindow + 1 == windows.Length)
+        {
+            PlayerStateManager.Singleton.AddState(new CharacterSelectState(serverRpcParams.Receive.SenderClientId, State.CharacterId, State.WandID, State.Spell0, State.Spell1, State.Spell2, true));
+        }
     }
 
-    public void CancelSelection()
-    {
-        // Unlock the current selection and allow for a new selection
-        windows[CurrentWindow].LockedIn = false;
-        windows[CurrentWindow].ConfirmButton.interactable = true;
 
-        // Destroy the confirmed icon and current icon indicator
-        Destroy(InUseConfirmed_icons[CurrentWindow]);
-        Destroy(CurrentIcon);
-
-        // Create a new icon indicator for the current window
-        CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].SelectorIconHolder.transform);
-    }
 
     public void ReplaceSpawnedPrefab()
     {
@@ -349,5 +350,34 @@ public class Scroller_Selector : NetworkBehaviour
         }
         lookAtObjectCOnstant.Target = ObjectSpawned.transform;
 
+    }
+
+    private void OnDisable()
+    {
+        if (ObjectSpawned != null)
+        {
+            Destroy(ObjectSpawned);
+        }
+        ResetAllSelections();
+
+
+    }
+
+
+    private void OnEnable()
+    {
+        windows[0].gameObject.SetActive(true);
+        selectionType = windows[0].type;
+        CurrentIconIndex = 0;
+        windows[0].SetInfoPanel(CurrentIconIndex);
+        ReplaceSpawnedPrefab();
+
+    }
+    public void ResetAllSelections()
+    {
+        for (int i = CurrentWindow; i !> -1; i--)
+        {
+            MoveToPreviousCat();
+        }
     }
 }

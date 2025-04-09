@@ -1,3 +1,4 @@
+using AssetInventory;
 using NUnit.Framework.Internal.Filters;
 using TMPro;
 using UnityEngine;
@@ -23,6 +24,7 @@ public class Scroller_InfoButton : MonoBehaviour
     public bool LockedIn;
     public GameObject SelectorIconHolder;
     [SerializeField] public PlayerCard[] playerCards;
+    private float timer = 0;
 
 
     private void Start()
@@ -32,11 +34,14 @@ public class Scroller_InfoButton : MonoBehaviour
     public void OnEnable()
     {
         PlayIdleAnim();
-        if(PlayAnim)
+        if (PlayAnim)
         {
             Startanim.Play();
         }
     }
+
+
+
 
     public void SetInfoPanel(int id)
     {

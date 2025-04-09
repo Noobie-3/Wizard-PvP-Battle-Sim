@@ -7,7 +7,11 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using System;
-
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using UnityEngine.SceneManagement;
 
 public class LobbyScreen_Join : MonoBehaviour
 {
@@ -22,6 +26,8 @@ public class LobbyScreen_Join : MonoBehaviour
     [SerializeField] private Map_DB MapDB;
     [SerializeField] private Map_SO SelectedMap;
     [SerializeField] private Lobby[] AvaliableLobbies;
+    [SerializeField] private TextMeshProUGUI ErrorLogger;
+    [SerializeField] private LobbyScreenSelector lobbyScreenSelector;
 
 
     private void Start()
@@ -105,13 +111,47 @@ public class LobbyScreen_Join : MonoBehaviour
         }
     }
 
-    private async void JoinLobbyByCode()
+    [ConsoleCommand("Join a relay with a join code")]
+    //join a relay
+    public async void JoinRelay(string joincode)
     {
-        print("Lobby code: " + LobbyCode);
+        try
+        {
+            //join the relay with the join code provided
+            Debug.Log("Joining relay with join code: " + joincode);
+            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joincode);
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
+                joinAllocation.RelayServer.IpV4,
+                (ushort)joinAllocation.RelayServer.Port,
+                joinAllocation.AllocationIdBytes,
+                joinAllocation.Key,
+                joinAllocation.ConnectionData,
+                joinAllocation.HostConnectionData
+                );
+
+            NetworkManager.Singleton.StartClient();
+        }
+
+
+        catch (RelayServiceException e)
+        {//catch any exceptions
+            Debug.Log(e);
+        }
+
+    }
+
+
+    public async void JoinLobbyByCode()
+    {
         if (LobbyCode == "")
         { 
-            print("Lobby code is null");
-        return;
+            ShowError( "Lobby code is empty! Please enter a valid code.");
+            return;
+        }
+        else
+        {
+            print("Lobby code is: " + LobbyCode);
         }
         try
         {
@@ -135,6 +175,9 @@ public class LobbyScreen_Join : MonoBehaviour
             {
                 print("Player: " + player.Data["PlayerName"].Value + "player id: " + player.Id);
             }
+
+            JoinRelay(lobby.Data["RelayCode"].Value);
+            lobbyScreenSelector.BackToMainScreen();
         }
         catch (LobbyServiceException e)
         {
@@ -162,16 +205,24 @@ public class LobbyScreen_Join : MonoBehaviour
 
     public async void JoinLobbyByIndex(int index)
     {
+        if(PlayerName == null || PlayerName == "" )
+        {
+            ShowError("Player name is empty! Please enter a valid name." );
+            return;
+        }
+
 
         print(index + " Index");
 
         if (index < 0 || index >= AvaliableLobbies.Length)
         {
-            Debug.LogError("Invalid lobby index!");
+            ShowError("Lobby is not available!" );
             return;
         }
 
        joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(AvaliableLobbies[index].Id);
+
+         NetworkManager.Singleton.SceneManager.LoadScene("Character_Select", LoadSceneMode.Single);
 
         print("JOined Lobby: " + joinedLobby.Name + " with " + joinedLobby.MaxPlayers + " players");
     }
@@ -185,11 +236,12 @@ public class LobbyScreen_Join : MonoBehaviour
         }
         catch (LobbyServiceException e)
         {
+            ShowError("Quick join failed: " );
             Debug.LogError(e);
         }
     }
 
-    private async void UpdatePlayerName()
+    public async void UpdatePlayerName()
     {
         try
         {
@@ -208,12 +260,15 @@ public class LobbyScreen_Join : MonoBehaviour
         }
     }   
 
-    private async void LeaveLobby()
+    public async void LeaveLobby()
     {
         try
         {
-            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
-            joinedLobby = null;
+            if (joinedLobby != null)
+            {
+                await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthenticationService.Instance.PlayerId);
+                joinedLobby = null;
+            }
         }
         catch (LobbyServiceException e)
         {
@@ -221,6 +276,12 @@ public class LobbyScreen_Join : MonoBehaviour
         }
     }
 
+    private void ShowError(string error)
+    {
+        ErrorLogger.text = error;
+        ErrorLogger.enabled = true;
+        ErrorLogger.GetComponent<Animation>().Play();
+    }
 
     
     private void Update()

@@ -165,4 +165,28 @@ private void StartGameServerRpc()
         }
 
     }
+
+    //check if most  users are locked in  if not start a timer on their end to lock them in 
+    public void CheckLockIn()
+    {
+        int lockedIn = 0;
+        foreach (var player in characterSelectDisplay.players)
+        {
+            if (player.IsLockedIn)
+            {
+                lockedIn++;
+            }
+        }
+
+        //if 70 percent of the players are locked in start the game after a time and start a timer on the ones that are not locked in screen
+        if(lockedIn * 100 / characterSelectDisplay.players.Count >= 70)
+        {
+            StartGame();
+        }
+        //start timer to lock in before starting game
+        else
+        {
+
+        }
+    }
 }

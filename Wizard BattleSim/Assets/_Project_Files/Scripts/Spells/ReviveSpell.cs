@@ -75,9 +75,9 @@ public class ReviveSpell : NetworkBehaviour , ISpell_Interface
 
 
 
-        if (playerController.Health.Value <= 0)
+        if (playerController.Stats.Health.Value <= 0)
         {
-            playerController.Health.Value = playerController.MaxHealth;
+            playerController.Stats.Health.Value = playerController.Stats.MaxHealth.Value;
 
 
             //Play some Sound effects and partcicals

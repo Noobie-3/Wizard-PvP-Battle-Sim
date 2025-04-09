@@ -54,8 +54,8 @@ public class PlayerUI : MonoBehaviour
 
         
         // Convert values to percentages
-        float health = player.Health.Value / player.MaxHealth;
-        float mana = player.Mana.Value / player.MaxMana;
+        float health = player.Stats.Health.Value / player.Stats.MaxHealth.Value;
+        float mana = player.Stats.Mana.Value / player.Stats.MaxMana.Value;
         //float stamina = player.Stamina.Value / player.MaxStamina;
 
         // Fill the bars
@@ -70,9 +70,9 @@ public class PlayerUI : MonoBehaviour
 
 
         // Update the text
-        healthText.text = $"Health: {health}/{player.MaxHealth}";
+        healthText.text = $"Health: {health}/{player.Stats.MaxHealth}";
        // staminaText.text = $"Stamina: {player.Stamina.Value}/{player.MaxStamina}";
-        manaText.text = $"Mana: {mana}/{player.MaxMana}";
+        manaText.text = $"Mana: {mana}/{player.Stats.MaxMana}";
 
         //Change Spell icons for selection
 

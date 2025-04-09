@@ -10,6 +10,11 @@ using AssetInventory;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using Unity.Networking.Transport.Relay;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 public class LObbyScreen_create : MonoBehaviour
 {
 
@@ -27,12 +32,15 @@ public class LObbyScreen_create : MonoBehaviour
     [SerializeField] private int MaxPlayers;
     [SerializeField] private TextMeshProUGUI MaxPlayerCountText;
     [SerializeField] private TextMeshProUGUI LobbyCodeDisplay;
+    [SerializeField] private string relayCode;
+    [SerializeField] private TMP_InputField NameField;
+    [SerializeField] private TextMeshProUGUI ErrorLogger;
+    [SerializeField] private LobbyScreenSelector lobbyScreenSelector;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     async void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-        PlayerName = "Mage" + UnityEngine.Random.Range(10, 99);
         await UnityServices.InitializeAsync();
 
         AuthenticationService.Instance.SignedIn += () =>
@@ -44,12 +52,57 @@ public class LObbyScreen_create : MonoBehaviour
         Debug.Log("Player Name is : " + PlayerName);
     }
 
-public async void Create_Lobby()
+    [ConsoleCommand("Create a relay with 2 slots")]
+    async public void CreateRelay()
     {
         try
         {
-            
+            //create a relay with 2 slots
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(2);
 
+            string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            Debug.Log("Join code: " + joinCode);
+            relayCode = joinCode;
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
+                allocation.RelayServer.IpV4,
+                (ushort)allocation.RelayServer.Port,
+                allocation.AllocationIdBytes,
+                allocation.Key,
+                allocation.ConnectionData
+                );
+
+            NetworkManager.Singleton.StartHost();
+        }
+        catch (Unity.Services.Relay.RelayServiceException e)
+        {
+            Debug.Log(e);
+        }
+
+    }
+
+
+    public async void Create_Lobby()
+    {
+        try
+        {
+
+        
+            if (LobbyName == null || LobbyName == "")
+            {
+                ShowError("Lobby Name is empty");
+                print("Lobby Name Is Empty");
+                return;
+            }
+
+            if (PlayerName == null || PlayerName == "")
+            {
+                ShowError("Player Name is empty");
+                print("Player Name Is Empty");
+                return;
+            }
+
+            CreateRelay();
             CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
             {
                 IsPrivate = false,
@@ -65,6 +118,7 @@ public async void Create_Lobby()
                 Data = new Dictionary<string, DataObject>
                 {
                     { "Level", new DataObject(DataObject.VisibilityOptions.Public, SelectedMap.ToString()) },
+                    { "RelayCode", new DataObject(DataObject.VisibilityOptions.Public, relayCode) }
 
                 },
 
@@ -85,9 +139,7 @@ public async void Create_Lobby()
             LobbyCodeDisplay.text = "Lobby Code: " + lobby.LobbyCode;
             Debug.Log("Lobby Code: " + lobby.LobbyCode);
             Debug.Log("Lobby Name: " + lobby.Name);
-
-            //move to lobby scene
-            SceneManager.LoadScene("Character_Select");
+            lobbyScreenSelector.BackToMainScreen();
         }
 
         catch(LobbyServiceException e)
@@ -226,4 +278,44 @@ public async void Create_Lobby()
         HandleLobbyUpdate();
         MaxPlayerCountText.text = "Max Players: " + MaxPlayers;
     }
+
+    public async void UpdatePlayerName()
+    {
+        try
+        {
+            NameChange();
+            await LobbyService.Instance.UpdatePlayerAsync(HostLobby.ToString(), AuthenticationService.Instance.PlayerId, new UpdatePlayerOptions
+            {
+                Data = new Dictionary<string, PlayerDataObject>
+            {
+                { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, PlayerName) }
+            }
+            });
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError(e);
+        }
+    }
+
+    public void NameChange()
+    {
+        if (NameField == null)
+            return;
+
+        if (NameField.text != "")
+            PlayerName = NameField.text;
+    }
+
+    private void ShowError(string error)
+    {
+        ErrorLogger.text = error;
+        ErrorLogger.enabled = true;
+        ErrorLogger.GetComponent<Animation>().Play();
+    }
+
+
+
+
+
 }

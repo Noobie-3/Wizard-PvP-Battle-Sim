@@ -62,10 +62,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7f9d4264da207c44ea5da9ca2f21986a, type: 3}
       propertyPath: m_Name
-      value: HissterFullRig
+      value: Hisster_Display
       objectReference: {fileID: 0}
+    - target: {fileID: 1430743269782057410, guid: 7f9d4264da207c44ea5da9ca2f21986a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 12472c3b16f515e49965a9e2aed95bd5, type: 2}
+    - target: {fileID: 1430743269782057410, guid: 7f9d4264da207c44ea5da9ca2f21986a, type: 3}
+      propertyPath: 'm_Materials.Array.data[2]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 12472c3b16f515e49965a9e2aed95bd5, type: 2}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6335211667985768571, guid: 7f9d4264da207c44ea5da9ca2f21986a, type: 3}
+    - {fileID: 65702495048144492, guid: 7f9d4264da207c44ea5da9ca2f21986a, type: 3}
+    - {fileID: -8700617353114198275, guid: 7f9d4264da207c44ea5da9ca2f21986a, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f9d4264da207c44ea5da9ca2f21986a, type: 3}
