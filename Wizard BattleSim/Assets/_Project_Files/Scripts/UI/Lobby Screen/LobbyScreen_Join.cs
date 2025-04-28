@@ -12,6 +12,7 @@ using Unity.Services.Relay.Models;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine.SceneManagement;
+using System.Threading.Tasks;
 
 public class LobbyScreen_Join : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class LobbyScreen_Join : MonoBehaviour
     [SerializeField] private Lobby[] AvaliableLobbies;
     [SerializeField] private TextMeshProUGUI ErrorLogger;
     [SerializeField] private LobbyScreenSelector lobbyScreenSelector;
+    [SerializeField] private ServerManager serverManager;
 
 
     private void Start()
@@ -43,6 +45,61 @@ public class LobbyScreen_Join : MonoBehaviour
         ListLobbies();
         DontDestroyOnLoad(this.gameObject);
     }
+
+    private void OnEnable()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+    }
+
+    private void OnDisable()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+    }
+
+    private void OnClientConnected(ulong clientId)
+    {
+        if (clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            Debug.Log($"Successfully connected as client {clientId}");
+
+            // Now it's safe to setup your CharacterSelectState
+
+            CharacterSelectState OldState = PlayerStateManager.Singleton.LookupState(NetworkManager.Singleton.LocalClientId);
+
+            print("old state info: ClientID:" + OldState.ClientId + "CharacterID:" + OldState.CharacterId + "PlayerLobbyId:" + OldState.PlayerLobbyId);
+
+            var State = new CharacterSelectState(
+                clientId: NetworkManager.Singleton.LocalClientId,
+                characterId: OldState.CharacterId,
+                wandID: OldState.WandID,
+                spell0: OldState.Spell0,
+                spell1: OldState.Spell1,
+                spell2: OldState.Spell2,
+                isLockedIn: OldState.IsLockedIn,
+                //current players id
+                playerLobbyId: AuthenticationService.Instance.PlayerId,
+                //player name
+                PlayerName: PlayerName
+                
+            );
+            if (PlayerStateManager.Singleton == null)
+            {
+                Debug.LogError("PlayerStateManager is null");
+                ShowError("PlayerStateManager is null");
+                return;
+            }
+            if (PlayerStateManager.Singleton == null)
+            {
+                Debug.LogError("PlayerStateManager is null");
+                ShowError("PlayerStateManager is null");
+                return;
+            }
+
+            PlayerStateManager.Singleton.RequestAddOrUpdateStateServerRpc(State);
+
+        }
+    }
+
     public async void ListLobbies()
     {
         try
@@ -113,7 +170,7 @@ public class LobbyScreen_Join : MonoBehaviour
 
     [ConsoleCommand("Join a relay with a join code")]
     //join a relay
-    public async void JoinRelay(string joincode)
+    public async Task<bool> JoinRelay(string joincode)
     {
         try
         {
@@ -131,14 +188,17 @@ public class LobbyScreen_Join : MonoBehaviour
                 );
 
             NetworkManager.Singleton.StartClient();
+            Debug.Log("Joined relay with join code: " + joincode);
+
+            return true;
         }
 
 
         catch (RelayServiceException e)
         {//catch any exceptions
             Debug.Log(e);
+            return false;
         }
-
     }
 
 
@@ -155,7 +215,7 @@ public class LobbyScreen_Join : MonoBehaviour
         }
         try
         {
-            JoinLobbyByCodeOptions createLobbyOptions = new JoinLobbyByCodeOptions
+            JoinLobbyByCodeOptions joinLobbyOptoins = new JoinLobbyByCodeOptions
             {
                 Player = new Player
                 {
@@ -166,7 +226,7 @@ public class LobbyScreen_Join : MonoBehaviour
                 },
             };
 
-            Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(LobbyCode);
+            Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(LobbyCode, joinLobbyOptoins);
             joinedLobby = lobby;
             Debug.Log("Joined lobby: " + lobby.Name + " with " + lobby.MaxPlayers + " players" + "using code: " + LobbyCode);
 
@@ -175,8 +235,31 @@ public class LobbyScreen_Join : MonoBehaviour
             {
                 print("Player: " + player.Data["PlayerName"].Value + "player id: " + player.Id);
             }
+             bool JoinedRelay = await JoinRelay(lobby.Data["RelayCode"].Value);
+            if (JoinedRelay == false) {
+                ShowError("Failed to join relay. Please try again." );
+                print("Failed to join relay. Please try again." );
+                return;
+            }
 
-            JoinRelay(lobby.Data["RelayCode"].Value);
+            CharacterSelectState OldState = PlayerStateManager.Singleton.LookupState(NetworkManager.Singleton.LocalClientId);
+
+            print("old state info: ClientID:" + OldState.ClientId + "CharacterID:" + OldState.CharacterId + "PlayerLobbyId:" + OldState.PlayerLobbyId);
+
+            var State = new CharacterSelectState(
+                clientId: NetworkManager.Singleton.LocalClientId,
+                characterId: OldState.CharacterId,
+                wandID: OldState.WandID,
+                spell0: OldState.Spell0,
+                spell1: OldState.Spell1,
+                spell2: OldState.Spell2,
+                isLockedIn: OldState.IsLockedIn,
+                //current players id
+                playerLobbyId: AuthenticationService.Instance.PlayerId
+            );
+
+            PlayerStateManager.Singleton.RequestAddOrUpdateStateServerRpc(State);
+            ServerManager.Instance.Lobby = lobby;
             lobbyScreenSelector.BackToMainScreen();
         }
         catch (LobbyServiceException e)
@@ -205,24 +288,45 @@ public class LobbyScreen_Join : MonoBehaviour
 
     public async void JoinLobbyByIndex(int index)
     {
-        if(PlayerName == null || PlayerName == "" )
+        if (string.IsNullOrEmpty(PlayerName))
         {
             ShowError("Player name is empty! Please enter a valid name." );
             return;
         }
 
+        print("PLayer Name Is " + PlayerName);
 
         print(index + " Index");
-
         if (index < 0 || index >= AvaliableLobbies.Length)
         {
-            ShowError("Lobby is not available!" );
+            ShowError("Lobby is not available!");
             return;
         }
+        JoinLobbyByIdOptions JoinLobbyOptions = new JoinLobbyByIdOptions
+        {
+            Player = new Player
+            {
+                Data = new Dictionary<string, PlayerDataObject>
+                    {
+                        { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, PlayerName) },
+                    }
+            },
+        };
 
-       joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(AvaliableLobbies[index].Id);
+        joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(AvaliableLobbies[index].Id, JoinLobbyOptions);
 
-         NetworkManager.Singleton.SceneManager.LoadScene("Character_Select", LoadSceneMode.Single);
+
+        bool joinedRelay = await JoinRelay(joinedLobby.Data["RelayCode"].Value);
+
+        
+        if(joinedRelay == false)
+        {
+            ShowError("Failed to join relay. Please try again." );
+            print("Failed to join relay. Please try again." );
+            return;
+        }
+        ServerManager.Instance.Lobby = joinedLobby;
+        print("joined Relay bool is true");
 
         print("JOined Lobby: " + joinedLobby.Name + " with " + joinedLobby.MaxPlayers + " players");
     }
@@ -233,6 +337,7 @@ public class LobbyScreen_Join : MonoBehaviour
         try
         {
             await LobbyService.Instance.QuickJoinLobbyAsync();
+
         }
         catch (LobbyServiceException e)
         {

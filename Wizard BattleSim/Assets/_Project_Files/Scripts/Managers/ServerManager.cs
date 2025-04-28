@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,8 @@ public class ServerManager : NetworkBehaviour
     public Coroutine DataPrintCoRo;
     public WandDatabase WandDataBase;
     public GameObject CommandConsole;
+    public Lobby Lobby;
+    public Map_DB MapDB;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,6 +56,8 @@ public class ServerManager : NetworkBehaviour
         spawnedObject.transform.position = new Vector3(0, 0, 0);  // Example position
 
     }
+
+
 
 
 
@@ -121,14 +126,18 @@ private void FixedUpdate()
     }
 
     [ServerRpc(RequireOwnership = false)]
-private void StartGameServerRpc()
+    private void StartGameServerRpc()
     {
         print(playerCharacterIds.Count + " PLayer character ids");
 
         // Load the new scene for all clients and the server
+
+            print(Lobby.Data["Level"].Value + "this is what the lobby data sayas the map is");
+            int convertedString = int.Parse(Lobby.Data["Level"].Value);
+            print("Converted string: " + convertedString + " and the map name is " + MapDB.GetMapById(convertedString).MapName);
+            NetworkManager.Singleton.SceneManager.LoadScene(MapDB.GetMapById(convertedString).MapName, LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += StartGameHelper;
         
-        NetworkManager.Singleton.SceneManager.LoadScene("Scene_01", LoadSceneMode.Single);
-        NetworkManager.Singleton.SceneManager.OnLoadComplete += StartGameHelper;
 
 
     }

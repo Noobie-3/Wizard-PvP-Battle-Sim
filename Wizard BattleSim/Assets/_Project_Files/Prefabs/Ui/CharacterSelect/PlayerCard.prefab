@@ -25,12 +25,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534575477108117399}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2474852837272325123}
+  m_Father: {fileID: 1188744074693384071}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -169,10 +169,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 179601940506902942}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 54, y: 0}
-  m_SizeDelta: {x: 100, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 54, y: -50}
+  m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7706853908356969678
 CanvasRenderer:
@@ -256,8 +256,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1188744074693384071}
-  - {fileID: 6209005056074168200}
-  - {fileID: 2669790725656208673}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -278,10 +276,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterDatabase: {fileID: 11400000, guid: a4aeff3221624274fa582a60d2dd68ad, type: 2}
-  WandDatabase: {fileID: 11400000, guid: 38db1fdf6bec93947ae782c601a7661a, type: 2}
+  wandDatabase: {fileID: 0}
   visuals: {fileID: 8573277628445242845}
   characterIconImage: {fileID: 8595538373838033744}
-  playerNameText: {fileID: 5040366668293957813}
+  playerNameText: {fileID: 4868806068904451423}
+  IsLockedInText: {fileID: 5040366668293957813}
 --- !u!1 &6626632716533477941
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,6 +447,8 @@ RectTransform:
   m_Children:
   - {fileID: 5976202431692785754}
   - {fileID: 179601940506902942}
+  - {fileID: 6209005056074168200}
+  - {fileID: 2669790725656208673}
   m_Father: {fileID: 2474852837272325123}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -485,7 +486,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2474852837272325123}
+  m_Father: {fileID: 1188744074693384071}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

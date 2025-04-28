@@ -24,7 +24,7 @@ public class Scroller_InfoButton : MonoBehaviour
     public bool LockedIn;
     public GameObject SelectorIconHolder;
     [SerializeField] public PlayerCard[] playerCards;
-    private float timer = 0;
+    public  float timer = 0;
 
 
     private void Start()
@@ -41,6 +41,7 @@ public class Scroller_InfoButton : MonoBehaviour
     }
 
 
+    
 
 
     public void SetInfoPanel(int id)
@@ -129,6 +130,37 @@ public class Scroller_InfoButton : MonoBehaviour
         }
 
         print("SetInfoPanel called with type " + type);
+    }
+
+
+    public void Update()
+    {
+        InfoPanel.SetActive(true);
+
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+        }
+        else
+        {
+            timer = .5f;
+            for(int i = 0; i < playerCards.Length; i++)
+            {
+                if (PlayerStateManager.Singleton.AllStatePlayers.Count > i)
+                {
+                    playerCards[i].UpdateDisplay(PlayerStateManager.Singleton.AllStatePlayers[i]);
+                }
+                else
+                {
+                    playerCards[i].DisableDisplay();
+                }
+            }
+        }
+    }
+
+    public void StatusUpdate()
+    {
+
     }
 
     public void DisableButtons()

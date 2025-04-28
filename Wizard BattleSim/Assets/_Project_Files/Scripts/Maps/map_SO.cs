@@ -17,6 +17,7 @@ public class Map_SO : ScriptableObject
 
     public int Id => id;
     public string DisplayName => displayName;
+    public string MapName => mapName;
     public Sprite Icon => icon;
 
 

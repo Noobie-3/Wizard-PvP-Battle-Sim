@@ -15,5 +15,5 @@ MonoBehaviour:
   id: 0
   displayName: Map 1
   icon: {fileID: 21300000, guid: 31d9c17431a2b734faea340ee9fa51d3, type: 3}
-  mapName: Map 1
+  mapName: Scene_01
   LevelMusic: {fileID: 0}

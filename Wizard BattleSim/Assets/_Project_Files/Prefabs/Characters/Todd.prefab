@@ -937,7 +937,7 @@ MonoBehaviour:
   m_LookaheadIgnoreY: 0
   m_XDamping: 0.6
   m_YDamping: 0.6
-  m_ZDamping: 0
+  m_ZDamping: 0.6
   m_TargetMovementOnly: 1
   m_ScreenX: 0.525
   m_ScreenY: 0.555

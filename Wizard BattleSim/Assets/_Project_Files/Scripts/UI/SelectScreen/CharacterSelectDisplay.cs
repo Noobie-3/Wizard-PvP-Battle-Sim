@@ -18,6 +18,7 @@ public class CharacterSelectDisplay : NetworkBehaviour
     [SerializeField] private Button lockInButton;
     [SerializeField] private Button StartButton;
     [SerializeField] ServerManager serverManager;
+    [SerializeField] private  float  Timer = 0;
 
     private GameObject introInstance;
     private List<CharacterSelectButton> characterButtons = new List<CharacterSelectButton>();
@@ -62,6 +63,8 @@ public class CharacterSelectDisplay : NetworkBehaviour
             //StartButton.gameObject.SetActive(true);
         }
     }
+
+
 
     public override void OnNetworkDespawn()
     {
@@ -145,12 +148,15 @@ public class CharacterSelectDisplay : NetworkBehaviour
             if (!characterDatabase.IsValidCharacterId(characterId)) { return; }
 
             if (IsCharacterTaken(characterId, true)) { return; }
-
+            print("old values of player state" + players[i].ClientId + " " + players[i].CharacterId + " " + players[i].WandID + " " + players[i].Spell0 + " " + players[i].Spell1 + " " + players[i].Spell2 + " " + players[i].IsLockedIn);
             players[i] = new CharacterSelectState(
                 players[i].ClientId,
                 characterId, 0,0,1,2,
-                players[i].IsLockedIn
+                players[i].IsLockedIn,
+                players[i].PlayerLobbyId
             );
+            print("new values of player state" + players[i].ClientId + " " + players[i].CharacterId + " " + players[i].WandID + " " + players[i].Spell0 + " " + players[i].Spell1 + " " + players[i].Spell2 + " " + players[i].IsLockedIn);
+
         }
     }
 
@@ -169,18 +175,39 @@ public class CharacterSelectDisplay : NetworkBehaviour
             if (!characterDatabase.IsValidCharacterId(players[i].CharacterId)) { return; }
 
             if (IsCharacterTaken(players[i].CharacterId, true)) { return; }
-
             players[i] = new CharacterSelectState(
                 players[i].ClientId,
                 players[i].CharacterId,
                 players[i].WandID,0,1,2,
                 true
+                , players[i].PlayerLobbyId
             );
         }
 
         foreach (var player in players)
         {
             if (!player.IsLockedIn) { return; }
+        }
+    }
+
+
+    private void UpdateDisplayTimed()
+    {
+        if(Timer > 0)
+        {
+            Timer -= Time.deltaTime;
+        }
+        else
+        {
+            Timer = 1.5f;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsClient)
+        {
+            UpdateDisplayTimed();
         }
     }
 

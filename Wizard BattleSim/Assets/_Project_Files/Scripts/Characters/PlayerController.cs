@@ -158,7 +158,6 @@ public class PlayerController : NetworkBehaviour
         WallCheck();
 
         RotateObjectServerRpc(moveDirection);
-        AdjustCameraDamping();
         PlayerUi.UpdateUI();
 
         if (Charging)
@@ -248,6 +247,7 @@ public class PlayerController : NetworkBehaviour
         if (context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
         {
             MoveInput = context.ReadValue<Vector2>();
+            AdjustCameraDamping();
             print("Move input is " + context.ReadValue<Vector2>());
 
             if (Anim != null)
@@ -455,11 +455,16 @@ public class PlayerController : NetworkBehaviour
     }
 private void AdjustCameraDamping()
 {
-    if (Cam == null || rb == null) return;
-        if (MoveInput.x >= 0) return;
-    // Get the player's velocity in camera space
-    // If player is moving toward the camera (negative Z)
-        Vcam.CancelDamping();
+        if (MoveInput.y >= 0 || Vcam == null)
+        {
+            Vcam.GetCinemachineComponent<CinemachineFramingTransposer>().m_ZDamping = 0.6f;
+            return;
+        }
+    print("Adjusting camera damping" + MoveInput.y + " " + MoveInput.x + " " + MoveInput.magnitude);
+        // Get the player's velocity in camera space
+        // If player is moving toward the camera (negative Z)
+        if(Vcam == null) return;
+        Vcam.GetCinemachineComponent<CinemachineFramingTransposer>().m_ZDamping = 0;
 }
 
     private void OnParticleCollision(GameObject other)

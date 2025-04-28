@@ -1,30 +1,24 @@
-using System.Runtime.CompilerServices;
 using TMPro;
-using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerCard : MonoBehaviour
 {
     [SerializeField] private CharacterDatabase characterDatabase;
-    [SerializeField] private WandDatabase WandDatabase;
+    [SerializeField] private WandDatabase wandDatabase;
     [SerializeField] private GameObject visuals;
     [SerializeField] private Image characterIconImage;
     [SerializeField] private TMP_Text playerNameText;
-    private float timer = 0;
-
+    [SerializeField] private TMP_Text IsLockedInText;
     public void UpdateDisplay(CharacterSelectState state)
     {
-        if(timer  < 0.5f)
-        {
-            timer += Time.deltaTime;
-            return;
-        }
+        print("called Update Display");
 
+        // Character Display
         if (state.CharacterId != -1)
         {
             var character = characterDatabase.GetCharacterById(state.CharacterId);
-            if(character == null)
+            if (character == null)
             {
                 Debug.LogError($"Character with ID {state.CharacterId} not found in database");
                 return;
@@ -37,18 +31,22 @@ public class PlayerCard : MonoBehaviour
             characterIconImage.enabled = false;
         }
 
-        if(state.WandID != -1)
+        // Name Display (NEW: Grab from LobbyUtils)
+        string playerName = state.PLayerDisplayName.ToString();
+        if(string.IsNullOrEmpty(playerName))
         {
-            var wand = WandDatabase.GetWandById(state.WandID);
-            if(wand == null)
-            {
-                Debug.LogError($"Wand with ID {state.WandID} not found in database");
-                return;
-            }
+            playerName = "Unknown Player";
+            print(playerName);
         }
-        
-
-        playerNameText.text = state.IsLockedIn ? $"Player {state.ClientId}" : $"Player {state.ClientId} (Picking...)";
+        if (state.IsLockedIn)
+        {
+            IsLockedInText.text = $"(Locked In)";
+        }
+        else
+        {
+            IsLockedInText.text = $"(Picking...)";
+        }
+        playerNameText.text = playerName;
 
         visuals.SetActive(true);
     }

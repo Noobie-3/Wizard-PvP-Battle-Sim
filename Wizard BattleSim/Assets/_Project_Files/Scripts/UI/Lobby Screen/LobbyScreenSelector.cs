@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class LobbyScreenSelector : MonoBehaviour
 {
-    [SerializeField ] private GameObject CreateLobbyScreen;
-    [SerializeField ] private GameObject JoinLobbyScreen;
-    [SerializeField ] private GameObject MainScreen;
+    [SerializeField ] public GameObject CreateLobbyScreen;
+    [SerializeField ] public GameObject JoinLobbyScreen;
+    [SerializeField ] public GameObject MainScreen;
     public void ChangeToCreate()
     {
         JoinLobbyScreen.SetActive(false);

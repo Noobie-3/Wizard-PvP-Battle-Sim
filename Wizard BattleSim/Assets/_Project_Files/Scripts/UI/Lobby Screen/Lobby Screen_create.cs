@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.Lobbies.Models;
@@ -15,6 +15,7 @@ using Unity.Services.Relay.Models;
 using Unity.Networking.Transport.Relay;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using System.Threading.Tasks;
 public class LObbyScreen_create : MonoBehaviour
 {
 
@@ -50,10 +51,13 @@ public class LObbyScreen_create : MonoBehaviour
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         Debug.Log("Player Name is : " + PlayerName);
+        MapImage.sprite = MapDB.GetMapById(SelectedMap).Icon;
+        MapNameDisplay.text = MapDB.GetMapById(SelectedMap).DisplayName;
+
     }
 
     [ConsoleCommand("Create a relay with 2 slots")]
-    async public void CreateRelay()
+    public async Task<string> CreateRelay()
     {
         try
         {
@@ -61,8 +65,11 @@ public class LObbyScreen_create : MonoBehaviour
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(2);
 
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            Debug.Log("Relay created with join code: " + joinCode);
+
             Debug.Log("Join code: " + joinCode);
             relayCode = joinCode;
+
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 allocation.RelayServer.IpV4,
@@ -73,12 +80,13 @@ public class LObbyScreen_create : MonoBehaviour
                 );
 
             NetworkManager.Singleton.StartHost();
+            return joinCode;
         }
         catch (Unity.Services.Relay.RelayServiceException e)
         {
             Debug.Log(e);
+            return null;
         }
-
     }
 
 
@@ -86,67 +94,88 @@ public class LObbyScreen_create : MonoBehaviour
     {
         try
         {
-
-        
-            if (LobbyName == null || LobbyName == "")
+            if (string.IsNullOrEmpty(LobbyName))
             {
                 ShowError("Lobby Name is empty");
                 print("Lobby Name Is Empty");
                 return;
             }
 
-            if (PlayerName == null || PlayerName == "")
+            if (string.IsNullOrEmpty(PlayerName))
             {
                 ShowError("Player Name is empty");
                 print("Player Name Is Empty");
                 return;
             }
+            // ✅ Await relay creation and get the code here
+            string relayCode = await CreateRelay();
 
-            CreateRelay();
+            if (string.IsNullOrEmpty(relayCode))
+            {
+                ShowError("Failed to create relay");
+                return;
+            }
+
+            Debug.Log("Relay code used in lobby: " + relayCode);
+
             CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions
             {
                 IsPrivate = false,
                 Player = new Player
-                
                 {
                     Data = new Dictionary<string, PlayerDataObject>
-                    {
-                        { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, PlayerName) }
-                    }
-                },
-
-                Data = new Dictionary<string, DataObject>
                 {
-                    { "Level", new DataObject(DataObject.VisibilityOptions.Public, SelectedMap.ToString()) },
-                    { "RelayCode", new DataObject(DataObject.VisibilityOptions.Public, relayCode) }
-
+                    { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, PlayerName) }
+                }
                 },
-
+                Data = new Dictionary<string, DataObject>
+            {
+                { "Level", new DataObject(DataObject.VisibilityOptions.Public, SelectedMap.ToString()) },
+                { "RelayCode", new DataObject(DataObject.VisibilityOptions.Public, relayCode) }
+            },
             };
+            print("player name is " + PlayerName + " and relay code is " + relayCode + " and level is " + SelectedMap.ToString() + " and max players is " + MaxPlayers.ToString());
 
-            if(MaxPlayers <= 0)
-            {
-                MaxPlayers = 2;
-            }
-            if(LobbyName == "")
-            {
-                LobbyName = "New Lobby";
-            }
-            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(LobbyName, MaxPlayers);
+            if (MaxPlayers <= 0) MaxPlayers = 2;
+            if (string.IsNullOrEmpty(LobbyName)) LobbyName = "New Lobby";
+
+            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(LobbyName, MaxPlayers, createLobbyOptions);
+
             HostLobby = lobby;
             JoinedLobby = lobby;
-            Debug.Log("Lobby Created with " + lobby.Id + " and " + lobby.MaxPlayers + " players");
-            LobbyCodeDisplay.text = "Lobby Code: " + lobby.LobbyCode;
-            Debug.Log("Lobby Code: " + lobby.LobbyCode);
-            Debug.Log("Lobby Name: " + lobby.Name);
-            lobbyScreenSelector.BackToMainScreen();
-        }
+            ServerManager.Instance.Lobby = lobby;
 
-        catch(LobbyServiceException e)
+            foreach(var player in ServerManager.Instance.Lobby.Players)
+            {
+                Debug.Log("Player ID: " + player.Id);
+            }
+
+
+            var OldState = PlayerStateManager.Singleton.LookupState(NetworkManager.Singleton.LocalClientId);
+
+            var State = new CharacterSelectState(
+                clientId: NetworkManager.Singleton.LocalClientId,
+                characterId: OldState.CharacterId,
+                wandID: OldState.WandID,
+                spell0: OldState.Spell0,
+                spell1: OldState.Spell1,
+                spell2: OldState.Spell2,
+                isLockedIn: OldState.IsLockedIn,
+                //current players id
+                playerLobbyId: AuthenticationService.Instance.PlayerId
+                //player name
+                , PlayerName: PlayerName
+            );
+
+            PlayerStateManager.Singleton.RequestAddOrUpdateStateServerRpc(State);
+            lobbyScreenSelector.BackToMainScreen();
+            LobbyCodeDisplay.text = "Lobby Code: " + lobby.LobbyCode;
+            Debug.Log("Lobby Created with code: " + lobby.LobbyCode);
+        }
+        catch (LobbyServiceException e)
         {
             Debug.LogError(e);
         }
-
     }
 
 
@@ -272,6 +301,7 @@ public class LObbyScreen_create : MonoBehaviour
             return;
         }
         MaxPlayers = MaxPlayers -= 1;
+        
     }
     private void Update()   
     {
@@ -279,7 +309,7 @@ public class LObbyScreen_create : MonoBehaviour
         MaxPlayerCountText.text = "Max Players: " + MaxPlayers;
     }
 
-    public async void UpdatePlayerName()
+/*    public async void UpdatePlayerName()
     {
         try
         {
@@ -296,7 +326,7 @@ public class LObbyScreen_create : MonoBehaviour
         {
             Debug.LogError(e);
         }
-    }
+    }*/
 
     public void NameChange()
     {
@@ -305,6 +335,7 @@ public class LObbyScreen_create : MonoBehaviour
 
         if (NameField.text != "")
             PlayerName = NameField.text;
+
     }
 
     private void ShowError(string error)

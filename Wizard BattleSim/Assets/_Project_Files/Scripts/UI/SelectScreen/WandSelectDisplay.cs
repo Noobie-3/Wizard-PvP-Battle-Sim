@@ -17,6 +17,25 @@ public class WandSelectDisplay : NetworkBehaviour
         InitializeWandSelection();
     }
 
+    private void Update()
+    {
+        
+
+
+        for (int i = 0; i < characterSelectDisplay.playerCards.Length; i++)
+        {
+            if (characterSelectDisplay.players.Count > i)
+            {
+                characterSelectDisplay.playerCards[i].UpdateDisplay(characterSelectDisplay.players[i]);
+            }
+            else
+            {
+                characterSelectDisplay.playerCards[i].DisableDisplay();
+            }
+        }
+
+
+    }
 
 
     private void InitializeWandSelection()
@@ -63,8 +82,9 @@ public class WandSelectDisplay : NetworkBehaviour
                 default,
                 default,
                 default,
-
-                characterSelectDisplay.players[i].IsLockedIn);
+                characterSelectDisplay.players[i].IsLockedIn,
+                characterSelectDisplay.players[i].PlayerLobbyId
+                );
 
 
 

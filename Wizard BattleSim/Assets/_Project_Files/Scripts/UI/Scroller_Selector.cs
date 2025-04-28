@@ -35,6 +35,7 @@ public class Scroller_Selector : NetworkBehaviour
     public AudioClip ClickSound; // Sound to play on button clicks
     public LookAtObjectCOnstant lookAtObjectCOnstant; // Script to make the camera look at a target
     public MusicManager MusicManager; // Script to manage music playback
+    public GameObject Display;
     public void Start()
     {
         // Initialize variables and set up the first window
@@ -61,12 +62,21 @@ public class Scroller_Selector : NetworkBehaviour
             {
                 if (selectionType == SelectionType.Character) return;
                 if(selectionType == SelectionType.Wand) return;
+            if (!Display.activeSelf){
+                if(ObjectSpawned != null)
+                {
+                    Destroy(ObjectSpawned); // Destroy the spawned object if it exists
+                }
+                return;
+            }
                 ReplaceSpawnedPrefab();
             }
 
 
         
     }
+
+    
 
     public void MoveToNextCat()
     {
@@ -141,6 +151,7 @@ public class Scroller_Selector : NetworkBehaviour
     {
         if (!IsClient)
         {
+            Debug.LogWarning("MoveToPreviousCat called on non-client instance.");
             return;
         }
 
@@ -262,10 +273,7 @@ public class Scroller_Selector : NetworkBehaviour
 
     public void ConfirmSelection()
     {
-        if (!IsClient)
-        {
-            return;
-        }
+
 
 
 
