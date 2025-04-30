@@ -51,29 +51,27 @@ public class Scroller_Selector : NetworkBehaviour
         {
             CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].transform);
         }
-        ReplaceSpawnedPrefab();
+
     }
 
     private void FixedUpdate()
     {
 
-            ObjectRespawnTime -= Time.deltaTime;
-            if (ObjectRespawnTime <= 0)
-            {
-                if (selectionType == SelectionType.Character) return;
-                if(selectionType == SelectionType.Wand) return;
-            if (!Display.activeSelf){
-                if(ObjectSpawned != null)
-                {
-                    Destroy(ObjectSpawned); // Destroy the spawned object if it exists
-                }
-                return;
-            }
-                ReplaceSpawnedPrefab();
-            }
+        ObjectRespawnTime -= Time.deltaTime;
+        if (ObjectRespawnTime <= 0)
+        {
+            if (selectionType == SelectionType.Character && ObjectSpawned != null) return;
+            if (selectionType == SelectionType.Wand) return;
+            if (!Display.activeSelf) return;
+            Destroy(ObjectSpawned); // Destroy the previous object
+            ReplaceSpawnedPrefab(); // Replace the spawned object with a new one
 
 
-        
+        }
+
+
+
+
     }
 
     
@@ -335,6 +333,7 @@ public class Scroller_Selector : NetworkBehaviour
 
     public void ReplaceSpawnedPrefab()
     {
+        print("Called Replace prefab");
         ObjectRespawnTime = 5;
         if (ObjectSpawned != null)
         {
@@ -378,7 +377,6 @@ public class Scroller_Selector : NetworkBehaviour
         selectionType = windows[0].type;
         CurrentIconIndex = 0;
         windows[0].SetInfoPanel(CurrentIconIndex);
-        ReplaceSpawnedPrefab();
 
     }
     public void ResetAllSelections()
