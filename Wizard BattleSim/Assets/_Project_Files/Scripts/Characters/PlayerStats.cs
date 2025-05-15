@@ -13,10 +13,10 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] private float manaRegenInterval = 1f;
     private void Update()
     {
-        if (!IsOwner) return;
-        if(manaRegenInterval <= 0 )
+        if (!IsServer) return;
+        if (manaRegenInterval <= 0)
         {
-           RestoreMana(manaRegenAmount);
+            RestoreMana(manaRegenAmount);
             manaRegenInterval = 1f; // Reset the interval
         }
         else
@@ -25,16 +25,28 @@ public class PlayerStats : NetworkBehaviour
         }
 
     }
+
     public bool SpendMana(float amount)
     {
         if (Mana.Value >= amount)
         {
-            Mana.Value -= amount;
+            SpendManaServerRpc(amount);
             return true;
         }
 
         return false;
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SpendManaServerRpc(float amount)
+    {
+        Mana.Value -= amount;
+    }
+
+
+
+
+
 
     public void RestoreMana(float amount)
     {
@@ -46,44 +58,46 @@ public class PlayerStats : NetworkBehaviour
         Mana.Value = Mathf.Min(Mana.Value + amount, MaxMana.Value);// Fills mana otherwise
     }
 
-    public void ChargeMana()
+    [ServerRpc(RequireOwnership = false)]
+    public void ChargeManaServerRpc()
     {
         RestoreMana(0.2f);
     }
 
-    public void TakeDamage(float damage, ulong PLayerWhoAttacked)
+
+    public void TakeDamage(float damage, ulong PlayerWhoAttacked)
     {
-        Health.Value -= damage;
+        TakeDamageServerRpc(damage); // Call the server RPC to handle damage on the server side
+
         if (Health.Value <= 0)
         {
-            Die(PLayerWhoAttacked);
-            print("called Die On " + CharacterChosen.DisplayName);
-            SpawnManager.instance.RespawnPlayerServerRpc(PLayerWhoAttacked);
-            SpawnManager.instance.RespawnPlayerServerRpc(this.OwnerClientId);
+            Die(PlayerWhoAttacked);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void TakeDamageServerRpc(float damage)
+    {
+        Health.Value -= damage;
+
     }
 
     private void Die(ulong AttackingPLayer)
     {
-        Debug.Log("Player died!");
+
+        print("called Die On " + transform.name);
+        SpawnManager.instance.RespawnPlayerServerRpc(AttackingPLayer);
+        SpawnManager.instance.RespawnPlayerServerRpc(this.OwnerClientId);
+        WinTracker.Singleton.AddWin(AttackingPLayer);
+
         // Add respawn or death handling here
-        if (WinTracker.Singleton != null)
-        {
-            for (int i = 0; i < gameController.GC.Players.Length; i++)
-            {
-                if (gameController.GC.Players[i].OwnerClientId == AttackingPLayer)
-                {
-                    WinTracker.Singleton.AddWin(AttackingPLayer);
-                    print("Win added");
-                    break;
-                }
-            }
 
-            print("Win added");
-        }
-
-
+        print("Win added");
     }
 
 
 }
+
+
+
+

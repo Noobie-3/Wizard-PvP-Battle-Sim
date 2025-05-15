@@ -450,7 +450,7 @@ MonoBehaviour:
   isSpawned: 0
   WandSpawnLocation: {fileID: 7548225651625600980}
   MyClientID: 0
-  Stats: {fileID: 0}
+  Stats: {fileID: 7523301896350195269}
   MoveInput: {x: 0, y: 0}
   MouseInput: {x: 0, y: 0}
   Grounded: 0

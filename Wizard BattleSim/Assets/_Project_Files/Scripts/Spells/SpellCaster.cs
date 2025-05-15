@@ -92,6 +92,7 @@ public class SpellCaster : NetworkBehaviour
 
     public void StartSpellCast()
     {
+        if(!IsOwner) return;
         if (CurrentSpellsTimers[SelectedSpell] > 0)
         {
             Debug.Log("Spell on cooldown");
@@ -139,7 +140,7 @@ public class SpellCaster : NetworkBehaviour
         var manaCost = Quicky ? SpellBook_Spammable.SpellBook[SpellToCast].ManaCost
                               : SpellBook.SpellBook[SpellToCast].ManaCost;
 
-        Stats.SpendMana(manaCost); // Deduct mana using the new system
+        Stats.SpendManaServerRpc(manaCost); // Deduct mana using the new system
 
         CastedSpell = Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
         CastedSpell.GetComponent<NetworkObject>().Spawn();
@@ -164,7 +165,10 @@ public class SpellCaster : NetworkBehaviour
     public void QuickCast()
     {
         if (!IsOwner) return;
-        if (!Stats.SpendMana(SpellBook_Spammable.SpellBook[Stats.CharacterChosen.SpamSpell].ManaCost))
+
+        var state = PlayerStateManager.Singleton.LookupState(OwnerClientId);
+
+        if (!Stats.SpendMana(SpellBook_Spammable.SpellBook[state.CharacterId].ManaCost))
         {
             return;
         }

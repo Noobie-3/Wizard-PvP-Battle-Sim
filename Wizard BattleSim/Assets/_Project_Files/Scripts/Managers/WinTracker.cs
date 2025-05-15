@@ -1,113 +1,143 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
+using Unity.Collections;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class WinTracker : MonoBehaviour
-{   
-    public int winsNeeded;
-    public Dictionary<ulong, int> PLayerWins = new Dictionary<ulong, int>();
+public class WinTracker : NetworkBehaviour
+{
+    public int winsNeeded = 3;
     public static WinTracker Singleton;
-    public int WinCount;
+
     public GameObject WinImage;
     public GameObject LoseImage;
     public Image[] PlayerImages;
     public CharacterDatabase characterDatabase;
-    //Singleton Pattern
-    private void Start()
+
+    private void Awake()
     {
-        if(Singleton == null)
+        if (Singleton == null)
         {
             Singleton = this;
-        }
-
-        DontDestroyOnLoad(gameObject);
-
-    }
-
-    public  void AddWin(ulong ClientID)
-    {
-        if(WinCount >= PlayerImages.Length)
-        {
-            print("Win count is greater than player images length");
-            return;
-
-        }
-        var PlayerState = PlayerStateManager.Singleton.LookupState(ClientID);
-        if(PLayerWins.ContainsKey(ClientID))
-        {
-            PLayerWins[ClientID] = PLayerWins[ClientID] + 1;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            PLayerWins.Add(ClientID, 1);
+            Destroy(gameObject);
         }
-        if(PlayerImages[WinCount] != null )
-        {
-            PlayerImages[WinCount].sprite = characterDatabase.GetCharacterById(PlayerState.CharacterId).Icon;
-        }
-
-        if(WinImage != null)
-        {
-            WinImage.gameObject.SetActive(true);
-        }
-        WinCount++;
-
-
     }
 
-    public bool CheckWin(ulong ClientId)
+    public void AddWin(ulong clientId)
     {
-        bool result;
+        var currentState = PlayerStateManager.Singleton.LookupState(clientId);
+        var updatedState = new CharacterSelectState(
+            clientId: currentState.ClientId,
+            characterId: currentState.CharacterId,
+            wandID: currentState.WandID,
+            spell0: currentState.Spell0,
+            spell1: currentState.Spell1,
+            spell2: currentState.Spell2,
+            isLockedIn: currentState.IsLockedIn,
+            playerLobbyId: currentState.PlayerLobbyId,
+            PlayerName: currentState.PLayerDisplayName,
+            winCount: currentState.WinCount + 1
+        );
 
-        if (PLayerWins[ClientId] >= winsNeeded) result = true;
-        else result = false;
-
-
-        foreach(var player in NetworkManager.Singleton.ConnectedClientsList)
+        PlayerStateManager.Singleton.AddState(updatedState);
+        print("Added Win to Player: " + updatedState.PLayerDisplayName.ToString() + " | New Win Count: " + updatedState.WinCount);
+        if (updatedState.WinCount >= winsNeeded)
         {
-            if (result)
+            EndGame(clientId);
+            print("Player: " + updatedState.PLayerDisplayName.ToString() + " has won the game!");
+        }
+    }
+
+    private void EndGame(ulong winningClientId)
+    {
+        if (!IsServer) return;
+
+        // Destroy player objects
+        foreach (var player in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (player.PlayerObject != null)
             {
-                // you can add placings later 
-                if(player.ClientId == ClientId)
-                {
-                    if(WinImage != null)
-                    {
-                        Instantiate(WinImage, PlayerImages[0].transform.parent);
-                    }
-                }
-                else
-                {
-                    if (LoseImage != null)
-                    {
-                        Instantiate(LoseImage, PlayerImages[0].transform.parent);
-                    }
-                }
+                Destroy(player.PlayerObject.gameObject);
+                print("Destroyed Player Object for: " + PlayerStateManager.Singleton.LookupState(player.ClientId).PLayerDisplayName);
             }
         }
 
-        return result;
+        // Load win screen scene
+        if (!string.IsNullOrEmpty(gameController.GC.EndScreenSceneName))
+        {
+            print("Loading End Screen Scene: " + gameController.GC.EndScreenSceneName);
+            NetworkManager.Singleton.SceneManager.LoadScene(gameController.GC.EndScreenSceneName, LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += OnWinSceneLoaded;
+        }
+        else
+        {
+            Debug.LogError("End screen scene name is not set in GameController.");
+        }
     }
 
-    public void EndGame()
+    private void OnWinSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
-        foreach(var player in NetworkManager.Singleton.ConnectedClientsList)
+        if (sceneName == gameController.GC.EndScreenSceneName && IsServer)
         {
-            if (player.PlayerObject != null) 
-            {Destroy(player.PlayerObject);
-            }                     
-
-            //load end scene after enough wins
-            if(gameController.GC.EndScreenSceneName != "")
-            {
-                SceneManager.LoadScene(gameController.GC.EndScreenSceneName);
-
-            }
+            SendFinalResultsToClients();
         }
-        //logic to end the game and go to the win screen
+    }
+
+    private void SendFinalResultsToClients()
+    {
+        List<CharacterSelectState> copiedStates = new List<CharacterSelectState>();
+        foreach (var state in PlayerStateManager.Singleton.AllStatePlayers)
+        {
+            copiedStates.Add(state);
+        }
+
+        var sorted = copiedStates
+            .OrderByDescending(p => p.WinCount)
+            .ToList();
+
+        CharacterSelectState[] rankedStates = new CharacterSelectState[sorted.Count];
+
+        for (int i = 0; i < sorted.Count; i++)
+        {
+            rankedStates[i] = new CharacterSelectState(
+                clientId: sorted[i].ClientId,
+                characterId: sorted[i].CharacterId,
+                wandID: sorted[i].WandID,
+                spell0: sorted[i].Spell0,
+                spell1: sorted[i].Spell1,
+                spell2: sorted[i].Spell2,
+                isLockedIn: sorted[i].IsLockedIn,
+                playerLobbyId: sorted[i].PlayerLobbyId,
+                PlayerName: sorted[i].PLayerDisplayName,
+                winCount: sorted[i].WinCount,
+                ranking: i + 1
+            );
+        }
+
+
+        foreach(var state in rankedStates)
+        {
+            print("Player Name: " + state.PLayerDisplayName.ToString() + " Player Rank: " + state.Ranking);
+        }
+
+
+        DisplayWinResultsClientRpc(rankedStates);
+    }
+
+    [ClientRpc]
+    private void DisplayWinResultsClientRpc(CharacterSelectState[] sortedResults)
+    {
+        print("Displaying Win Results on Client");
+        print("PLayer Name: " + sortedResults[0].PLayerDisplayName.ToString() + " Player Rank: " + sortedResults[0].Ranking);
+        if (WinScreen_Load.Instance != null)
+        {
+            WinScreen_Load.Instance.ShowResults(sortedResults);
+        }
     }
 }

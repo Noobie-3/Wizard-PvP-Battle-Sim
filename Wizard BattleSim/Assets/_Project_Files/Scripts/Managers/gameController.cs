@@ -36,7 +36,7 @@ public class gameController : NetworkBehaviour
 
     }
     private void Start() {
-
+        DontDestroyOnLoad(this.gameObject);
         if (HideMouse)
         {
             Cursor.visible = false;

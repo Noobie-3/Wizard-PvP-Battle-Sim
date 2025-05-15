@@ -162,7 +162,7 @@ public class PlayerController : NetworkBehaviour
 
         if (Charging)
         {
-            Stats.ChargeMana();
+            Stats.ChargeManaServerRpc();
         }
     }
     // Movement logic
@@ -426,33 +426,7 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void DieServerRpc(ulong Hitter, ulong Sender)
-    {
-        print("Sender is " + Sender + "Hitter is " + Hitter);
-        if (!IsServer) return;
-        if (WinTracker.Singleton != null)
-        {
 
-            for (int i = 0; i < gameController.GC.Players.Length; i++)
-            {
-                if (gameController.GC.Players[i].OwnerClientId == Hitter)
-                {
-                    WinTracker.Singleton.AddWin(Hitter);
-
-
-                    print("Win added");
-                    break;
-                }
-            }
-
-            print("Win added");
-        }
-
-
-
-
-    }
 private void AdjustCameraDamping()
 {
         if (MoveInput.y >= 0 || Vcam == null)
@@ -469,6 +443,7 @@ private void AdjustCameraDamping()
 
     private void OnParticleCollision(GameObject other)
     {
+        if(!IsOwner) return;
         print("Collider with a partical" + other.name);
         ISpell_Interface spell_Interface = other.GetComponent<ISpell_Interface>();
         if (spell_Interface == null)
@@ -493,9 +468,10 @@ private void AdjustCameraDamping()
 
     public void TakeDamage(Spell spell, ulong whoHitMe)
     {
-        if (!IsServer) return;
         print(name + "PLayer took dmaage from" + spell + " Cast by  " + CharacterChosen.DisplayName);
         Stats.TakeDamage(spell.Spell_Damage, whoHitMe);
         PlayerUi.UpdateUI();
+
+
     }
 }

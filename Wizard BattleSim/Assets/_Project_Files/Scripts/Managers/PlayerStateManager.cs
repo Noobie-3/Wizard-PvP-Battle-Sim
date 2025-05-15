@@ -56,7 +56,10 @@ public class PlayerStateManager : NetworkBehaviour
             spell1: 1,
             spell2: 2,
             isLockedIn: false,
-            playerLobbyId: ""
+            playerLobbyId: "",
+            winCount: 0,
+            ranking: 0
+            
         );
 
         RequestAddOrUpdateStateServerRpc(state);
@@ -114,13 +117,15 @@ public class PlayerStateManager : NetworkBehaviour
 
                 existing.IsLockedIn = newState.IsLockedIn;
 
+                existing.WinCount = newState.WinCount;
+                existing.Ranking = newState.Ranking;
                 if (!string.IsNullOrEmpty(newState.PLayerDisplayName.ToString()))
                     existing.PLayerDisplayName = newState.PLayerDisplayName;
 
                 AllStatePlayers[i] = existing;
                 found = true;
 
-                Debug.Log($"[Server] Player {existing.ClientId} spawned and state added. Values are  Client Id: {newState.ClientId} Character Id: {newState.CharacterId} Wand Id {newState.WandID} Spells 1:{newState.Spell0} 2: {newState.Spell1} 3:{newState.Spell2}  isLockedIn: {newState.IsLockedIn} playerLobbyId: {newState.PlayerLobbyId} playerdisplayName: {newState.PLayerDisplayName}");
+                Debug.Log($"[Server] Player {existing.ClientId} spawned and state added. Values are  Client Id: {newState.ClientId} Character Id: {newState.CharacterId} Wand Id {newState.WandID} Spells 1:{newState.Spell0} 2: {newState.Spell1} 3:{newState.Spell2}  isLockedIn: {newState.IsLockedIn} playerLobbyId: {newState.PlayerLobbyId} playerdisplayName: {newState.PLayerDisplayName} Playerwins: {newState.WinCount}");
 
                 break;
             }
@@ -129,7 +134,7 @@ public class PlayerStateManager : NetworkBehaviour
         if (!found)
         {
             AllStatePlayers.Add(newState);
-            Debug.Log($"[Server] Player {newState.ClientId} spawned and state added. Values are  Client Id: {newState.ClientId} Character Id: {newState.CharacterId} Wand Id {newState.WandID} Spells 1:{newState.Spell0} 2: {newState.Spell1} 3:{newState.Spell2}  isLockedIn: {newState.IsLockedIn} playerLobbyId: {newState.PlayerLobbyId} playerdisplayName: {newState.PLayerDisplayName}");
+            Debug.Log($"[Server] Player {newState.ClientId} spawned and state added. Values are  Client Id: {newState.ClientId} Character Id: {newState.CharacterId} Wand Id {newState.WandID} Spells 1:{newState.Spell0} 2: {newState.Spell1} 3:{newState.Spell2}  isLockedIn: {newState.IsLockedIn} playerLobbyId: {newState.PlayerLobbyId} playerdisplayName: {newState.PLayerDisplayName} Player wins: {newState.WinCount}");
         }
     }
 

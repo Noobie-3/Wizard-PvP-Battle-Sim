@@ -17,5 +17,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project_Files/Scenes/TitleScreen.unity
     guid: 8e6504a77d2e9454e87a1885d97944f4
+  - enabled: 1
+    path: Assets/_Project_Files/Scenes/endScreen.unity
+    guid: faa39be85e2f8d541a0cd61671d179d4
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
