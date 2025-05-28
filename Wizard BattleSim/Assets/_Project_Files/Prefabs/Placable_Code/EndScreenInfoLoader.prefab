@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 0
   m_Name: EndScreenInfoLoader
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -44,3 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beb751dfa2f04a74cad5ecf8484dcfb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resultContainer: {fileID: 0}
+  resultPrefab: {fileID: 2891852826334610938, guid: 3069558e52b7e0c4bb818aebcfe8aba9, type: 3}
+  ModelsSpawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  SpawnedModels:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  characterDatabase: {fileID: 11400000, guid: a4aeff3221624274fa582a60d2dd68ad, type: 2}

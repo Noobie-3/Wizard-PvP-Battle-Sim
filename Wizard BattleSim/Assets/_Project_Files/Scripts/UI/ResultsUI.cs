@@ -11,11 +11,11 @@ public class ResultsUI : MonoBehaviour
     [SerializeField] private Sprite[] rankSprites;  // Array of rank sprites (0: 1st, 1: 2nd, etc.)
 
     // Method to set player's name and score
-    public void SetInfo(string playerName, int score, int rank)
+    public void SetInfo(string playerName, int score, int rank, Sprite PlayerImage)
     {
         nameText.text = playerName;
         scoreText.text = "Wins: " + score;
-
+        playerImage.sprite = PlayerImage;
         print("Player Name: " + playerName + "Player Rank: " + rank );
         switch(rank)
         {

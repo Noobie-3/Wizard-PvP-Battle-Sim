@@ -49,6 +49,13 @@ public class LobbyScreen_Join : MonoBehaviour
     private void OnEnable()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+        SceneManager.sceneLoaded += (scene, mode) =>
+        {
+            if (scene.name == gameController.GC.CharacterSelectSceneName)
+            {
+                OnsceneLoaded();
+            }
+        };
     }
 
     private void OnDisable()
@@ -409,6 +416,16 @@ public class LobbyScreen_Join : MonoBehaviour
 
         if(LobbyCodeField.text != "")
             LobbyCode = LobbyCodeField.text;
+    }
+
+    public void OnsceneLoaded()
+    {
+        //check if already in a lobby if so move to the charcter select screen
+        if (ServerManager.Instance.Lobby != null)
+        {
+            lobbyScreenSelector.BackToMainScreen();
+            return;
+        }
     }
 
     

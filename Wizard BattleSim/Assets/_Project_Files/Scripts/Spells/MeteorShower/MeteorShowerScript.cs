@@ -16,6 +16,7 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
     public float CurrentLifeTime;
     [SerializeField] private float MeteorHeight;
     [SerializeField] Coroutine SpawnCoroutine;
+    public bool CanHit;
 
     public ulong CasterId { get; set; }
     
@@ -27,7 +28,15 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
     void Update()
     {
         CurrentLifeTime += Time.deltaTime;
-
+        if(hitagainTime  >= spell.MultiHitCooldown)
+        {
+            hitagainTime= 0;
+            CanHit = true;
+        }
+        else
+        {
+            hitagainTime += Time.deltaTime;
+        }
     }
 
     public IEnumerator SpawnMeteors()
@@ -74,7 +83,36 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
 
     }
 
-    public void TriggerEffect()
+    private void OnTriggerStay(Collider other)
+    {
+        if (!IsServer) return;
+        if(!CanHit) return;
+        if (other.gameObject.TryGetComponent(out IHittable_inherited ihit))
+        {
+            print(ihit.name + "meteor hit this object");
+            if (ihit.Type == IHittable_inherited.ObjectType.player)
+            {
+                ihit.GotHit(this.gameObject, spell, CasterId);
+
+
+            }
+            var TempLocation = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            /*            var Impact = Instantiate(ImpactEffect, TempLocation, Quaternion.identity);
+                        if (Impact != null)
+                        {
+                            gameController.GC.DestroyObjectOnNetwork(Impact, 5);
+                        }
+                        Impact.GetComponent<NetworkObject>().Spawn();
+            */
+           // Destroy(gameObject);
+           CanHit = false;
+           hitagainTime = 0;
+           gameController.GC.DestroyObjectOnNetwork(gameObject, 5);
+
+
+        }
+    }
+        public void TriggerEffect()
     {
         throw new System.NotImplementedException();
     }

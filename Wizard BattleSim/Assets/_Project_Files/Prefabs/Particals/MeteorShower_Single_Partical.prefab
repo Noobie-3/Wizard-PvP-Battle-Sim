@@ -1013,7 +1013,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 10
+      scalar: 2
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -10049,6 +10049,14 @@ PrefabInstance:
     - target: {fileID: 8085078715071084092, guid: 7d26b5a85f7669c469bf038e5bd73758, type: 3}
       propertyPath: m_Name
       value: Fire_02_Add
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 7d26b5a85f7669c469bf038e5bd73758, type: 3}
+      propertyPath: m_AreaSize.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8163526335372600225, guid: 7d26b5a85f7669c469bf038e5bd73758, type: 3}
+      propertyPath: m_AreaSize.y
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

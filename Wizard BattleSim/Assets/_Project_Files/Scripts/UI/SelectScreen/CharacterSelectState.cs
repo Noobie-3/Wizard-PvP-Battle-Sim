@@ -45,6 +45,7 @@ public struct CharacterSelectState : INetworkSerializable, IEquatable<CharacterS
         serializer.SerializeValue(ref PlayerLobbyId);
         serializer.SerializeValue(ref PLayerDisplayName);
         serializer.SerializeValue(ref WinCount);
+        serializer.SerializeValue(ref Ranking);
     
 
     }

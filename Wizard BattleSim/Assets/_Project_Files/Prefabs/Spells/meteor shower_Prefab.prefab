@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -355494114160931465}
   - component: {fileID: 6892376151233665232}
   - component: {fileID: 6859204722662706434}
+  - component: {fileID: 6894387857589996631}
   m_Layer: 0
   m_Name: meteor shower_Prefab
   m_TagString: Untagged
@@ -47,9 +48,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 661470317
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 661470317
   DeferredDespawnTick: 0
-  Ownership: 1
+  Ownership: 2
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -104,4 +105,26 @@ MonoBehaviour:
   spell: {fileID: 11400000, guid: 5c6577c3a14e89a4da2d4bd9277ba1d3, type: 2}
   CurrentLifeTime: 0
   MeteorHeight: 50
+  CanHit: 0
   rb: {fileID: 6892376151233665232}
+--- !u!65 &6894387857589996631
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5631925080883307570}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 30, y: 2.5599613, z: 30}
+  m_Center: {x: 0, y: 0, z: 0}

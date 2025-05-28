@@ -2,6 +2,8 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Authentication;
+using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -198,4 +200,27 @@ private void FixedUpdate()
 
         }
     }
+
+    public void replayGame()
+    {
+
+    }
+
+    public async void LeaveLobby()
+    {
+        try
+        {
+            if (Lobby != null)
+            {
+                await LobbyService.Instance.RemovePlayerAsync(Lobby.Id, AuthenticationService.Instance.PlayerId);
+                Lobby = null;
+                print("Left lobby");
+            }
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError(e);
+        }
+    }
+
 }

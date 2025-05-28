@@ -10,7 +10,7 @@ public class Character : ScriptableObject
     [SerializeField] private Sprite icon;
     [SerializeField] private GameObject introPrefab;
     [SerializeField] private GameObject gameplayPrefab;
-
+    [SerializeField] private GameObject ResultsScreenPrefab;
     //GamePlay Stats
     [SerializeField] private float moveSpeed = 50;
     [SerializeField] int spamSpell;
@@ -27,4 +27,5 @@ public class Character : ScriptableObject
     public GameObject GameplayPrefab => gameplayPrefab;
     public float MoveSpeed => moveSpeed;
     public int SpamSpell => spamSpell;
+    public GameObject resultsPreFab => ResultsScreenPrefab;
 }
