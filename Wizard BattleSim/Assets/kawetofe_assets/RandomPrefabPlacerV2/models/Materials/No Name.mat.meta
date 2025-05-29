@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c63319a372579d541adccce792717579
+timeCreated: 1510348685
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146752
+  packageName: Random Prefab Placer - Version 2
+  packageVersion: 1.0.2
+  assetPath: Assets/kawetofe_assets/RandomPrefabPlacerV2/models/Materials/No Name.mat
+  uploadId: 423259
