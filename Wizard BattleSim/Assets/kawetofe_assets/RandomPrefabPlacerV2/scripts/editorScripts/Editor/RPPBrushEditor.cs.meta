@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 187fe46cd8e614d409ef3d6a67eca1a1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146752
+  packageName: Random Prefab Placer - Version 2
+  packageVersion: 1.0.2
+  assetPath: Assets/kawetofe_assets/RandomPrefabPlacerV2/scripts/editorScripts/Editor/RPPBrushEditor.cs
+  uploadId: 423259
