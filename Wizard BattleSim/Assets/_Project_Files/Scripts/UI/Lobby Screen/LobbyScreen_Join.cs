@@ -34,15 +34,20 @@ public class LobbyScreen_Join : MonoBehaviour
 
     private void Start()
     {
+        if(gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            lobbyScreenSelector.ChangeToNonOnlineLobby();
+            return;
+        }
         PlayerName = "Mage" + UnityEngine.Random.Range(10, 99);
         Timer = 0;
         UnityServices.InitializeAsync();
         AuthenticationService.Instance.SignedIn += () =>
         {
             Debug.Log("Signed in as: " + AuthenticationService.Instance.PlayerId);
+            ListLobbies();
         };
         AuthenticationService.Instance.SignInAnonymouslyAsync();
-        ListLobbies();
         DontDestroyOnLoad(this.gameObject);
     }
 
@@ -111,6 +116,7 @@ public class LobbyScreen_Join : MonoBehaviour
     {
         try
         {
+
             // Set lobby query options
             QueryLobbiesOptions options = new QueryLobbiesOptions
             {
@@ -126,6 +132,11 @@ public class LobbyScreen_Join : MonoBehaviour
 
             // Fetch available lobbies
             QueryResponse queryResponse = await LobbyService.Instance.QueryLobbiesAsync(options);
+            if(queryResponse == null || queryResponse.Results.Count == 0)
+            {
+                Debug.Log("No lobbies found or query response is null.");
+                return;
+            }
             Debug.Log("Lobbies found: " + queryResponse.Results.Count);
 
             // Ensure we don't display outdated lobbies
@@ -134,6 +145,7 @@ public class LobbyScreen_Join : MonoBehaviour
             // Loop through each lobby and update the UI
             for (int i = 0; i < queryResponse.Results.Count && i < LobbyObjects.Length; i++)
             {
+                
                 var lobby = queryResponse.Results[i];
 
                 // Activate the lobby slot (if inactive)
@@ -179,6 +191,7 @@ public class LobbyScreen_Join : MonoBehaviour
     //join a relay
     public async Task<bool> JoinRelay(string joincode)
     {
+
         try
         {
             //join the relay with the join code provided
@@ -211,6 +224,10 @@ public class LobbyScreen_Join : MonoBehaviour
 
     public async void JoinLobbyByCode()
     {
+        if (gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            return;
+        }
         if (LobbyCode == "")
         { 
             ShowError( "Lobby code is empty! Please enter a valid code.");
@@ -278,6 +295,10 @@ public class LobbyScreen_Join : MonoBehaviour
 
     private async void HandleLobbyPollForUpdates()
     {
+        if (gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            return;
+        }
         if (joinedLobby == null)
         {
             return;
@@ -295,6 +316,10 @@ public class LobbyScreen_Join : MonoBehaviour
 
     public async void JoinLobbyByIndex(int index)
     {
+        if (gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            return;
+        }
         if (string.IsNullOrEmpty(PlayerName))
         {
             ShowError("Player name is empty! Please enter a valid name." );
@@ -340,7 +365,11 @@ public class LobbyScreen_Join : MonoBehaviour
 
     public async void QuickJoinLobby()
     {
-        
+
+        if (gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            return;
+        }
         try
         {
             await LobbyService.Instance.QuickJoinLobbyAsync();
@@ -355,6 +384,10 @@ public class LobbyScreen_Join : MonoBehaviour
 
     public async void UpdatePlayerName()
     {
+        if (gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            return;
+        }
         try
         {
             NameChange();
@@ -374,6 +407,10 @@ public class LobbyScreen_Join : MonoBehaviour
 
     public async void LeaveLobby()
     {
+        if (gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            return;
+        }
         try
         {
             if (joinedLobby != null)
@@ -421,6 +458,11 @@ public class LobbyScreen_Join : MonoBehaviour
     public void OnsceneLoaded()
     {
         //check if already in a lobby if so move to the charcter select screen
+        if(ServerManager.Instance == null)
+        {
+            print("ServerManager is Null");
+            return;
+        }
         if (ServerManager.Instance.Lobby != null)
         {
             lobbyScreenSelector.BackToMainScreen();

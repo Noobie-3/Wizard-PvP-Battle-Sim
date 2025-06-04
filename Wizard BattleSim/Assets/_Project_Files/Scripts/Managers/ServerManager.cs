@@ -49,6 +49,16 @@ public class ServerManager : NetworkBehaviour
         
     }
 
+    public void StartHost()
+    {
+        NetworkManager.Singleton.StartHost();
+    }
+
+    public void StartCLient()
+    {
+        NetworkManager.Singleton.StartClient();
+    }
+
     // Spawn object locally for the player
     private void SpawnLocalObject()
     {
@@ -129,16 +139,21 @@ private void FixedUpdate()
 
     [ServerRpc(RequireOwnership = false)]
     private void StartGameServerRpc()
-    {
-        print(playerCharacterIds.Count + " PLayer character ids");
-
-        // Load the new scene for all clients and the server
+    {if (gameController.GC.connectionType == gameController.ConnectionType.Online)
+        {
+            // Load the new scene for all clients and the server
 
             print(Lobby.Data["Level"].Value + "this is what the lobby data sayas the map is");
             int convertedString = int.Parse(Lobby.Data["Level"].Value);
             print("Converted string: " + convertedString + " and the map name is " + MapDB.GetMapById(convertedString).MapName);
             NetworkManager.Singleton.SceneManager.LoadScene(MapDB.GetMapById(convertedString).MapName, LoadSceneMode.Single);
-            NetworkManager.Singleton.SceneManager.OnLoadComplete += StartGameHelper;
+
+
+        }
+        print(playerCharacterIds.Count + " PLayer character ids");
+        NetworkManager.Singleton.SceneManager.LoadScene(MapDB.GetMapById(0).MapName, LoadSceneMode.Single);//change later from 0
+
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += StartGameHelper;
         
 
 
@@ -156,7 +171,7 @@ private void FixedUpdate()
 
             print("Called Spawn Player  in Server Manager{Depercrated}");
 /*            SpawnManager.instance.SpawnPlayer(playerEntry.ClientId);
-*/        }
+*/      }
         NetworkManager.Singleton.SceneManager.OnLoadComplete -= StartGameHelper;
     }
 

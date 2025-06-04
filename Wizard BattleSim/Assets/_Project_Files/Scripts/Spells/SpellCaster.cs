@@ -107,8 +107,11 @@ public class SpellCaster : NetworkBehaviour
             }
             Player.Anim.SetBool("IsCasting", true);
             IsCasting = true;
-            Player.CanRun = false;
-            Player.MoveInput = Vector2.zero;
+            if(Player.Grounded)
+            {
+                Player.CanRun = false;
+                Player.MoveInput = Vector2.zero;
+            }
 
 
         }
@@ -117,6 +120,10 @@ public class SpellCaster : NetworkBehaviour
     [ConsoleCommand("Cast a spell")]
     public void CastSpell()
     {
+        if(!IsOwner)
+        {
+            return;
+        }
         Vector3 ShotDir;
         RaycastHit hit;
         if (Physics.Raycast(Cam.transform.position, Cam.transform.forward, out hit, Mathf.Infinity))

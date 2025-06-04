@@ -121,7 +121,7 @@ public class PlayerController : NetworkBehaviour
         }
         else
         {
-            Destroy(camComponent);
+            camComponent.enabled = false;
             audioListener.enabled = false;
             Vcam.Priority = 0;
             PlayerUi.gameObject.SetActive(false);
@@ -157,7 +157,7 @@ public class PlayerController : NetworkBehaviour
         GroundCheck();
         WallCheck();
 
-        RotateObjectServerRpc(moveDirection);
+        RotateObjectClientRpc(moveDirection);
         PlayerUi.UpdateUI();
 
         if (Charging)
@@ -208,11 +208,11 @@ public class PlayerController : NetworkBehaviour
 }*/
 
     //Rotation logic
-    [ServerRpc]
+/*    [ServerRpc]
     private void RotateObjectServerRpc(Vector3 moveDirection)
     {
         RotateObjectClientRpc(moveDirection);
-    }
+    }*/
     [ClientRpc]
     private void RotateObjectClientRpc(Vector3 moveDirection)
     {
@@ -317,6 +317,7 @@ public class PlayerController : NetworkBehaviour
     // Ground check
     private void GroundCheck()
     {
+        if(!IsOwner) return;
         Grounded = Physics.Raycast(MeshToRotate.transform.position + GroundCheck_Start, Vector3.down, GroundCheck_Distance, gameController.GC.GroundLayer);
         if (Grounded)
         {

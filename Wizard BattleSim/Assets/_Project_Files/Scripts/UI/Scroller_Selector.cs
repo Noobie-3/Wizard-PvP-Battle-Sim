@@ -54,6 +54,9 @@ public class Scroller_Selector : NetworkBehaviour
 
     }
 
+    
+
+
     private void FixedUpdate()
     {
 
@@ -69,6 +72,11 @@ public class Scroller_Selector : NetworkBehaviour
 
         }
 
+
+        if(!Display.activeSelf)
+        {
+            if(ObjectSpawned != null) Destroy(ObjectSpawned); // Destroy the object if display is not active
+        }
 
 
 
@@ -325,7 +333,8 @@ public class Scroller_Selector : NetworkBehaviour
 
         if (CurrentWindow + 1 == windows.Length)
         {
-            PlayerStateManager.Singleton.AddState(new CharacterSelectState(serverRpcParams.Receive.SenderClientId, State.CharacterId, State.WandID, State.Spell0, State.Spell1, State.Spell2, true));
+            var state = PlayerStateManager.Singleton.LookupState(serverRpcParams.Receive.SenderClientId);
+            PlayerStateManager.Singleton.AddState(new CharacterSelectState(serverRpcParams.Receive.SenderClientId, state.CharacterId, state.WandID, state.Spell0, state.Spell1, state.Spell2, true));
         }
     }
 
@@ -366,7 +375,7 @@ public class Scroller_Selector : NetworkBehaviour
             Destroy(ObjectSpawned);
         }
         ResetAllSelections();
-
+        
 
     }
 

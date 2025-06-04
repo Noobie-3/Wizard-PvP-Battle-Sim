@@ -47,7 +47,7 @@ public class SpawnManager : NetworkBehaviour
 
     public void AssignSpawnPointsByServer(SceneEvent sceneevent)
     {
-        if (sceneevent.SceneEventType == SceneEventType.LoadEventCompleted)
+        if (sceneevent.SceneEventType == SceneEventType.LoadEventCompleted && sceneevent.SceneName != gameController.GC.CharacterSelectSceneName && sceneevent.SceneName != gameController.GC.EndScreenSceneName)
         {
 
             print(spawnPoints.Length + "  this is how many spawn points there is");
@@ -138,6 +138,10 @@ public class SpawnManager : NetworkBehaviour
         }
 
         print("Resverting to default spawn point");
+        if(spawnPoints.Length == 0)
+        {
+            return null;
+        }
         return spawnPoints[0];
 
     }

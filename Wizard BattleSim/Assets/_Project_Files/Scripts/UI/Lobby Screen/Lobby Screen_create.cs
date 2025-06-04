@@ -42,6 +42,11 @@ public class LObbyScreen_create : MonoBehaviour
     async void Start()
     {
         DontDestroyOnLoad(this.gameObject);
+        if (gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            lobbyScreenSelector.ChangeToNonOnlineLobby();
+            return;
+        }
         await UnityServices.InitializeAsync();
 
         AuthenticationService.Instance.SignedIn += () =>
