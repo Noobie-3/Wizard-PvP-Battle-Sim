@@ -25,6 +25,10 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] public Vector3 moveDirection;
     [SerializeField] private bool Gravity = true;
     [SerializeField] private float JumpHeight = 5f;
+    private NetworkVariable<Quaternion> syncedRotation = new NetworkVariable<Quaternion>(
+    writePerm: NetworkVariableWritePermission.Owner
+);
+
 
     // Ground check variables
     [Header("Ground Check Settings")]
@@ -137,7 +141,16 @@ public class PlayerController : NetworkBehaviour
     private void Update()
     {
 
-        if (!IsOwner) return;
+        if (!IsOwner)
+        {
+            MeshToRotate.transform.rotation = Quaternion.Slerp(
+                MeshToRotate.transform.rotation,
+                syncedRotation.Value,
+                Time.deltaTime * 10f
+            );
+            return;
+        }
+
         if (!CanRun) return;
 
         if (Anim != null)
@@ -157,7 +170,7 @@ public class PlayerController : NetworkBehaviour
         GroundCheck();
         WallCheck();
 
-        RotateObjectClientRpc(moveDirection);
+        RotateCharacter();
         PlayerUi.UpdateUI();
 
         if (Charging)
@@ -208,19 +221,24 @@ public class PlayerController : NetworkBehaviour
 }*/
 
     //Rotation logic
-/*    [ServerRpc]
-    private void RotateObjectServerRpc(Vector3 moveDirection)
+    private void RotateCharacter()
     {
-        RotateObjectClientRpc(moveDirection);
-    }*/
-    [ClientRpc]
-    private void RotateObjectClientRpc(Vector3 moveDirection)
-    {
-        if (moveDirection != Vector3.zero)
-        {
-            MeshToRotate.transform.rotation = Quaternion.LookRotation(moveDirection);
-        }
+        if (!IsOwner || moveDirection == Vector3.zero) return;
+
+        // Desired rotation based on movement direction
+        Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+
+        // Smooth rotation using Slerp or RotateTowards
+        MeshToRotate.transform.rotation = Quaternion.Slerp(
+            MeshToRotate.transform.rotation,
+            targetRotation,
+            Time.deltaTime * 10f // Adjust rotation speed
+        );
+
+        //sync to other clients if needed
+        syncedRotation.Value = MeshToRotate.transform.rotation;
     }
+
 
 
 
@@ -280,7 +298,7 @@ public class PlayerController : NetworkBehaviour
         {
             CanRun = true;
             Charging = false;
-
+            Anim.SetBool("IsCharging", false);
         }
 
         if (!Grounded) return;
@@ -291,7 +309,7 @@ public class PlayerController : NetworkBehaviour
             CanRun = false;
 
             rb.linearVelocity = Vector3.zero;
-
+            Anim.SetBool("IsCharging", true);
             //start charging
         }
 

@@ -62,6 +62,11 @@ public class PlayerStats : NetworkBehaviour
     public void ChargeManaServerRpc()
     {
         RestoreMana(0.2f);
+        var playercontroller = GetComponent<PlayerController>();
+        if (playercontroller != null && playercontroller.Charging)
+        {
+            playercontroller.Anim.SetBool("IsCharging", true);
+        }
     }
 
 

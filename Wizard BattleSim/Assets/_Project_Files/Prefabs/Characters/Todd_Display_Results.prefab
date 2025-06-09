@@ -396,10 +396,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5587233888388266316}
-    - targetCorrespondingSourceObject: {fileID: 1082271958561512970, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1332662371017604062}
+      addedObject: {fileID: 7845659673161578364}
   m_SourcePrefab: {fileID: 100100000, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
 --- !u!4 &364052595578450167 stripped
 Transform:
@@ -411,7 +408,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
   m_PrefabInstance: {fileID: 2069671357983543103}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &5587233888388266316
+--- !u!95 &7845659673161578364
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -424,34 +421,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: ab6086ba1a14fb041a57dd8ab72eedb2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!1 &1422561058278871349 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1082271958561512970, guid: 1748d36dd401e084f9ca88fda006ba79, type: 3}
-  m_PrefabInstance: {fileID: 2069671357983543103}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1332662371017604062
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1422561058278871349}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8dec24a70217ce74f9bde97bb880978e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
