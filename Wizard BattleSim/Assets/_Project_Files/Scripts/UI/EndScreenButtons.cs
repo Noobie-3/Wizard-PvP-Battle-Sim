@@ -8,14 +8,21 @@ public class EndScreenButtons : MonoBehaviour
     // Method to restart the game
     public void RestartGame()
     {
-        NetworkManager.Singleton.SceneManager.LoadScene(gameController.GC.CharacterSelectSceneName,loadSceneMode:LoadSceneMode.Additive);
+        NetworkManager.Singleton.SceneManager.LoadScene(gameController.GC.CharacterSelectSceneName,loadSceneMode:LoadSceneMode.Single);
     }
 
     //method to leave lobby and to go to main menu
     public void LeaveGame()
     {
-        ServerManager.Instance.LeaveLobby();
-        NetworkManager.Singleton.Shutdown();
+        if(NetworkManager.Singleton.IsConnectedClient)
+        {
+            // If the player is Connected then ShutDown the NetworkManager
+            NetworkManager.Singleton.Shutdown();
+        }
+        if (ServerManager.Instance.Lobby == null)
+        {
+            ServerManager.Instance.LeaveLobby();
+        }
         NetworkManager.Singleton.SceneManager.LoadScene(gameController.GC.CharacterSelectSceneName, loadSceneMode: LoadSceneMode.Single);
     }
 

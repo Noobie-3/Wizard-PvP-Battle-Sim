@@ -70,9 +70,9 @@ public class PlayerUI : MonoBehaviour
 
 
         // Update the text
-        healthText.text = $"Health: {health}/{player.Stats.MaxHealth}";
+        healthText.text = $"{health}/{player.Stats.MaxHealth.Value}";
        // staminaText.text = $"Stamina: {player.Stamina.Value}/{player.MaxStamina}";
-        manaText.text = $"Mana: {mana}/{player.Stats.MaxMana}";
+        manaText.text = $"{mana}/{player.Stats.MaxMana.Value}";
 
         //Change Spell icons for selection
 
