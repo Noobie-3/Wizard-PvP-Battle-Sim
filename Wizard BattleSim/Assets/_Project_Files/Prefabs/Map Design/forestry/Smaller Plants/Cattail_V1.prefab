@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4882228956521315367
+--- !u!1001 &8637452483836218064
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 1f2bc8f648a978f42a0d59411ff5dfcc, type: 3}
       propertyPath: m_LocalScale.x
-      value: 391.68
+      value: 488.92
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1f2bc8f648a978f42a0d59411ff5dfcc, type: 3}
       propertyPath: m_LocalScale.y
-      value: 391.68
+      value: 488.92
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1f2bc8f648a978f42a0d59411ff5dfcc, type: 3}
       propertyPath: m_LocalScale.z
-      value: 391.68
+      value: 488.92
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1f2bc8f648a978f42a0d59411ff5dfcc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -68,8 +68,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cattail_V1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1f2bc8f648a978f42a0d59411ff5dfcc, type: 3}
+      propertyPath: m_TagString
+      value: RemoveCollider
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1f2bc8f648a978f42a0d59411ff5dfcc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 996858940769546997}
   m_SourcePrefab: {fileID: 100100000, guid: 1f2bc8f648a978f42a0d59411ff5dfcc, type: 3}
+--- !u!1 &8871823623746402177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1f2bc8f648a978f42a0d59411ff5dfcc, type: 3}
+  m_PrefabInstance: {fileID: 8637452483836218064}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &996858940769546997
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8871823623746402177}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0013586741, y: 0.0051793363, z: 0.0004604246}
+  m_Center: {x: 0.00006824758, y: 0.00021506984, z: -0.00006907625}
