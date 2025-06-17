@@ -139,7 +139,8 @@ private void FixedUpdate()
 
     [ServerRpc(RequireOwnership = false)]
     private void StartGameServerRpc()
-    {if (gameController.GC.connectionType == gameController.ConnectionType.Online)
+    {
+        if (gameController.GC.connectionType == gameController.ConnectionType.Online)
         {
             // Load the new scene for all clients and the server
 
@@ -158,6 +159,8 @@ private void FixedUpdate()
 
 
     }
+
+
     public void StartGameHelper(ulong clientId, string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadMode)
     {   // Register a callback to spawn players after the scene loads
         print("Called Start Game helper in Server MNager");

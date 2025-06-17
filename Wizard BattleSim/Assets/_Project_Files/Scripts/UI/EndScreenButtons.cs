@@ -8,6 +8,16 @@ public class EndScreenButtons : MonoBehaviour
     // Method to restart the game
     public void RestartGame()
     {
+        //reset values 
+        //Reset spawn points list 
+        SpawnManager.instance.spawnPoints = new PlayerSpawnLocation[0];
+// Reset player spawn points dictionary 
+        SpawnManager.instance.playerSpawnPoints.Clear();
+
+        // Reset the player states
+        WinTracker.Singleton.ResetWinsServerRpc();
+        print("Restarting game and resetting spawn points.");
+        // Load the character select scene
         NetworkManager.Singleton.SceneManager.LoadScene(gameController.GC.CharacterSelectSceneName,loadSceneMode:LoadSceneMode.Single);
     }
 

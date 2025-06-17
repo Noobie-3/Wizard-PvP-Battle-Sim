@@ -49,12 +49,12 @@ public class FireBall : NetworkBehaviour, ISpell_Interface
         if (iHit.Type == IHittable_inherited.ObjectType.player && iHit.OwnerClientId == CasterId) return;
 
         iHit.GotHit(gameObject, spell,  CasterId);
-
         TriggerEffect();
     }
 
     public void TriggerEffect()
     {
+        Destroy(gameObject);
     }
 
 }

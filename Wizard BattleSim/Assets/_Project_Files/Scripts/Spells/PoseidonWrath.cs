@@ -74,7 +74,7 @@ public class PoseidonWrath: NetworkBehaviour, ISpell_Interface
         if (iHit.Type == IHittable_inherited.ObjectType.player && iHit.OwnerClientId == CasterId) return;
 
         iHit.GotHit(this.gameObject,spell,CasterId);
-
+        Destroy(gameObject); // Destroy the spell after it hits something
 
     }
 

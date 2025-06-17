@@ -21,7 +21,7 @@ MonoBehaviour:
   Spell_Speed: 130
   Spell_Damage: 3
   LifeTime: 15
-  MultiHitCooldown: 0.5
+  MultiHitCooldown: 1
   Spell_Prefab: {fileID: 9134858270483239568, guid: 4aa3426e90bec754d861b99aa9af4ba5, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 2899165438443141732, guid: 03d4a3a4fec3371449242759f742e820, type: 3}
   Grounded_SpellToSpawn_Prefab: {fileID: 4645668245002821493, guid: a7597e1ca666bad4fbf87a99af0f89b7, type: 3}

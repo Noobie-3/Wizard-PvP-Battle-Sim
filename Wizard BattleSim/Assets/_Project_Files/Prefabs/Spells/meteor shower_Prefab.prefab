@@ -105,7 +105,7 @@ MonoBehaviour:
   spell: {fileID: 11400000, guid: 5c6577c3a14e89a4da2d4bd9277ba1d3, type: 2}
   CurrentLifeTime: 0
   MeteorHeight: 50
-  CanHit: 0
+  CanHit: 1
   rb: {fileID: 6892376151233665232}
 --- !u!65 &6894387857589996631
 BoxCollider:

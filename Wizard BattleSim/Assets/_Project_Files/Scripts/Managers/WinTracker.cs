@@ -87,6 +87,7 @@ public class WinTracker : NetworkBehaviour
         {
             SendFinalResultsToClients();
         }
+
     }
 
     private void SendFinalResultsToClients()
@@ -130,6 +131,31 @@ public class WinTracker : NetworkBehaviour
         DisplayWinResultsClientRpc(rankedStates);
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void ResetWinsServerRpc()
+    {
+        print("Resetting all player wins.");
+        foreach (var state in PlayerStateManager.Singleton.AllStatePlayers)
+        {
+            var resetState = new CharacterSelectState(
+                clientId: state.ClientId,
+                characterId: state.CharacterId,
+                wandID: state.WandID,
+                spell0: state.Spell0,
+                spell1: state.Spell1,
+                spell2: state.Spell2,
+                isLockedIn: state.IsLockedIn,
+                playerLobbyId: state.PlayerLobbyId,
+                PlayerName: state.PLayerDisplayName,
+                winCount: 0,
+                ranking: 0
+            );
+
+            PlayerStateManager.Singleton.AddState(resetState);
+            print("Reset Win Count for Player: " + resetState.PLayerDisplayName.ToString());
+        }
+    }
+
     [ClientRpc]
     private void DisplayWinResultsClientRpc(CharacterSelectState[] sortedResults)
     {
@@ -139,5 +165,6 @@ public class WinTracker : NetworkBehaviour
         {
             WinScreen_Load.Instance.ShowResults(sortedResults);
         }
+        
     }
 }

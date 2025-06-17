@@ -182,7 +182,6 @@ public class PlayerController : NetworkBehaviour
     private void MoveObject()
     {
         if (!IsOwner) return;
-        print("running Move Object Object shoudl be moving in a direction");
         // Apply Gravity if enabled
         if (Gravity)
         {
@@ -197,12 +196,10 @@ public class PlayerController : NetworkBehaviour
         moveDirection.y = 0;
         // Apply movement
         rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
-        print("just SetRb velocity to " + rb.linearVelocity + "Move direction is " + moveDirection + "Move speed is " + moveSpeed);
         // If no input and grounded, stop horizontal movement
         if (MoveInput == Vector2.zero && Grounded)
         {
 
-            print("MOve input  is zero");
             // If no input and grounded, stop horizontal movement
             rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
         }
@@ -266,7 +263,6 @@ public class PlayerController : NetworkBehaviour
         {
             MoveInput = context.ReadValue<Vector2>();
             AdjustCameraDamping();
-            print("Move input is " + context.ReadValue<Vector2>());
 
             if (Anim != null)
             {
@@ -460,7 +456,7 @@ private void AdjustCameraDamping()
         Vcam.GetCinemachineComponent<CinemachineFramingTransposer>().m_ZDamping = 0;
 }
 
-    private void OnParticleCollision(GameObject other)
+/*    private void OnParticleCollision(GameObject other)
     {
         if(!IsOwner) return;
         print("Collider with a partical" + other.name);
@@ -484,7 +480,7 @@ private void AdjustCameraDamping()
         spell_Interface.hitagainTime = spell_Interface.spell.MultiHitCooldown;
         print("Should have taken damage from " + other.name);
     }
-
+*/
     public void TakeDamage(Spell spell, ulong whoHitMe)
     {
         print(name + "PLayer took dmaage from" + spell + " Cast by  " + CharacterChosen.DisplayName);

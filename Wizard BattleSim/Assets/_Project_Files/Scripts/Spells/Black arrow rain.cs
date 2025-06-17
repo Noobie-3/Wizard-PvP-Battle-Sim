@@ -33,15 +33,11 @@ public class Blackarrowrain : NetworkBehaviour, ISpell_Interface
         {
             hitagainTime -= Time.deltaTime;
         }
+        if(CurrentLifeTime >= spell.LifeTime && IsServer)
+        {
+            Destroy(gameObject);
+        }
     }
-
-    public override void OnNetworkSpawn()
-    {
-        if (!IsServer) return;
-        Destroy(gameObject, spell.LifeTime);
-    }
-
-
 
     public void FireSpell()
     {

@@ -3,6 +3,7 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Scroller_Selector : NetworkBehaviour
 {
@@ -36,6 +37,12 @@ public class Scroller_Selector : NetworkBehaviour
     public LookAtObjectCOnstant lookAtObjectCOnstant; // Script to make the camera look at a target
     public MusicManager MusicManager; // Script to manage music playback
     public GameObject Display;
+    public Button StartButton; // Button to start the game, assigned in the inspector
+    public LobbyScreenSelector ScreenSelector;
+    public GameObject ConnectonTypeObject; // Object to show connection type, assigned in the inspector
+
+
+
     public void Start()
     {
         // Initialize variables and set up the first window
@@ -51,14 +58,38 @@ public class Scroller_Selector : NetworkBehaviour
         {
             CurrentIcon = Instantiate(current_Icon_Indicator, windows[CurrentWindow].transform);
         }
+        if(IsClient) return; // Ensure this code runs only on the client side
+        ConnectonTypeObject.SetActive(true); 
 
     }
 
+    public override void OnNetworkSpawn()
+    {
+        NetworkManager.SceneManager.OnSceneEvent += OnSceneLoaded; // Subscribe to scene load events
+    }
+    private void OnSceneLoaded(SceneEvent Event)
+    {
+        if (Event.SceneEventType == SceneEventType.LoadEventCompleted && Event.SceneName == gameController.GC.CharacterSelectSceneName)
+        {
+            if (!IsClient) return;
+            
+            if (gameController.GC.connectionType == gameController.ConnectionType.Online)
+            {
+                ScreenSelector.ChangeToNonOnlineLobby();
+                ConnectonTypeObject.SetActive(true); // Show connection type object if online
+            }
+
+        }
+    }
     
 
 
     private void FixedUpdate()
     {
+        if(Display.activeSelf && StartButton != null)
+        {
+            StartButton.onClick.AddListener(ServerManager.Instance.StartGame);
+        }
 
         ObjectRespawnTime -= Time.deltaTime;
         if (ObjectRespawnTime <= 0)
@@ -379,6 +410,14 @@ public class Scroller_Selector : NetworkBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        if (ObjectSpawned != null)
+        {
+            Destroy(ObjectSpawned); // Clean up the spawned object when the script is destroyed
+        }
+        NetworkManager.SceneManager.OnSceneEvent -= OnSceneLoaded; // Unsubscribe from scene load events
+    }
 
     private void OnEnable()
     {

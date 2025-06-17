@@ -78,6 +78,7 @@ public class PlayerStats : NetworkBehaviour
         {
             Die(PlayerWhoAttacked);
         }
+        print("Hp after damage: " + Health.Value + " on " + transform.name);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -94,7 +95,6 @@ public class PlayerStats : NetworkBehaviour
         SpawnManager.instance.RespawnPlayerServerRpc(AttackingPLayer);
         SpawnManager.instance.RespawnPlayerServerRpc(this.OwnerClientId);
         WinTracker.Singleton.AddWin(AttackingPLayer);
-
         // Add respawn or death handling here
 
         print("Win added");

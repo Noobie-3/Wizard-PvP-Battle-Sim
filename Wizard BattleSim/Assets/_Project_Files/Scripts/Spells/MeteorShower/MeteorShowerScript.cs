@@ -13,7 +13,7 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
     [SerializeField] private GameObject Meteor_Prefab;
     [SerializeField] public Spell spell;
     public float hitagainTime { get; set; }
-    public float CurrentLifeTime;
+    public float CurrentLifeTime = -10;
     [SerializeField] private float MeteorHeight;
     [SerializeField] Coroutine SpawnCoroutine;
     public bool CanHit;
@@ -37,6 +37,18 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
         {
             hitagainTime += Time.deltaTime;
         }
+        if(CurrentLifeTime >= spell.LifeTime && IsServer)
+        {
+            Destroy(gameObject); // Destroy the meteor shower spell after its lifetime
+            print("Destroying Meteor Shower Spell after lifetime" + CurrentLifeTime + " seconds.");
+        }
+    }
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        CanHit = true;
+        CurrentLifeTime = 0; // Initialize the lifetime to 0 at the start
     }
 
     public IEnumerator SpawnMeteors()
@@ -57,7 +69,6 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
     {
         var meteor = Instantiate(Meteor_Prefab, randomMeteorPosition, Quaternion.identity);
         meteor.GetComponent<NetworkObject>().Spawn();
-        meteor.GetComponentInChildren<MeteorBehavior>().Initialize(CasterId,new Vector3(0,0,0));
         meteor.transform.localScale = new Vector3(randomMeteorSize, randomMeteorSize, randomMeteorSize);
         meteor.GetComponent<Rigidbody>().AddForce(Vector3.down * Speed, ForceMode.Impulse);
     }
@@ -107,13 +118,12 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
            // Destroy(gameObject);
            CanHit = false;
            hitagainTime = 0;
-           gameController.GC.DestroyObjectOnNetwork(gameObject, 5);
 
 
         }
     }
         public void TriggerEffect()
     {
-        throw new System.NotImplementedException();
+        //nothing here 
     }
 }

@@ -93,6 +93,11 @@ public class SpellCaster : NetworkBehaviour
     public void StartSpellCast()
     {
         if(!IsOwner) return;
+        if(IsCasting) 
+        {
+            Debug.Log("Already casting a spell");
+            return;
+        }
         if (CurrentSpellsTimers[SelectedSpell] > 0)
         {
             Debug.Log("Spell on cooldown");
@@ -146,8 +151,6 @@ public class SpellCaster : NetworkBehaviour
         GameObject CastedSpell;
         var manaCost = Quicky ? SpellBook_Spammable.SpellBook[SpellToCast].ManaCost
                               : SpellBook.SpellBook[SpellToCast].ManaCost;
-
-        Stats.SpendManaServerRpc(manaCost); // Deduct mana using the new system
 
         CastedSpell = Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
         CastedSpell.GetComponent<NetworkObject>().Spawn();

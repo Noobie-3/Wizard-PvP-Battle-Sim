@@ -457,8 +457,15 @@ public class LobbyScreen_Join : MonoBehaviour
 
     public void OnsceneLoaded()
     {
+        print("OnsceneLoaded called");
+        if (gameController.GC.connectionType != gameController.ConnectionType.Online)
+        {
+            lobbyScreenSelector.DisableAll();
+            gameController.GC.ConnectonTypeObject.SetActive(false);
+            lobbyScreenSelector.ChangeToNonOnlineLobby();
+        }
         //check if already in a lobby if so move to the charcter select screen
-        if(ServerManager.Instance == null)
+        if (ServerManager.Instance == null)
         {
             print("ServerManager is Null");
             return;
@@ -468,6 +475,8 @@ public class LobbyScreen_Join : MonoBehaviour
             lobbyScreenSelector.BackToMainScreen();
             return;
         }
+
+
     }
 
     

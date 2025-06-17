@@ -68,7 +68,10 @@ public class PlayerUI : MonoBehaviour
         mana = Mathf.Round(mana * 100);
         //stamina = Mathf.Round(stamina * 100);
 
-
+        if (player.Stats.Health.Value > 0f && player.Stats.Health.Value < 1f)
+        {
+            health = 1f;
+        }
         // Update the text
         healthText.text = $"{health}/{player.Stats.MaxHealth.Value}";
        // staminaText.text = $"Stamina: {player.Stamina.Value}/{player.MaxStamina}";

@@ -49,7 +49,7 @@ public class SpawnManager : NetworkBehaviour
     {
         if (sceneevent.SceneEventType == SceneEventType.LoadEventCompleted && sceneevent.SceneName != gameController.GC.CharacterSelectSceneName && sceneevent.SceneName != gameController.GC.EndScreenSceneName)
         {
-
+            spawnPoints = GameObject.FindObjectsOfType<PlayerSpawnLocation>();
             print(spawnPoints.Length + "  this is how many spawn points there is");
 
             foreach (var client in NetworkManager.Singleton.ConnectedClients)

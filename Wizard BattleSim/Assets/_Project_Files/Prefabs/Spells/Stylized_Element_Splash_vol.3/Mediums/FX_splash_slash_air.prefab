@@ -9771,6 +9771,7 @@ GameObject:
   - component: {fileID: 1214471433631955951}
   - component: {fileID: 6337782101356310175}
   - component: {fileID: 8156138011991783204}
+  - component: {fileID: 9190663725709483967}
   m_Layer: 0
   m_Name: FX_splash_slash_air
   m_TagString: Untagged
@@ -14680,8 +14681,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 461162522
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 3943697101
+  InScenePlacedSourceGlobalObjectIdHash: 461162522
+  DeferredDespawnTick: 0
+  Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -14689,6 +14692,8 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!54 &6337782101356310175
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14728,11 +14733,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbda5a3eacf4cc744b711bbd8609fbe4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   spell: {fileID: 11400000, guid: 13d9a0bb612ec524db2058bd40801ec0, type: 2}
   CurrentLifeTime: 0
   rb: {fileID: 6337782101356310175}
   Hitcount: 0
   MaxHit: 3
+--- !u!135 &9190663725709483967
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2899165438443141732}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.47
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2899165439476243438
 GameObject:
   m_ObjectHideFlags: 0
