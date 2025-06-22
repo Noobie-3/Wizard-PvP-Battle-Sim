@@ -104,10 +104,9 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
             if (ihit.Type == IHittable_inherited.ObjectType.player)
             {
                 ihit.GotHit(this.gameObject, spell, CasterId);
-
-
+                CanHit = false;
+                hitagainTime = 0;
             }
-            var TempLocation = new Vector3(transform.position.x, transform.position.y, transform.position.z);
             /*            var Impact = Instantiate(ImpactEffect, TempLocation, Quaternion.identity);
                         if (Impact != null)
                         {
@@ -115,10 +114,7 @@ public class MeteorShowerScript : NetworkBehaviour, ISpell_Interface
                         }
                         Impact.GetComponent<NetworkObject>().Spawn();
             */
-           // Destroy(gameObject);
-           CanHit = false;
-           hitagainTime = 0;
-
+            // Destroy(gameObject);
 
         }
     }

@@ -158,6 +158,7 @@ public class Scroller_Selector : NetworkBehaviour
                 windows[CurrentWindow].DisableButtons();
                 InUseConfirmed_icons[CurrentWindow] = Instantiate(Confirmed_Icon, windows[CurrentWindow].SelectorIconHolder.transform);
                 windows[CurrentWindow].StopIdleAnim();
+                Destroy(ObjectSpawned); // Destroy the currently spawned object
             }
             Debug.LogWarning("No more categories to move to.");
         }
@@ -387,7 +388,7 @@ public class Scroller_Selector : NetworkBehaviour
                 ObjectSpawned = Instantiate(wandDatabase.GetWandById(CurrentIconIndex).ShowCasePrefab, ObjectSpawn);
                 break;
             case SelectionType.Spell:
-                ObjectSpawned = Instantiate(SpellDatabase.SpellBook[CurrentIconIndex].Grounded_SpellToSpawn_Prefab, ObjectSpawn);
+                ObjectSpawned = Instantiate(SpellDatabase.SpellBook[CurrentIconIndex].Spell_display_Prefab, ObjectSpawn);
                 break;
             case SelectionType.Character:
                 ObjectSpawned = Instantiate(characterDatabase.GetCharacterById(CurrentIconIndex).IntroPrefab, ObjectSpawn);

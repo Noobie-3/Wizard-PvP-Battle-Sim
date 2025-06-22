@@ -38,6 +38,7 @@ public class SpellEditor : Editor
         spell.Spell_Prefab = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Spell Prefab", "The main prefab representing the spell."), spell.Spell_Prefab, typeof(GameObject), allowSceneObjects: false);
         spell.Air_SpellToSpawn_Prefab = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Air Spell Prefab", "The prefab for the air version of the spell."), spell.Air_SpellToSpawn_Prefab, typeof(GameObject), allowSceneObjects: false);
         spell.Grounded_SpellToSpawn_Prefab = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Grounded Spell Prefab", "The prefab for the grounded version of the spell."), spell.Grounded_SpellToSpawn_Prefab, typeof(GameObject), allowSceneObjects: false);
+        spell.Spell_display_Prefab = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Display Prefab ", "The prefab for the Display version of the spell."), spell.Spell_display_Prefab, typeof(GameObject), allowSceneObjects: false);
 
         EditorGUILayout.Space();
 

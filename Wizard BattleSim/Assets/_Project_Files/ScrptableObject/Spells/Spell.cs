@@ -51,6 +51,8 @@ public class Spell : ScriptableObject {
     [Tooltip("The prefab for the grounded version of the spell.")]
     public GameObject Grounded_SpellToSpawn_Prefab;
 
+    public GameObject Spell_display_Prefab;
+
     [Header("Spawnable Effects")]
     [Tooltip("The visual effect triggered when the spell impacts something.")]
     public GameObject ImpactEffect;

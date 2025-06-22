@@ -20,11 +20,12 @@ MonoBehaviour:
   CasterChar: {fileID: 0}
   Spell_Speed: 130
   Spell_Damage: 25
-  LifeTime: 5
+  LifeTime: 45555556
   MultiHitCooldown: 5
   Spell_Prefab: {fileID: 4352458349310551559, guid: 5f1f03ecbe1c78746ab02c53aa53b81e, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 2311169645915646850, guid: 586643af911dc0b4d9a84adc0a535df6, type: 3}
+  Spell_display_Prefab: {fileID: 2311169645915646850, guid: 57c92fbec78bf334ca2f4717147cf94b, type: 3}
   ImpactEffect: {fileID: 0}
   FireSound: {fileID: 0}
   ImpactSound: {fileID: 8300000, guid: dc61cbe82bbc0674888ac44d8a221fc8, type: 3}

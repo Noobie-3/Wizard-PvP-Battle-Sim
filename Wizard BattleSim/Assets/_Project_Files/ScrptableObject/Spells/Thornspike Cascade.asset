@@ -12,20 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eec596e1f0af439499de903d75dd5e46, type: 3}
   m_Name: Thornspike Cascade
   m_EditorClassIdentifier: 
+  Spell_Name: Thornspike Cascade
+  SpellIcon: {fileID: 21300000, guid: 80b4c3887624de84ba66e00bffa96c52, type: 3}
+  ManaCost: 0
+  CooldownDuration: 1
+  Spell_CastTime: 3
+  CasterChar: {fileID: 0}
   Spell_Speed: 65
   Spell_Damage: 15
+  LifeTime: 5
+  MultiHitCooldown: 0.5
   Spell_Prefab: {fileID: 1769051784159778425, guid: 98562a1415248b94a93ec861efc50ee8, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 1769051784159778425, guid: 98562a1415248b94a93ec861efc50ee8, type: 3}
-  CooldownDuration: 1
-  LifeTime: 5
-  ManaCost: 0
-  Spell_Name: Thornspike Cascade
-  Spell_CastTime: 3
-  MultiHitCooldown: 0.5
-  SpellIcon: {fileID: 21300000, guid: 80b4c3887624de84ba66e00bffa96c52, type: 3}
-  CasterChar: {fileID: 0}
+  Spell_display_Prefab: {fileID: 1769051784159778425, guid: 96311769f495c50448b3e22d01acae8e, type: 3}
+  ImpactEffect: {fileID: 0}
   FireSound: {fileID: 0}
   ImpactSound: {fileID: 0}
-  ImpactEffect: {fileID: 0}
+  SoundVolume: 1
+  SoundPriority: 128
+  SoundPitch: 1
   Spell_Type: 1

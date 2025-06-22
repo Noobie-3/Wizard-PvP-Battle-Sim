@@ -54,9 +54,13 @@ public class Default_Spell_Projectile : NetworkBehaviour, ISpell_Interface
     void SpawnSpellServerRpc()
     {
         var Spell = Instantiate(spell.Grounded_SpellToSpawn_Prefab, PosToSpawn, Quaternion.identity);
-        Spell.GetComponent<ISpell_Interface>().Initialize(CasterId, Vector3.zero);
-        Spell.GetComponent<ISpell_Interface>().FireSpell();
-        Spell.GetComponent<NetworkObject>().Spawn();
+
+        var networkObject = Spell.GetComponent<NetworkObject>();
+        networkObject.Spawn(); // Must come first!
+
+        var spellInterface = Spell.GetComponent<ISpell_Interface>();
+        spellInterface.Initialize(CasterId, Vector3.zero);
+        spellInterface.FireSpell(); // safe now — ServerRpc won't break
     }
 
 

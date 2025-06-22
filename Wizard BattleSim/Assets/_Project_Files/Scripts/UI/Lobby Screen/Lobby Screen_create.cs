@@ -28,7 +28,9 @@ public class LObbyScreen_create : MonoBehaviour
     [SerializeField] private string PlayerName;
     [SerializeField] private Map_DB MapDB;
     [SerializeField] private Image MapImage;
+    [SerializeField] private Image MapImage_Dupe;
     [SerializeField] private TextMeshProUGUI MapNameDisplay;
+    [SerializeField] private TextMeshProUGUI MapNameDisplayDupe;
     [SerializeField] private int SelectedMap;
     [SerializeField] private int MaxPlayers;
     [SerializeField] private TextMeshProUGUI MaxPlayerCountText;
@@ -58,6 +60,9 @@ public class LObbyScreen_create : MonoBehaviour
         Debug.Log("Player Name is : " + PlayerName);
         MapImage.sprite = MapDB.GetMapById(SelectedMap).Icon;
         MapNameDisplay.text = MapDB.GetMapById(SelectedMap).DisplayName;
+        MapImage_Dupe.sprite = MapDB.GetMapById(SelectedMap).Icon;
+        MapNameDisplayDupe.text = MapDB.GetMapById(SelectedMap).DisplayName;
+
 
     }
 
@@ -271,6 +276,14 @@ public class LObbyScreen_create : MonoBehaviour
 
         MapImage.sprite = MapDB.GetMapById(SelectedMap).Icon;
         MapNameDisplay.text = MapDB.GetMapById(SelectedMap).DisplayName;
+        MapImage_Dupe.sprite = MapDB.GetMapById(SelectedMap).Icon;
+        MapNameDisplayDupe.text = MapDB.GetMapById(SelectedMap).DisplayName;
+
+        if(ServerManager.Instance != null)
+        {
+            ServerManager.Instance.selectedMap = SelectedMap;
+            print("Set map to " + MapDB.Maps[SelectedMap].name);
+        }
     }
 
     public void ChangeMapDown()
@@ -288,6 +301,14 @@ public class LObbyScreen_create : MonoBehaviour
         }
         MapImage.sprite = MapDB.GetMapById(SelectedMap).Icon;
         MapNameDisplay.text = MapDB.GetMapById(SelectedMap).DisplayName;
+        MapImage_Dupe.sprite = MapDB.GetMapById(SelectedMap).Icon;
+        MapNameDisplayDupe.text = MapDB.GetMapById(SelectedMap).DisplayName;
+        if (ServerManager.Instance != null)
+        {
+            ServerManager.Instance.selectedMap = SelectedMap;
+            print("Set map to " + MapDB.Maps[SelectedMap].name);
+        }
+
     }
 
     public void increasePlayercount()

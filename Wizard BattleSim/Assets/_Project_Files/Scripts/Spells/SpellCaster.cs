@@ -153,8 +153,8 @@ public class SpellCaster : NetworkBehaviour
                               : SpellBook.SpellBook[SpellToCast].ManaCost;
 
         CastedSpell = Instantiate(SpellBook.SpellBook[SpellToCast].Spell_Prefab, positon, default);
-        CastedSpell.GetComponent<NetworkObject>().Spawn();
         CastedSpell.GetComponent<ISpell_Interface>().Initialize(CasterId, camDir);
+        CastedSpell.GetComponent<NetworkObject>().Spawn();
         CastedSpell.GetComponent<ISpell_Interface>().FireSpell();
     }
 

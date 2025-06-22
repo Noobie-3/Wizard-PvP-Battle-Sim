@@ -25,6 +25,7 @@ MonoBehaviour:
   Spell_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
   Air_SpellToSpawn_Prefab: {fileID: 0}
   Grounded_SpellToSpawn_Prefab: {fileID: 5041855814169712352, guid: 9da1a9a9d123a4f4cb5bc5bf35965f93, type: 3}
+  Spell_display_Prefab: {fileID: 5041855814169712352, guid: fb1bdede41d519c46b9b249f8baca4dd, type: 3}
   ImpactEffect: {fileID: 9129159807273035532, guid: 5c545fe0e7d380b45ae0fd34c54f7b45, type: 3}
   FireSound: {fileID: 0}
   ImpactSound: {fileID: 8300000, guid: 2cd7b87674a1b2440ad9d2c9f8dcaf85, type: 3}

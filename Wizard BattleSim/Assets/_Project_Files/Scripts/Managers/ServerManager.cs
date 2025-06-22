@@ -22,6 +22,7 @@ public class ServerManager : NetworkBehaviour
     public GameObject CommandConsole;
     public Lobby Lobby;
     public Map_DB MapDB;
+    public int selectedMap;
     // Start is called before the first frame update
     void Start()
     {
@@ -144,15 +145,12 @@ private void FixedUpdate()
         {
             // Load the new scene for all clients and the server
 
-            print(Lobby.Data["Level"].Value + "this is what the lobby data sayas the map is");
-            int convertedString = int.Parse(Lobby.Data["Level"].Value);
-            print("Converted string: " + convertedString + " and the map name is " + MapDB.GetMapById(convertedString).MapName);
-            NetworkManager.Singleton.SceneManager.LoadScene(MapDB.GetMapById(convertedString).MapName, LoadSceneMode.Single);
-
+            NetworkManager.Singleton.SceneManager.LoadScene(MapDB.GetMapById(selectedMap).MapName, LoadSceneMode.Single);
+            print("Loading scene for all clients and server: " + MapDB.GetMapById(selectedMap).MapName);
 
         }
         print(playerCharacterIds.Count + " PLayer character ids");
-        NetworkManager.Singleton.SceneManager.LoadScene(MapDB.GetMapById(0).MapName, LoadSceneMode.Single);//change later from 0
+        NetworkManager.Singleton.SceneManager.LoadScene(MapDB.GetMapById(selectedMap).MapName, LoadSceneMode.Single);
 
         NetworkManager.Singleton.SceneManager.OnLoadComplete += StartGameHelper;
         

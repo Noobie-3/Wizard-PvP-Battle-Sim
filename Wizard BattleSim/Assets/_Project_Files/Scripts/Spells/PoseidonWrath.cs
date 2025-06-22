@@ -46,14 +46,26 @@ public class PoseidonWrath: NetworkBehaviour, ISpell_Interface
 
     public void FireSpell()
     {
-        if (!IsOwner) return;
-        rb.AddForce(spell.Spell_Speed * transform.forward, ForceMode.Impulse);
     }
 
     public void Initialize(ulong casterId, Vector3 direction)
     {
         CasterId = casterId;
-        transform.LookAt(direction);
+        //snap to ground
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position , Vector3.down, out hit, Mathf.Infinity))
+        {
+            transform.position = hit.point;
+            print("Poseidons Wrath: Spell snapped to ground at position " + hit.point + " from caster " + CasterId);
+        }
+        else
+        {
+            Debug.LogWarning("POsidions WRath: No ground detected below the spell.");
+        }
+
+
+        //stop tilting the spell and make it fire flat 
+        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 
 
 
@@ -73,6 +85,10 @@ public class PoseidonWrath: NetworkBehaviour, ISpell_Interface
         if (iHit == null) return;
         if (iHit.Type == IHittable_inherited.ObjectType.player && iHit.OwnerClientId == CasterId) return;
 
+        if(iHit.Type != IHittable_inherited.ObjectType.player) 
+        {
+            return;
+        }
         iHit.GotHit(this.gameObject,spell,CasterId);
         Destroy(gameObject); // Destroy the spell after it hits something
 
