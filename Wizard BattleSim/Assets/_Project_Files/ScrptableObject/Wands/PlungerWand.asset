@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 2
   displayName: Plunger Of The Septic Sage
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f23969b90cc36f54c96d405df89408c1, type: 3}
   WandPrefab: {fileID: 1820939062932629301, guid: 398d230bf56653148a4074d647c6624f, type: 3}
   ShowCasePrefab: {fileID: 6986167611938658282, guid: e15d783301b5f82438b7b73f78e4d7d2, type: 3}
-  moveSpeed: 50

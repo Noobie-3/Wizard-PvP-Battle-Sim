@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   displayName: Map 1
-  icon: {fileID: 21300000, guid: 31d9c17431a2b734faea340ee9fa51d3, type: 3}
+  icon: {fileID: 21300000, guid: 436b3ca875596c343b8e6345e7227b5f, type: 3}
   mapName: Scene_01
   LevelMusic: {fileID: 0}
