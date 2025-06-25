@@ -20,6 +20,7 @@ public class ServerManager : NetworkBehaviour
     public Coroutine DataPrintCoRo;
     public WandDatabase WandDataBase;
     public GameObject CommandConsole;
+    public GameObject[] JoinBUttons;
     public Lobby Lobby;
     public Map_DB MapDB;
     public int selectedMap;
@@ -53,11 +54,23 @@ public class ServerManager : NetworkBehaviour
     public void StartHost()
     {
         NetworkManager.Singleton.StartHost();
+        DisableButtons();
+
+
     }
 
     public void StartCLient()
     {
         NetworkManager.Singleton.StartClient();
+        DisableButtons();
+    }
+
+    public void DisableButtons()
+    {
+        foreach(var button in JoinBUttons)
+        {
+            button.SetActive(false);
+        }
     }
 
     // Spawn object locally for the player

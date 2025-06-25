@@ -67,6 +67,7 @@ MonoBehaviour:
   LockedIn: 0
   SelectorIconHolder: {fileID: 4434697365734030666}
   playerCards: []
+  timer: 0
 --- !u!1 &3715287870691426489
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,7 +285,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &18060961124956420
 RectTransform:
   m_ObjectHideFlags: 0
@@ -431,7 +432,7 @@ RectTransform:
   m_GameObject: {fileID: 6219371007136692115}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.35294, z: 1}
+  m_LocalScale: {x: 0.7417313, y: 0.5369982, z: 1.5215}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1729692145360824124}
@@ -469,7 +470,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 5071fe6a3d327cf418537bb0c7197f41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -551,8 +552,8 @@ RectTransform:
   m_GameObject: {fileID: 8149745521979606430}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.35294, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: -0.7, y: -0.50678563, z: -1.4358974}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1729692145360824124}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -589,7 +590,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 5071fe6a3d327cf418537bb0c7197f41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
