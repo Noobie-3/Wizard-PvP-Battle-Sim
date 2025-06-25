@@ -82,7 +82,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3bf2ad4f10148cc49a04063f64b28bff, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2905892006063216080}
+      addedObject: {fileID: 6158766742408851955}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3bf2ad4f10148cc49a04063f64b28bff, type: 3}
       insertIndex: -1
       addedObject: {fileID: -3014744509513857171}
@@ -153,7 +153,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3bf2ad4f10148cc49a04063f64b28bff, type: 3}
   m_PrefabInstance: {fileID: 3830305259324659764}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2905892006063216080
+--- !u!114 &6158766742408851955
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3782765787
+  GlobalObjectIdHash: 1174926506
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
