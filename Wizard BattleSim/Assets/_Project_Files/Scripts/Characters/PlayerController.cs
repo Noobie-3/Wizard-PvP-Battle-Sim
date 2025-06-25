@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 using Unity.Netcode.Components;
 using System.Threading;
 using UnityEngine.Video;
+using UnityEditor.Experimental.GraphView;
 
 [RequireComponent(typeof(PlayerStats))]
 public class PlayerController : NetworkBehaviour
@@ -74,6 +75,7 @@ public class PlayerController : NetworkBehaviour
     public InputAction MoveAction;
     // Store the last valid cardinal rotation
     private Quaternion lastValidRotation;
+    
 
 
     // Spell variables
@@ -456,37 +458,41 @@ private void AdjustCameraDamping()
         Vcam.GetCinemachineComponent<CinemachineFramingTransposer>().m_ZDamping = 0;
 }
 
-/*    private void OnParticleCollision(GameObject other)
-    {
-        if(!IsOwner) return;
-        print("Collider with a partical" + other.name);
-        ISpell_Interface spell_Interface = other.GetComponent<ISpell_Interface>();
-        if (spell_Interface == null)
+    /*    private void OnParticleCollision(GameObject other)
         {
-            print("No spell interface found on " + other.name);
-            return;
+            if(!IsOwner) return;
+            print("Collider with a partical" + other.name);
+            ISpell_Interface spell_Interface = other.GetComponent<ISpell_Interface>();
+            if (spell_Interface == null)
+            {
+                print("No spell interface found on " + other.name);
+                return;
+            }
+            if (spell_Interface.CasterId == this.OwnerClientId)
+            {
+                print("Caster is the same as the player");
+                return;
+            }
+            if (spell_Interface.hitagainTime > 0)
+            {
+                print("Hit again time is not 0");
+                return;
+            }
+            TakeDamage(spell_Interface.spell, spell_Interface.CasterId);
+            spell_Interface.hitagainTime = spell_Interface.spell.MultiHitCooldown;
+            print("Should have taken damage from " + other.name);
         }
-        if (spell_Interface.CasterId == this.OwnerClientId)
-        {
-            print("Caster is the same as the player");
-            return;
-        }
-        if (spell_Interface.hitagainTime > 0)
-        {
-            print("Hit again time is not 0");
-            return;
-        }
-        TakeDamage(spell_Interface.spell, spell_Interface.CasterId);
-        spell_Interface.hitagainTime = spell_Interface.spell.MultiHitCooldown;
-        print("Should have taken damage from " + other.name);
-    }
-*/
+    */
     public void TakeDamage(Spell spell, ulong whoHitMe)
     {
-        print(name + "PLayer took dmaage from" + spell + " Cast by  " + CharacterChosen.DisplayName);
-        Stats.TakeDamage(spell.Spell_Damage, whoHitMe);
+        TakeDamageServerRPC(spell.Spell_Damage, whoHitMe);
+
+            }
+    [ServerRpc(RequireOwnership = false)]
+    public void TakeDamageServerRPC(float SpellDamage , ulong WhoHitMe)
+    {
+        print(name + "PLayer took dmaage " + SpellDamage+ " Cast by  " + CharacterChosen.DisplayName);
+        Stats.TakeDamage(SpellDamage, WhoHitMe);
         PlayerUi.UpdateUI();
-
-
     }
 }

@@ -22,7 +22,6 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
 
     public bool GotHit(GameObject ThingThatHitMe, Spell Spell, ulong CasterId)
     {
-        if(!IsServer) return false;
         if (ThingThatHitMe == null)
         {
             Debug.LogWarning("Spell hit null object.");

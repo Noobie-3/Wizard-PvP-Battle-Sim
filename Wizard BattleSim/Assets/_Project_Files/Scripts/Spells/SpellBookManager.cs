@@ -6,7 +6,7 @@ public class SpellBookManager : MonoBehaviour
 {
     public static SpellBookManager Singleton;
 
-    SpellBook_AllSpellsList SpellBook;
+    public SpellBook_AllSpellsList SpellBook;
 
     private void Start()
     {
