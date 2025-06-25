@@ -28,6 +28,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _DISABLE_SSR_TRANSPARENT
   - _ENABLE_FOG_ON_TRANSPARENT
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
@@ -44,6 +45,7 @@ Material:
   - TransparentDepthPostpass
   - TransparentBackface
   - MOTIONVECTORS
+  - RayTracingPrepass
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -73,6 +75,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -141,25 +147,38 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _MainTexPower: 5.08
+    - _MaterialID: 1
+    - _MaterialTypeMask: 2
+    - _Metalic: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _OpaqueCullMode: 2
     - _Parallax: 0.02
     - _PerPixelSorting: 0
+    - _RayTracing: 0
+    - _ReceivesSSR: 1
+    - _ReceivesSSRTransparent: 0
+    - _RefractionModel: 0
     - _RenderQueueType: 3
+    - _RequireSplitLighting: 0
+    - _Rougness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StencilRef: 0
-    - _StencilRefDepth: 1
+    - _StencilRefDepth: 0
     - _StencilRefDistortionVec: 4
-    - _StencilRefMV: 33
+    - _StencilRefGBuffer: 2
+    - _StencilRefMV: 32
     - _StencilWriteMask: 6
     - _StencilWriteMaskDepth: 9
     - _StencilWriteMaskDistortionVec: 4
-    - _StencilWriteMaskMV: 43
+    - _StencilWriteMaskGBuffer: 15
+    - _StencilWriteMaskMV: 41
+    - _SupportDecals: 1
     - _SurfaceType: 1
+    - _TransmissionEnable: 1
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
@@ -170,6 +189,7 @@ Material:
     - _UVSec: 0
     - _UseShadowThreshold: 0
     - _ZTestDepthEqualForOpaque: 4
+    - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
     - _ZWrite: 0
     m_Colors:
@@ -179,6 +199,8 @@ Material:
     - _MainTexSpeed: {r: 1, g: 1, b: 0, a: 0}
     - _MainTexTIling: {r: 1, g: 1, b: 0, a: 0}
     - _MainTexTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _Normal_Speed: {r: 0, g: 0, b: 0, a: 0}
+    - _Normal_Tiling: {r: 0, g: 0, b: 0, a: 0}
     - _mainTexSpeed: {r: 0.1, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7985154514682912270}
   - component: {fileID: 8336322529436723014}
   - component: {fileID: 2281580553903545321}
+  - component: {fileID: 5322126965139211423}
+  - component: {fileID: -954248423764124729}
   m_Layer: 0
   m_Name: StoneHenge_03
   m_TagString: Untagged
@@ -108,3 +110,43 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.001351216, y: 0.00059859705, z: 0.0030057442}
   m_Center: {x: 0.000007834548, y: -0.0007019045, z: 0.0015023832}
+--- !u!114 &5322126965139211423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6433590407716871723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 235239849
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &-954248423764124729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6433590407716871723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9097abceb871d9b46bf0e82842e18af3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  Type: 1
+  PC: {fileID: 0}
