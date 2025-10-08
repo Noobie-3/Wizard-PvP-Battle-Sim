@@ -69,6 +69,7 @@ public class Scroller_Selector : NetworkBehaviour
     }
     private void OnSceneLoaded(SceneEvent Event)
     {
+        
         if (Event.SceneEventType == SceneEventType.LoadEventCompleted && Event.SceneName == gameController.GC.CharacterSelectSceneName)
         {
             if (!IsClient) return;
@@ -76,7 +77,7 @@ public class Scroller_Selector : NetworkBehaviour
             if (gameController.GC.connectionType == gameController.ConnectionType.Online)
             {
                 ScreenSelector.ChangeToNonOnlineLobby();
-                ConnectonTypeObject.SetActive(true); // Show connection type object if online
+                ConnectonTypeObject.SetActive(false); // Show connection type object if online
             }
 
         }

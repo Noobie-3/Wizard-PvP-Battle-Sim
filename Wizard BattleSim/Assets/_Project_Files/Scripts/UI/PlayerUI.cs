@@ -21,6 +21,7 @@ public class PlayerUI : MonoBehaviour
     public GameObject CurrentIconEffect;
     public int CurrentIconIndex;
 
+    public Image[] spellSlotCovers;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +31,23 @@ public class PlayerUI : MonoBehaviour
             player = GetComponentInParent<PlayerController>();
         }
 
+
+
         
 
     }
 
     // Update is called once per frame
 
+
+    private void Update()
+    {
+        
+    }
+    public void UpdateCovers(int i, float Percentage)
+    {
+        spellSlotCovers[i].fillAmount = Percentage;
+    }
 
     public void UpdateUI()
     {

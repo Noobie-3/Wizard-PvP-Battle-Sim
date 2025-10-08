@@ -4,15 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
 using Cinemachine;
-using UnityEngine.UIElements;
-using UnityEngine.UI;
-using TMPro;
-using UnityEngine.Rendering.UI;
-using UnityEngine.SceneManagement;
-using Unity.Netcode.Components;
-using System.Threading;
-using UnityEngine.Video;
-using UnityEditor.Experimental.GraphView;
 
 [RequireComponent(typeof(PlayerStats))]
 public class PlayerController : NetworkBehaviour
@@ -22,36 +13,32 @@ public class PlayerController : NetworkBehaviour
     // Movement variables
     [Header("Movement Settings")]
     [SerializeField] public float moveSpeed = 5f;
-    [SerializeField] public float moveSpeedDefault;
     [SerializeField] public Vector3 moveDirection;
     [SerializeField] private bool Gravity = true;
     [SerializeField] private float JumpHeight = 5f;
-    private NetworkVariable<Quaternion> syncedRotation = new NetworkVariable<Quaternion>(
-    writePerm: NetworkVariableWritePermission.Owner
-);
-
+    public float FallSpeed;
+    private NetworkVariable<Quaternion> syncedRotation = new NetworkVariable<Quaternion>(writePerm: NetworkVariableWritePermission.Owner);
 
     // Ground check variables
     [Header("Ground Check Settings")]
     [SerializeField] private float GroundCheck_Distance = 0.5f;
     [SerializeField] private Vector3 GroundCheck_Start = new Vector3(0, 0.5f, 0);
 
-    // Wall check variables
-    [Header("Wall Check Settings")]
-    [SerializeField] private Vector3 WallCheck_Start = new Vector3(0, 1.5f, 0);
-    [SerializeField] private float wallCheckDistance = 1f;
-    [SerializeField] private float DistanceFromFloorRequiredToWallRun = 1.5f;
-    [SerializeField] private bool IsWallRunning = false;
-    [SerializeField] private bool AbleToWallRun = true;
+    float lastGroundedTime;
+    float coyoteTime = 0.15f;
+
+
 
     // Camera settings
     [Header("Camera Settings")]
     [SerializeField] public Transform Cam;
     [SerializeField] public Camera camComponent;
     [SerializeField] private CinemachineVirtualCamera Vcam;
+    [SerializeField] CinemachineImpulseSource impulseSource;
 
     // Miscellaneous settings
     [Header("Miscellaneous Settings")]
+    public NetworkObject DamageBilboard;
     [SerializeField] public Character CharacterChosen;
     [SerializeField] private GameObject MeshToRotate;
     [SerializeField] private AudioListener audioListener;
@@ -64,6 +51,7 @@ public class PlayerController : NetworkBehaviour
     public Transform WandSpawnLocation;
     public ulong MyClientID;
     public PlayerStats Stats; // Reference to PlayerStats
+    [SerializeField] private GameObject ChargeVfx;
     // Input variables
     [Header("Input Settings")]
     [SerializeField] public Vector2 MoveInput;
@@ -74,7 +62,7 @@ public class PlayerController : NetworkBehaviour
     public InputActionAsset PlayerControls;
     public InputAction MoveAction;
     // Store the last valid cardinal rotation
-    private Quaternion lastValidRotation;
+    public Vector3 TargetRot;
     
 
 
@@ -100,6 +88,7 @@ public class PlayerController : NetworkBehaviour
 
     // Wall check and wall running logic
     private Vector3 currentWallNormal = Vector3.zero;
+    private NetworkObject spawnedChargeVfx;
 
     //Is called When the player is spawned on the network
     public override void OnNetworkSpawn()
@@ -168,72 +157,68 @@ public class PlayerController : NetworkBehaviour
         if (!IsOwner) return;
         if (gameController.GC == null) return;
 
-        MoveObject();
-        GroundCheck();
-        WallCheck();
 
-        RotateCharacter();
+        GroundCheck();
+
         PlayerUi.UpdateUI();
 
         if (Charging)
         {
             Stats.ChargeManaServerRpc();
         }
+
+
+
+        //rotate the object based on the camrea
+        //camera forward and right vectors:
+        var forward = Cam.transform.forward;
+        var right = Cam.transform.right;
+
+        //project forward and right vectors on the horizontal plane (y = 0)
+        forward.y = 0f;
+        right.y = 0f;
+        forward.Normalize();
+        right.Normalize();
+
+
+        //this is the direction in the world space we want to move:
+        TargetRot = forward * MoveInput.y + right * MoveInput.x;
+        RotateCharacter();
+
+        MoveObject();
+
+        AlterGravity();
     }
     // Movement logic
     private void MoveObject()
     {
         if (!IsOwner) return;
-        // Apply Gravity if enabled
-        if (Gravity)
-        {
-            rb.AddForce(Vector3.down * gameController.GC.Gravity_force, ForceMode.Acceleration);
-        }
-
         if (Charging) return;
-        
+        print("Moveing Object");
         IsRunning = MoveInput.x != 0 || MoveInput.y != 0;
 
-        moveDirection = Cam.right.normalized * MoveInput.x + Cam.forward.normalized * MoveInput.y;
-        moveDirection.y = 0;
-        // Apply movement
-        rb.linearVelocity = new Vector3(moveDirection.x * moveSpeed, rb.linearVelocity.y, moveDirection.z * moveSpeed);
-        // If no input and grounded, stop horizontal movement
-        if (MoveInput == Vector2.zero && Grounded)
-        {
+        Vector3 targetVelocity = TargetRot.normalized * moveSpeed;
+        Vector3 currentVelocity = rb.linearVelocity;
+        Vector3 velocityChange = targetVelocity - new Vector3(currentVelocity.x, 0, currentVelocity.z);
 
-            // If no input and grounded, stop horizontal movement
-            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
-        }
+        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+
     }
-    /* else
-     {
-         // If wall running, adjust velocity to maintain wall run
-         Vector3 wallRunDirection = Vector3.Cross(currentWallNormal, Vector3.up).normalized;
-         // Determine if player is moving forward along the wall
-         if (Vector3.Dot(wallRunDirection, Cam.forward) < 0)
-         {
-             wallRunDirection = -wallRunDirection;
-         }
-         rb.linearVelocity = wallRunDirection * moveSpeed + Vector3.up * rb.linearVelocity.y;
 
-}*/
+    public void AlterGravity()
+    {
+        rb.linearVelocity += Vector3.up * -FallSpeed * Time.fixedDeltaTime;
+    }
 
     //Rotation logic
     private void RotateCharacter()
     {
-        if (!IsOwner || moveDirection == Vector3.zero) return;
-
-        // Desired rotation based on movement direction
-        Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
-
-        // Smooth rotation using Slerp or RotateTowards
-        MeshToRotate.transform.rotation = Quaternion.Slerp(
-            MeshToRotate.transform.rotation,
-            targetRotation,
-            Time.deltaTime * 10f // Adjust rotation speed
-        );
-
+        if (!IsOwner) return;
+        if (TargetRot.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(TargetRot, Vector3.up);
+            MeshToRotate.transform.rotation = Quaternion.Slerp(MeshToRotate.transform.rotation, targetRotation, 0.15f);
+        }
         //sync to other clients if needed
         syncedRotation.Value = MeshToRotate.transform.rotation;
     }
@@ -245,45 +230,21 @@ public class PlayerController : NetworkBehaviour
     public void GetMoveInput(InputAction.CallbackContext context)
     {
         if (!IsOwner) return;
-
-        print("Can run = " + CanRun);
-        // Check if movement is allowed
-        if (!CanRun)
+        if (context.performed)
         {
-            /*            MoveInput = Vector2.zero; // Reset movement input
-            */
-            if (Anim != null)
-            {
-                Anim.SetFloat("X", 0);
-                Anim.SetFloat("Y", 0);
-            }
-            return;
+            Vector2 input = context.ReadValue<Vector2>();
+            MoveInput = new Vector2(input.x, input.y);
+        }
+        else if (context.canceled)
+        {
+            MoveInput = Vector3.zero;
+        }
+        if (Anim != null)
+        {
+            Anim.SetFloat("X", MoveInput.x);
+            Anim.SetFloat("Y", MoveInput.y);
         }
 
-        // Always read the input when CanRun is true
-        if (context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
-        {
-            MoveInput = context.ReadValue<Vector2>();
-            AdjustCameraDamping();
-
-            if (Anim != null)
-            {
-                Anim.SetFloat("X", MoveInput.x);
-                Anim.SetFloat("Y", MoveInput.y);
-            }
-        }
-        else if (context.phase == InputActionPhase.Canceled)
-        {
-            print(context.phase);
-            // Reset movement on input cancellation
-            MoveInput = Vector2.zero;
-
-            if (Anim != null)
-            {
-                Anim.SetFloat("X", 0);
-                Anim.SetFloat("Y", 0);
-            }
-        }
     }
 
     public void GetMouseInput(InputAction.CallbackContext context)
@@ -292,33 +253,34 @@ public class PlayerController : NetworkBehaviour
     }
     public void GetChargeStatus(InputAction.CallbackContext context)
     {
+        if (!IsOwner) return;
+
         if (context.phase == InputActionPhase.Canceled)
         {
             CanRun = true;
             Charging = false;
-            Anim.SetBool("IsCharging", false);
+            Anim?.SetBool("IsCharging", false);
+            StopChargeServerRpc();   // <- despawn
+            return;
         }
 
         if (!Grounded) return;
+
         if (context.phase == InputActionPhase.Performed || context.phase == InputActionPhase.Started)
         {
             Charging = true;
-            //stop movment
             CanRun = false;
-
             rb.linearVelocity = Vector3.zero;
-            Anim.SetBool("IsCharging", true);
-            //start charging
+            Anim?.SetBool("IsCharging", true);
+            StartChargeServerRpc(transform.position);  // <- spawn
+
         }
-
-
-
     }
     // Jump logic
     public void JumpInput(InputAction.CallbackContext context)
     {
         //SpellCasterScript.ResetChargeSpell();
-        if (context.performed && (Grounded || IsWallRunning))
+        if (context.performed && (Grounded))
         {
             SpellCasterScript.TristanCast();
             rb.AddForce(Vector3.up * JumpHeight, ForceMode.Impulse);
@@ -339,90 +301,13 @@ public class PlayerController : NetworkBehaviour
         {
             JumpUsed = false;
         }
-        if (Anim != null)
-        {
-            Anim.SetBool("Grounded", Grounded);
-        }
+        if (Grounded) lastGroundedTime = Time.time;
+
+        bool groundedBuffered = (Time.time - lastGroundedTime) <= coyoteTime;
+        Anim?.SetBool("Grounded", groundedBuffered);
+
         Debug.DrawRay(transform.position + GroundCheck_Start, Vector3.down * GroundCheck_Distance, Color.red);
     }
-    private void WallCheck()
-    {
-        if (!IsOwner) return;
-        if (MoveInput == Vector2.zero) return;
-        if (!Grounded)
-        {
-            if (!AbleToWallRun) return;
-            RaycastHit hit;
-            // Check if player is high enough from the ground to wall run
-            if (!Physics.Raycast(MeshToRotate.transform.position, Vector3.down, DistanceFromFloorRequiredToWallRun, gameController.GC.GroundLayer))
-            {// Perform raycasts in multiple directions to detect walls
-                if (Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, MeshToRotate.transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, -transform.right, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, -transform.forward, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (MeshToRotate.transform.right + MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-MeshToRotate.transform.right + MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer) ||
-                    Physics.Raycast(MeshToRotate.transform.position + WallCheck_Start, (-transform.right - MeshToRotate.transform.forward).normalized, out hit, wallCheckDistance, gameController.GC.WallLayer))
-                {
-                    Vector3 wallNormal = hit.normal;
-                    // Determine if the wall is suitable for wall running (not too steep)
-                    if (Vector3.Dot(wallNormal, Vector3.up) < 0.1f)
-                    {
-                        currentWallNormal = wallNormal;
-                        // Rotate the player to face 90 degrees along the wall
-                        Vector3 wallForward = Vector3.Cross(wallNormal, Vector3.up).normalized;
-                        // Determine the correct direction based on player's input
-                        if (Vector3.Dot(wallForward, Cam.forward) < 0)
-                        {
-                            wallForward = -wallForward;
-                        }
-                        Quaternion targetRotation = Quaternion.LookRotation(wallForward, Vector3.up);
-                        MeshToRotate.transform.rotation = targetRotation;
-                        /*                        SetWallRunningServerRpc(true);
-                        */
-                    }
-                }
-                else
-                {
-                    //  SetWallRunningServerRpc(false);
-                    Gravity = true;
-                }
-
-                /*                if (IsWallRunning && AbleToWallRun)
-                                {   // Zero out vertical velocity to prevent falling
-                                    rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-                                    ReduceStaminaServerRpc(Time.deltaTime * StaminaConsumptionRate);
-                                    if (Stamina.Value <= 0)
-                                    {
-                                        SetWallRunningServerRpc(false);
-                                        Gravity = true;
-                                        AbleToWallRun = false;
-                                    }
-                                }
-                                // Debugging raycasts
-                                /*Debug.DrawRay(transform.position + WallCheck_Start, transform.right * wallCheckDistance, Color.blue);
-                                Debug.DrawRay(transform.position + WallCheck_Start, -transform.right * wallCheckDistance, Color.blue);
-                                Debug.DrawRay(transform.position + WallCheck_Start, transform.forward * wallCheckDistance, Color.blue);
-                                Debug.DrawRay(transform.position + WallCheck_Start, -transform.forward * wallCheckDistance, Color.blue);
-                                Debug.DrawRay(transform.position + WallCheck_Start, (transform.right + transform.forward).normalized * wallCheckDistance, Color.blue);
-                                Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right + transform.forward).normalized * wallCheckDistance, Color.blue);
-                                Debug.DrawRay(transform.position + WallCheck_Start, (transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
-                                Debug.DrawRay(transform.position + WallCheck_Start, (-transform.right - transform.forward).normalized * wallCheckDistance, Color.blue);
-                                Debug.DrawRay(transform.position + WallCheck_Start, Vector3.down * DistanceFromFloorRequiredToWallRun, Color.blue);
-                                PlayerUi.UpdateUI();*/
-            }
-        }
-        /*        else
-                {
-                    SetWallRunningServerRpc(false);
-                    AbleToWallRun = true;
-                }
-        */
-    }
-
-
-
 
     // Animation handling
     private void AnimateObject()
@@ -432,7 +317,6 @@ public class PlayerController : NetworkBehaviour
         // Update animation parameters
         Anim.SetBool("IsRunning", IsRunning);
         //Anim.SetBool("IsCharging", Charging);
-        Anim.SetBool("IsWallRunning", IsWallRunning);
     }
     public IEnumerator PrintData()
     {
@@ -485,14 +369,83 @@ private void AdjustCameraDamping()
     */
     public void TakeDamage(Spell spell, ulong whoHitMe)
     {
+        // Only send the raw data to the server
         TakeDamageServerRPC(spell.Spell_Damage, whoHitMe);
+    }
 
-            }
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRPC(float SpellDamage , ulong WhoHitMe)
+    public void TakeDamageServerRPC(float SpellDamage, ulong WhoHitMe)
     {
-        print(name + "PLayer took dmaage " + SpellDamage+ " Cast by  " + CharacterChosen.DisplayName);
+
+        Vector2 Jitter;
+        Jitter.x = Random.Range(-1, 1);
+        Jitter.y = Random.Range(-1, 1);
+
+
+
+        DamagePopupSpawner.Instance.CreatePopUp(new Vector3(Jitter.x + transform.position.x, Jitter.y + transform.position.y, transform.position.z ) + Vector3.up * 2, SpellDamage.ToString(), new Color(0, 255, 252, 1));
         Stats.TakeDamage(SpellDamage, WhoHitMe);
         PlayerUi.UpdateUI();
+
+        // Only tell the OWNER of this PlayerController to shake their camera
+        ClientRpcParams sendToOwner = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new ulong[] { OwnerClientId }
+            }
+        };
+
+        DoCamShakeClientRpc(sendToOwner);
+       // ShowDamageBilboard();
     }
+
+    [ClientRpc]
+    public void DoCamShakeClientRpc(ClientRpcParams rpcParams = default)
+    {
+        impulseSource.GenerateImpulse();
+    }
+
+    [ClientRpc]
+    public void ShowDamageBilboardClientRpc()
+    {
+       var Bilboard = Instantiate(DamageBilboard);
+        Bilboard.Spawn();
+        Destroy(Bilboard, 2f);
+    }
+
+
+    [ServerRpc]
+    private void StartChargeServerRpc(Vector3 pos)
+    {
+        if (spawnedChargeVfx && spawnedChargeVfx.IsSpawned) return;
+        if (!ChargeVfx) return;
+
+        var vfx = Instantiate(ChargeVfx, pos, default);
+        vfx.transform.position = pos;
+        print(vfx.transform.position + " vfx position " + "This is pos sent: "+ pos);
+        var netObj = vfx.GetComponent<NetworkObject>();
+        
+
+        // If you want the player to be the owner (not necessary unless they need to drive it):
+        // netObj.SpawnWithOwnership(OwnerClientId, true);
+        netObj.Spawn(true); // server-owned is fine for a visual
+        print(vfx.transform.position + " vfx position after spawn");
+        // Parent to the wand/socket so it follows the player on all clients
+
+        spawnedChargeVfx = netObj;
+    }
+
+    [ServerRpc]
+    private void StopChargeServerRpc()
+    {
+        if (spawnedChargeVfx && spawnedChargeVfx.IsSpawned)
+        {
+
+            spawnedChargeVfx.Despawn(true);
+            spawnedChargeVfx = null;
+        }
+    }
+
+
 }

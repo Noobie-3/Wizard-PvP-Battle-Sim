@@ -29,7 +29,10 @@ public class SpellCaster : NetworkBehaviour
     [SerializeField] public Transform CastPosition;
     [SerializeField] public Camera Cam;
     public List<float> spellCooldownTimers = new List<float>();
+    [SerializeField] public PlayerUI PlayerUi;
+
     public Transform Hand;
+    
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) return;
@@ -116,6 +119,7 @@ public class SpellCaster : NetworkBehaviour
             {
                 Player.CanRun = false;
                 Player.MoveInput = Vector2.zero;
+                Player.rb.linearVelocity = Vector3.zero;
             }
 
 
@@ -227,6 +231,17 @@ public class SpellCaster : NetworkBehaviour
             if (CurrentSpellsTimers[i] > 0)
             {
                 CurrentSpellsTimers[i] -= Time.deltaTime;
+
+                   //calk percentage 
+                   var Percentage = ((CurrentSpellsTimers[i] / SpellBook.SpellBook[i].CooldownDuration) );
+                    
+                if(PlayerUi)
+                {
+                    PlayerUi.UpdateCovers(i, Percentage);
+                    print("called Update Covers with Percentage : "  + Percentage);
+
+                }
+
             }
         }
     }
