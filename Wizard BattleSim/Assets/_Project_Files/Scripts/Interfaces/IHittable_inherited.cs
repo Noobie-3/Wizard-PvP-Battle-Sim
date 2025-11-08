@@ -28,7 +28,11 @@ public class IHittable_inherited : NetworkBehaviour, IHitable
                 if (!PC) return false;
 
                 // Call server damage path directly (no client decision making)
-                PC.TakeDamageServerRPC(spell.Spell_Damage, casterId);
+                if(spell.MultiHitCooldown <= 0)
+                {
+                    Destroy(thingThatHitMe);
+                }
+                PC.TakeDamageServerRPC(spell.Spell_Damage, casterId);//untested change may revert
                 return true;
 
             case ObjectType.Breakable:
