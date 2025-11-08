@@ -17,9 +17,12 @@ public class SpawnManager : NetworkBehaviour
 
     private void Awake()
     {
-        instance = this;
-        DontDestroyOnLoad(gameObject);
-
+        //singleton
+        if(instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -47,6 +50,9 @@ public class SpawnManager : NetworkBehaviour
 
     public void AssignSpawnPointsByServer(SceneEvent sceneevent)
     {
+        if (instance != this) {
+            return;
+        }
         if (sceneevent.SceneEventType == SceneEventType.LoadEventCompleted && sceneevent.SceneName != gameController.GC.CharacterSelectSceneName && sceneevent.SceneName != gameController.GC.EndScreenSceneName)
         {
             spawnPoints = GameObject.FindObjectsOfType<PlayerSpawnLocation>();
@@ -54,7 +60,7 @@ public class SpawnManager : NetworkBehaviour
 
             foreach (var client in NetworkManager.Singleton.ConnectedClients)
             {
-                // Get or assign a spawn point
+                //  assign a spawn point
                 var assignedSpawnPoint = GetAvailableSpawnPoint();
                 playerSpawnPoints[client.Key] = assignedSpawnPoint;
                 print("Client with key of " + client.Key + "has its spawn point set at " + playerSpawnPoints[client.Key].transform.position );
@@ -96,7 +102,6 @@ public class SpawnManager : NetworkBehaviour
         print("Spawned with owndership of id  " + clientId);
 
 
-        //Untested change.. changed network object to gameobject    if it doenst funtion revert back
     }
 
     [ServerRpc (RequireOwnership = false)]

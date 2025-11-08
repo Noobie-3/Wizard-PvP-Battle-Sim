@@ -32,6 +32,7 @@ public class WinTracker : NetworkBehaviour
     public void AddWin(ulong clientId)
     {
         var currentState = PlayerStateManager.Singleton.LookupState(clientId);
+        print(currentState.WinCount + "this is the win count before adding a win");
         var updatedState = new CharacterSelectState(
             clientId: currentState.ClientId,
             characterId: currentState.CharacterId,
@@ -132,30 +133,22 @@ public class WinTracker : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ResetWinsServerRpc()
+    public void ResetWinsAndReturnToSelectServerRpc()
     {
-        print("Resetting all player wins.");
-        foreach (var state in PlayerStateManager.Singleton.AllStatePlayers)
+        //should only be server since its a server rpc
+        if(IsClient && !IsServer)
         {
-            var resetState = new CharacterSelectState(
-                clientId: state.ClientId,
-                characterId: state.CharacterId,
-                wandID: state.WandID,
-                spell0: state.Spell0,
-                spell1: state.Spell1,
-                spell2: state.Spell2,
-                isLockedIn: state.IsLockedIn,
-                playerLobbyId: state.PlayerLobbyId,
-                PlayerName: state.PLayerDisplayName,
-                winCount: 0,
-                ranking: 0
-            );
-
-            PlayerStateManager.Singleton.AddState(resetState);
-            print("Reset Win Count for Player: " + resetState.PLayerDisplayName.ToString());
+            print("non Host Made it inside the client RPc");
+            return;
         }
-    }
+        Debug.Log("[WinTracker] Resetting wins + loading select scene (server).");
+        PlayerStateManager.Singleton.ResetAllWinsServer();
 
+        NetworkManager.SceneManager.LoadScene(
+            gameController.GC.CharacterSelectSceneName,
+            LoadSceneMode.Single
+        );
+    }
     [ClientRpc]
     private void DisplayWinResultsClientRpc(CharacterSelectState[] sortedResults)
     {

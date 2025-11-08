@@ -8,53 +8,56 @@ using UnityEngine;
 
 public class FireBall : NetworkBehaviour, ISpell_Interface
 {
-
     [SerializeField] public Spell spell;
-
-    public float CurrentLifeTime;
     public ulong CasterId { get; set; }
 
-    Spell ISpell_Interface.spell => spell;
+    Spell ISpell_Interface.spell => throw new System.NotImplementedException();
 
-    public float hitagainTime { get; set; }
+    public float hitagainTime { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
     public Rigidbody rb;
 
+    private bool _hasTriggered;
+    private Collider _col;
 
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        _col = GetComponent<Collider>();
     }
-
 
     public void FireSpell()
     {
-        if (!IsOwner) return;
+        if (!IsServer) return;                      // server-owned projectile movement
         rb.AddForce(spell.Spell_Speed * transform.forward, ForceMode.Impulse);
     }
 
-    public void Initialize(ulong casterId, Vector3 direction)
+    public void Initialize(ulong casterId, Vector3 lookAt)
     {
         CasterId = casterId;
-        transform.LookAt(direction);
+        transform.LookAt(lookAt);
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!IsServer) return;
         IHittable_inherited iHit;
 
+
         other.TryGetComponent<IHittable_inherited>(out iHit);
         if (iHit == null) return;
-        if (iHit.Type == IHittable_inherited.ObjectType.player && iHit.OwnerClientId == CasterId) return;
-
-        iHit.GotHit(gameObject, spell,  CasterId);
+        if (iHit.Type == IHittable_inherited.ObjectType.player && iHit.OwnerClientId == CasterId) return; iHit.GotHit(gameObject, spell, CasterId);
         TriggerEffect();
+    }
+
+    private void DespawnProjectile()
+    {
+        if (TryGetComponent(out NetworkObject no) && no.IsSpawned) no.Despawn(true);
+        else Destroy(gameObject);
     }
 
     public void TriggerEffect()
     {
-        Destroy(gameObject);
+        DespawnProjectile();
     }
-
 }

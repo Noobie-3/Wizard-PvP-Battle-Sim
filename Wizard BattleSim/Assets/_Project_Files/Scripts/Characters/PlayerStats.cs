@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class PlayerStats : NetworkBehaviour
 {
@@ -11,6 +12,7 @@ public class PlayerStats : NetworkBehaviour
     // mana regen over time
     [SerializeField] private float manaRegenAmount = 5f;
     [SerializeField] private float manaRegenInterval = 1f;
+    [SerializeField] private bool _isDead = false;
     private void Update()
     {
         if (!IsServer) return;
@@ -72,34 +74,36 @@ public class PlayerStats : NetworkBehaviour
 
     public void TakeDamage(float damage, ulong PlayerWhoAttacked)
     {
-        TakeDamageServerRpc(damage); // Call the server RPC to handle damage on the server side
+        TakeDamageServerRpc(damage, PlayerWhoAttacked); // Call the server RPC to handle damage on the server side
 
-        if (Health.Value <= 0)
-        {
-            Die(PlayerWhoAttacked);
-        }
         print("Hp after damage: " + Health.Value + " on " + transform.name);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void TakeDamageServerRpc(float damage)
+    public void TakeDamageServerRpc(float damage, ulong playerWhoAttacked)
     {
+
         Health.Value -= damage;
 
+        if (Health.Value <= 0f)
+        {
+            _isDead = true;
+            ServerDie(playerWhoAttacked);
+        }
     }
 
-    private void Die(ulong AttackingPLayer)
+    private void ServerDie(ulong attackingPlayer)
     {
+        Debug.Log($"[Server] Die on {name} by {attackingPlayer}");
 
-        print("called Die On " + transform.name);
-        SpawnManager.instance.RespawnPlayerServerRpc(AttackingPLayer);
-        SpawnManager.instance.RespawnPlayerServerRpc(this.OwnerClientId);
-        WinTracker.Singleton.AddWin(AttackingPLayer);
-        // Add respawn or death handling here
+        SpawnManager.instance.RespawnPlayerServerRpc(attackingPlayer);
+        SpawnManager.instance.RespawnPlayerServerRpc(OwnerClientId);
 
-        print("Win added");
+        WinTracker.Singleton.AddWin(attackingPlayer);
+
+
+         _isDead = false;
     }
-
 
 }
 

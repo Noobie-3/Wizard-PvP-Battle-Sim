@@ -1,60 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class IHittable_inherited : NetworkBehaviour, IHitable
 {
-
-    [SerializeField]
-    public enum ObjectType
-    {
-        player,
-        nullify,
-        Breakable
-
-    }
-    [SerializeField] public ObjectType Type;
+    public enum ObjectType { player, nullify, Breakable }
+    [SerializeField] public ObjectType Type = ObjectType.player;
     [SerializeField] public PlayerController PC;
 
-
-
-    public bool GotHit(GameObject ThingThatHitMe, Spell Spell, ulong CasterId)
+    private void Awake()
     {
-        if (ThingThatHitMe == null)
-        {
-            Debug.LogWarning("Spell hit null object.");
-            return true;
-        }
+        if (!PC) PC = GetComponent<PlayerController>() ?? GetComponentInParent<PlayerController>();
+    }
 
-        if (Spell == null)
-        {
-            Debug.LogWarning("Spell is null.");
-            return false;
-        }
-
-        Debug.Log(CasterId + " is the Caster ID. Spell hit.");
+    // Server-only entry point
+    public bool GotHit(GameObject thingThatHitMe, Spell spell, ulong casterId)
+    {
+        if (!IsServer) return false;
+        if (spell == null) return false;
 
         switch (Type)
         {
             case ObjectType.nullify:
-                Debug.Log("Nullable object got hit: " + gameObject.name);
-                break;
+                return true;
 
             case ObjectType.player:
-                Debug.Log(OwnerClientId + "owner and casterId " + CasterId);
-                if (OwnerClientId == CasterId) return false;
-                Debug.Log("Player got hit.");
-                PC.TakeDamage(Spell, CasterId);
+                if (OwnerClientId == casterId) return false; // self-hit protection
+                if (!PC) return false;
+
+                // Call server damage path directly (no client decision making)
+                PC.TakeDamageServerRPC(spell.Spell_Damage, casterId);
                 return true;
 
             case ObjectType.Breakable:
-                Debug.Log("Breakable object got hit.");
+                // TODO: breakable logic here
                 return true;
         }
         return false;
     }
-
-    
 }

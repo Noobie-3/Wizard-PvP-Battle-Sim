@@ -138,6 +138,28 @@ public class PlayerStateManager : NetworkBehaviour
         }
     }
 
+    public void ResetAllWinsServer()
+    {
+        if(IsClient && !IsServer)
+        {
+            print("Client Made it to reset for some reason fix this now");
+            return;
+        }
+        for (int i = 0; i < AllStatePlayers.Count; i++)
+        {
+
+            var s = AllStatePlayers[i];
+
+            s.WinCount = 0;
+            s.Ranking = 0;
+            AllStatePlayers[i] = s; // assign back to trigger replication
+            if (IsServer)
+            {
+                print("Server Reset " + s.PLayerDisplayName + " player id is " + s.ClientId + " their new win count is " + AllStatePlayers[i].WinCount);
+            }
+        }
+    }
+
 
     public CharacterSelectState LookupState(ulong clientId)
     {
